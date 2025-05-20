@@ -3,6 +3,7 @@
 #include "memory.h"
 #include "console.h"
 #include "hooks.h"
+#include "pointers.h"
 
 class Insurgence
 {
@@ -12,6 +13,7 @@ public:
 		this->MemoryManager = new Memory();
 		this->ExternalConsole = new Console();
 		this->HooksManager = new Hooks();
+		this->PointersManager = new Pointers();
 	}
 
 	~Insurgence()
@@ -19,12 +21,14 @@ public:
 		delete this->MemoryManager;
 		delete this->ExternalConsole;
 		delete this->HooksManager;
+		delete this->PointersManager;
 	}
 
 public:
 	Memory* MemoryManager;
 	Console* ExternalConsole;
 	Hooks* HooksManager;
+	Pointers* PointersManager;
 };
 
 inline Insurgence* Globals;

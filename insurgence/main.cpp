@@ -10,6 +10,7 @@ void UnMain(HINSTANCE Instance)
 	{
 		Globals->ExternalConsole->Destroy();
 		Globals->HooksManager->Destroy();
+		Globals->PointersManager->Destroy();
 
 		delete Globals;
 	}
@@ -25,10 +26,7 @@ void Main(HINSTANCE Instance)
 		return UnMain(Instance);
 
 	Globals->ExternalConsole->Create();
-
-	/*uintptr_t daad = Globals->MemoryManager->FindSignature("engine.dll", "48 8B 05 ? ? ? ? 48 83 C0");
-
-	void* dafs = reinterpret_cast<void*(__cdecl*)()>(daad)();*/
+	Globals->PointersManager->Create();
 
 	while (true)
 	{
