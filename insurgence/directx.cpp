@@ -50,7 +50,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 Device)
     ImGui_ImplDX9_NewFrame();
     ImGui::NewFrame();
 
-    if (ImGui::Begin("Hello World"))
+    if (ImGui::Begin("Hello World", nullptr, ImGuiWindowFlags_NoCollapse))
     {
         ImGui::End();
     }
