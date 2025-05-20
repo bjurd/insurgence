@@ -14,10 +14,12 @@ public:
 		this->HooksManager = new Hooks();
 	}
 
-	/*~Insurgence()
+	~Insurgence()
 	{
 		delete this->MemoryManager;
-	}*/
+		delete this->ExternalConsole;
+		delete this->HooksManager;
+	}
 
 public:
 	Memory* MemoryManager;

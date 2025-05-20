@@ -6,7 +6,12 @@
 void UnMain(HINSTANCE Instance)
 {
 	if (Globals)
+	{
 		Globals->ExternalConsole->Destroy();
+		Globals->HooksManager->Destroy();
+
+		delete Globals;
+	}
 
 	FreeLibraryAndExitThread(Instance, 0);
 }
@@ -22,6 +27,9 @@ void Main(HINSTANCE Instance)
 
 	while (true)
 	{
+		if (GetAsyncKeyState(VK_END))
+			break;
+
 		Sleep(10);
 	}
 
