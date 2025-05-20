@@ -1,7 +1,7 @@
 #include "createmove.h"
 
 #include "globals.h"
-#include "cusercmd.h"
+#include "valve/cusercmd.h"
 #include "minhook/MinHook.h"
 
 typedef bool (*fnCreateMove)(void* _this, float SampleTime, CUserCmd* Command);
