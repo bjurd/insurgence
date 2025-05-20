@@ -23,7 +23,7 @@ void Main(HINSTANCE Instance)
 	if (!Globals->HooksManager->Create())
 		return UnMain(Instance);
 
-	Globals->ExternalConsole->Create(); // TODO: Organize globals better
+	Globals->ExternalConsole->Create();
 
 	while (true)
 	{
