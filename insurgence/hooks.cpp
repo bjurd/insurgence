@@ -3,6 +3,7 @@
 #include "globals.h"
 #include "minhook/MinHook.h"
 #include "createmove.h"
+#include "directx.h"
 
 bool Hooks::Create()
 {
@@ -11,6 +12,7 @@ bool Hooks::Create()
 
 	this->List = std::vector<Hook*>();
 	this->List.push_back(new CreateMove());
+	this->List.push_back(new DirectX());
 
 	for (Hook* Current : this->List)
 		Current->Create();

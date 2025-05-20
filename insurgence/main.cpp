@@ -26,9 +26,9 @@ void Main(HINSTANCE Instance)
 
 	Globals->ExternalConsole->Create();
 
-	uintptr_t daad = Globals->MemoryManager->FindSignature("engine.dll", "48 8B 05 ? ? ? ? 48 83 C0");
+	/*uintptr_t daad = Globals->MemoryManager->FindSignature("engine.dll", "48 8B 05 ? ? ? ? 48 83 C0");
 
-	void* dafs = reinterpret_cast<void*(__cdecl*)()>(daad)();
+	void* dafs = reinterpret_cast<void*(__cdecl*)()>(daad)();*/
 
 	while (true)
 	{
