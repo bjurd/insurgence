@@ -2,24 +2,6 @@
 #include <Windows.h>
 
 #include "globals.h"
-#include "minhook/MinHook.h"
-
-typedef bool (*fnCreateMove)(void* _this, float SampleTime, void* CUserCmd);
-fnCreateMove oCreateMove;
-
-bool __fastcall hkCreateMove(void* _this, float SampleTime, void* CUserCmd)
-{
-	printf("%f\n", SampleTime);
-	return oCreateMove(_this, SampleTime, CUserCmd);
-}
-
-typedef void (*fnCLMove)(float Samples, bool Final);
-fnCLMove oCLMove;
-
-void hkCLMove(float Samples, bool Final)
-{
-	oCLMove(Samples, Final);
-}
 
 void UnMain(HINSTANCE Instance)
 {
@@ -31,28 +13,17 @@ void UnMain(HINSTANCE Instance)
 
 void Main(HINSTANCE Instance)
 {
-	if (MH_Initialize() != MH_OK)
+	Globals = new Insurgence();
+
+	if (!Globals->HooksManager->Create())
 		return UnMain(Instance);
 
-	Globals = new Insurgence();
 	Globals->ExternalConsole->Create(); // TODO: Organize globals better
-
-	uintptr_t CreateMoveAddr = Globals->MemoryManager->FindSignature("client.dll", "40 53 48 83 EC ? 83 C9 ? 0F 29 74 24");
-	uintptr_t CL_MoveAddr = Globals->MemoryManager->FindSignature("engine.dll", "48 89 5C 24 ? 57 48 83 EC ? 0F 29 74 24 ? 0F B6 DA");
-
-	MH_CreateHook((LPVOID)CreateMoveAddr, (LPVOID)&hkCreateMove, (LPVOID*)&oCreateMove);
-	MH_CreateHook((LPVOID)CL_MoveAddr, (LPVOID)&hkCLMove, (LPVOID*)&oCLMove);
-	MH_EnableHook(MH_ALL_HOOKS);
 
 	while (true)
 	{
-
-
 		Sleep(10);
 	}
-
-	MH_DisableHook(MH_ALL_HOOKS);
-	MH_Uninitialize();
 
 	UnMain(Instance);
 }
