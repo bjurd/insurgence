@@ -87,3 +87,8 @@ uintptr_t Memory::FindSignature(const std::string Module, const std::string Sign
 
 	return this->ScanMemory(Base, Size, Pattern, Mask);
 }
+
+char* Memory::GetMethodPointerAt(char*** Object, uintptr_t Index)
+{
+	return (*Object)[Index];
+}

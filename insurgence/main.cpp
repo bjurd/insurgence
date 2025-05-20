@@ -2,6 +2,7 @@
 #include <Windows.h>
 
 #include "globals.h"
+#include "memory.h"
 
 void UnMain(HINSTANCE Instance)
 {
@@ -24,6 +25,10 @@ void Main(HINSTANCE Instance)
 		return UnMain(Instance);
 
 	Globals->ExternalConsole->Create();
+
+	uintptr_t daad = Globals->MemoryManager->FindSignature("engine.dll", "48 8B 05 ? ? ? ? 48 83 C0");
+
+	void* dafs = reinterpret_cast<void*(__cdecl*)()>(daad)();
 
 	while (true)
 	{
