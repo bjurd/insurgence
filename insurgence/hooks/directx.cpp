@@ -1,10 +1,10 @@
 #include "directx.h"
 
-#include "globals.h"
+#include "../globals.h"
 #include <d3d9.h>
-#include "kiero.h"
-#include "imgui/imgui_impl_dx9.h"
-#include "imgui/imgui_impl_win32.h"
+#include "../kiero.h"
+#include "../imgui/imgui_impl_dx9.h"
+#include "../imgui/imgui_impl_win32.h"
 
 typedef long (*fnReset)(LPDIRECT3DDEVICE9, D3DPRESENT_PARAMETERS*);
 fnReset oReset;

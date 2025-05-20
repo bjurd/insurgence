@@ -1,8 +1,8 @@
 #pragma once
 
-#include "hooks.h"
+#include "../hooks.h"
 
-class DirectX : public Hook
+class CreateMove : public Hook
 {
 public:
 	void Create();

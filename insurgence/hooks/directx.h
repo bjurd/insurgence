@@ -1,8 +1,8 @@
 #pragma once
 
-#include "hooks.h"
+#include "../hooks.h"
 
-class WndProc : public Hook
+class DirectX : public Hook
 {
 public:
 	void Create();

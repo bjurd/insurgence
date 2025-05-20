@@ -3,9 +3,9 @@
 #include "globals.h"
 #include "minhook/MinHook.h"
 
-#include "createmove.h"
-#include "directx.h"
-#include "wndproc.h"
+#include "hooks/createmove.h"
+#include "hooks/directx.h"
+#include "hooks/wndproc.h"
 
 bool Hooks::Create()
 {
