@@ -1,5 +1,6 @@
 #include "math.h"
 
+#include "../globals.h"
 #include <cmath>
 #include <cfloat>
 
@@ -119,4 +120,34 @@ void AngleVectors(const Angle& Angles, Vector& Forward, Vector& Right, Vector& U
 	Up.x = Cr * Sp * Cy + Sr * Sy;
 	Up.y = Cr * Sp * Sy - Sr * Cy;
 	Up.z = Cr * Cp;
+}
+
+int FrustumTransform(const VMatrix& WorldToSurface, const Vector& Point, Vector& Screen)
+{
+	Screen.y = WorldToSurface[1][0] * Point.x + WorldToSurface[1][1] * Point.y + WorldToSurface[1][2] * Point.z + WorldToSurface[1][3];
+	Screen.x = WorldToSurface[0][0] * Point.x + WorldToSurface[0][1] * Point.y + WorldToSurface[0][2] * Point.z + WorldToSurface[0][3];
+	Screen.z = 0.f;
+
+	float Width = WorldToSurface[3][0] * Point.x + WorldToSurface[3][1] * Point.y + WorldToSurface[3][2] * Point.z + WorldToSurface[3][3];
+
+	bool Hidden = Width < 0.001f;
+
+	if (Hidden)
+	{
+		Screen.x *= 100000;
+		Screen.y *= 100000;
+	}
+	else
+	{
+		float iWidth = 1.f / Width;
+		Screen.x *= iWidth;
+		Screen.y *= iWidth;
+	}
+
+	return Hidden;
+}
+
+int ScreenTransform(const Vector& Point, Vector& Screen)
+{
+	return FrustumTransform(Globals->PointersManager->Client->WorldToScreenMatrix(), Point, Screen);
 }
