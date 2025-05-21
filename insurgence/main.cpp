@@ -22,11 +22,11 @@ void Main(HINSTANCE Instance)
 {
 	Globals = new Insurgence();
 
-	if (!Globals->HooksManager->Create())
-		return UnMain(Instance);
-
 	Globals->ExternalConsole->Create();
 	Globals->PointersManager->Create();
+
+	if (!Globals->HooksManager->Create())
+		return UnMain(Instance);
 
 	while (true)
 	{

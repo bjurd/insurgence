@@ -7,8 +7,6 @@
 class Pointers
 {
 public:
-	bool Initialized;
-
 	IClientEntityList* EntityList;
 	IVEngineClient* Client;
 	CClientState* ClientState;

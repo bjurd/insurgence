@@ -12,12 +12,9 @@ void Pointers::Create()
 
 	if (GetClientStateAddr)
 		this->ClientState = reinterpret_cast<CClientState * (__cdecl*)()>(GetClientStateAddr)(); // TODO: Something whack is happening here
-
-	// Yay
-	this->Initialized = true;
 }
 
 void Pointers::Destroy()
 {
-	this->Initialized = false;
+
 }
