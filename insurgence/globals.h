@@ -10,7 +10,6 @@ class Insurgence
 public:
 	Insurgence()
 	{
-		this->MemoryManager = new Memory();
 		this->ExternalConsole = new Console();
 		this->HooksManager = new Hooks();
 		this->PointersManager = new Pointers();
@@ -18,14 +17,12 @@ public:
 
 	~Insurgence()
 	{
-		delete this->MemoryManager;
 		delete this->ExternalConsole;
 		delete this->HooksManager;
 		delete this->PointersManager;
 	}
 
 public:
-	Memory* MemoryManager;
 	Console* ExternalConsole;
 	Hooks* HooksManager;
 	Pointers* PointersManager;

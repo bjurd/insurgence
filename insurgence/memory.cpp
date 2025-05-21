@@ -74,7 +74,7 @@ uintptr_t Memory::FindSignature(const std::string Module, const std::string Sign
 {
 	std::vector<uint8_t> Pattern;
 	std::vector<bool> Mask;
-	this->ParseSignature(Signature, Pattern, Mask);
+	Memory::ParseSignature(Signature, Pattern, Mask);
 
 	uintptr_t Base = 0;
 	size_t Size = 0;
@@ -82,13 +82,8 @@ uintptr_t Memory::FindSignature(const std::string Module, const std::string Sign
 	std::wstring ModuleW; // Dumb
 	ModuleW.assign(Module.begin(), Module.end());
 
-	if (!this->GetModuleInfo(ModuleW.c_str(), Base, Size))
+	if (!Memory::GetModuleInfo(ModuleW.c_str(), Base, Size))
 		return 0;
 
-	return this->ScanMemory(Base, Size, Pattern, Mask);
-}
-
-char* Memory::GetMethodPointerAt(char*** Object, uintptr_t Index)
-{
-	return (*Object)[Index];
+	return Memory::ScanMemory(Base, Size, Pattern, Mask);
 }

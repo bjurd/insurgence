@@ -2,12 +2,14 @@
 
 #include "basehandle.h"
 #include "icliententity.h"
+#include "c_baseentity.h"
+#include "../memory.h"
 
 class IClientEntityList
 {
 public:
 	// Get IClientNetworkable interface for specified entity
-	virtual IClientNetworkable * GetClientNetworkable(int entnum) = 0;
+	virtual IClientNetworkable* GetClientNetworkable(int entnum) = 0;
 	virtual IClientNetworkable* GetClientNetworkableFromHandle(CBaseHandle hEnt) = 0;
 	virtual IClientUnknown* GetClientUnknownFromHandle(CBaseHandle hEnt) = 0;
 
@@ -25,4 +27,11 @@ public:
 	// Sizes entity list to specified size
 	virtual void				SetMaxEntities(int maxents) = 0;
 	virtual int					GetMaxEntities() = 0;
+
+	C_BaseEntity* GetBaseEntityFromHandle(CBaseHandle Handle)
+	{
+		IClientUnknown* Ent = GetClientUnknownFromHandle(Handle);
+
+		return Ent ? Ent->GetBaseEntity() : 0;
+	}
 };
