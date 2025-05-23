@@ -12,7 +12,7 @@ void Pointers::Create()
 	uintptr_t GetClientStateAddr = Memory::FindSignature("engine.dll", Engine_GetClientState);
 
 	if (GetClientStateAddr)
-		this->ClientState = reinterpret_cast<CClientState * (__cdecl*)()>(GetClientStateAddr)(); // TODO: Something whack is happening here
+		this->ClientState = reinterpret_cast<CClientState * (__cdecl*)()>(GetClientStateAddr)(); // TODO: Something wack is happening here
 }
 
 void Pointers::Destroy()
