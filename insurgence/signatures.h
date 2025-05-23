@@ -1,0 +1,13 @@
+#pragma once
+
+// client.dll
+#define CL_CreateMove "40 53 48 83 EC ? 83 C9 ? 0F 29 74 24"
+
+#define C_BaseEntity_GetAbsOrigin "40 53 48 83 EC ? 48 8B D9 E8 ? ? ? ? 48 8D 83 ? ? ? ? 48 83 C4 ? 5B C3 CC CC CC CC CC 48 89 5C 24" // May actually be on IClientEntity
+#define C_BaseEntity_GetAbsAngles "40 53 48 83 EC ? 48 8B D9 E8 ? ? ? ? 48 8D 83 ? ? ? ? 48 83 C4 ? 5B C3 CC CC CC CC CC 40 53"
+
+// engine.dll
+#define Engine_GetClientState "48 8B 05 ? ? ? ? 48 83 C0" // TODO: This is weird
+
+#define CL_Move "48 89 5C 24 ? 57 48 83 EC ? 0F 29 74 24 ? 0F B6 DA"
+#define CL_SendMove "48 89 5C 24 ? 57 B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? E8"
