@@ -8,31 +8,16 @@ WNDPROC oWndProc;
 
 LRESULT __stdcall hkWndProc(HWND Window, UINT Message, WPARAM Wide, LPARAM Long)
 {
-    // TODO: The rest
+    // TODO: The rest (not click thru imgui)
 
-    if (ImGui_ImplWin32_WndProcHandler(Window, Message, Wide, Long))
-        return true;
+    ImGui_ImplWin32_WndProcHandler(Window, Message, Wide, Long);
 
 	return CallWindowProcA(oWndProc, Window, Message, Wide, Long);
 }
 
-BOOL CALLBACK EnumWindowsProc(HWND Window, LPARAM Reserved)
-{
-    DWORD ProcessID;
-    GetWindowThreadProcessId(Window, &ProcessID);
-
-    if (ProcessID != GetCurrentProcessId()) return true;
-    if (GetWindow(Window, GW_OWNER) != NULL) return true;
-    if (!IsWindowVisible(Window)) return true;
-
-    MainWindow = Window;
-
-    return false;
-}
-
 void WndProc::Create()
 {
-    EnumWindows(EnumWindowsProc, 0);
+    MainWindow = FindWindow(TEXT("Valve001"), nullptr);
 
     if (!MainWindow)
     {
@@ -40,11 +25,14 @@ void WndProc::Create()
         return;
     }
 
-    oWndProc = (WNDPROC)SetWindowLongPtrA(MainWindow, GWLP_WNDPROC, (__int64)(LONG_PTR)hkWndProc);
+    oWndProc = (WNDPROC)SetWindowLongPtr(MainWindow, GWLP_WNDPROC, (__int64)(LONG_PTR)hkWndProc);
+
+    if (!oWndProc)
+        printf("Failed to hook WndProc\n");
 }
 
 void WndProc::Destroy()
 {
-    if (MainWindow)
-        SetWindowLongPtrA(MainWindow, GWLP_WNDPROC, (__int64)(LONG_PTR)oWndProc);
+    if (MainWindow && oWndProc)
+        SetWindowLongPtr(MainWindow, GWLP_WNDPROC, (__int64)(LONG_PTR)oWndProc);
 }
