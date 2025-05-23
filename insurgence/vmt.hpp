@@ -79,19 +79,9 @@ public:
 		return VMT::CallAddr<ReturnType>((void*)this, MethodAddr, ## __VA_ARGS__);						\
 	}
 
-#define CLPROXY(MethodName, Signature, ReturnType, Arguments, ...)										\
-	ReturnType MethodName Arguments																		\
-	{																									\
-		static uintptr_t MethodAddr = Memory::FindSignature("client.dll", ##Signature);					\
-		return VMT::CallAddr<ReturnType>((void*)this, MethodAddr, ## __VA_ARGS__);						\
-	}
+#define CLPROXY(MethodName, Signature, ReturnType, Arguments, ...) SIGPROXY(MethodName, "client.dll", Signature, ReturnType, Arguments, __VA_ARGS__)
 
-#define ENPROXY(MethodName, Signature, ReturnType, Arguments, ...)										\
-	ReturnType MethodName Arguments																		\
-	{																									\
-		static uintptr_t MethodAddr = Memory::FindSignature("engine.dll", ##Signature);					\
-		return VMT::CallAddr<ReturnType>((void*)this, MethodAddr, ## __VA_ARGS__);						\
-	}
+#define ENPROXY(MethodName, Signature, ReturnType, Arguments, ...) SIGPROXY(MethodName, "engine.dll", Signature, ReturnType, Arguments, __VA_ARGS__)
 
 #define PROXYVAR(MethodName, Type, Index)			\
 	Type* MethodName()								\
