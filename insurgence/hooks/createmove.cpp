@@ -16,7 +16,7 @@ bool __fastcall hkCreateMove(void* _this, float SampleTime, CUserCmd* Command)
 
 void CreateMove::Create()
 {
-	uintptr_t CreateMoveAddr = Memory::FindSignature("client.dll", CL_Move);
+	uintptr_t CreateMoveAddr = Memory::FindSignature("client.dll", CL_CreateMove);
 
 	MH_CreateHook((LPVOID)CreateMoveAddr, (LPVOID)&hkCreateMove, (LPVOID*)&oCreateMove);
 }
