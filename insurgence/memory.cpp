@@ -87,3 +87,14 @@ uintptr_t Memory::FindSignature(const std::string Module, const std::string Sign
 
 	return Memory::ScanMemory(Base, Size, Pattern, Mask);
 }
+
+uintptr_t Memory::RelativeToReal(uintptr_t Address, int Offset, int InstructionSize)
+{
+	if (!Address)
+		return 0;
+
+	int32_t RelativeAddress = *reinterpret_cast<int32_t*>(Address + Offset);
+	uintptr_t RealAddress = Address + InstructionSize;
+
+	return RealAddress;
+}

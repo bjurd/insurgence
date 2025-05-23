@@ -16,17 +16,14 @@ public:
 	static bool GetModuleInfo(const wchar_t* Name, uintptr_t& Base, size_t& Size);
 	static uintptr_t FindSignature(const std::string Module, const std::string Signature);
 
+	static uintptr_t RelativeToReal(uintptr_t Address, int Offset, int InstructionSize);
+
 	template <typename T>
-	static T RelativeToReal(char* Address, int Offset, int InstructionSize)
+	static T ResolveMethod(uintptr_t Address, int Offset, int InstructionSize)
 	{
-		if (!Address) return nullptr;
+		uintptr_t RealAddress = RelativeToReal(Address, Offset, InstructionSize);
 
-		char* Instruction = Address + Offset;
-		int RelativeAddress = *(int*)(Instruction);
-
-		char* RealAddress = Address + InstructionSize + RelativeAddress;
-
-		return (T)RealAddress;
+		return reinterpret_cast<T>(RealAddress);
 	}
 
 	template <typename T>
