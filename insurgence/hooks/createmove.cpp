@@ -14,14 +14,14 @@ bool __fastcall hkCreateMove(void* _this, float SampleTime, CUserCmd* Command)
 {
 	C_BaseEntity* LocalPlayer = (C_BaseEntity*)Globals->PointersManager->EntityList->GetClientEntity(Globals->PointersManager->Client->GetLocalPlayerIndex());
 
-	if (LocalPlayer)
+	/*if (LocalPlayer)
 	{
 		C_INSPlayer* LocalINSPlayer = (C_INSPlayer*)LocalPlayer;
 
 		int TeamNumber = *LocalINSPlayer->GetTeamNumber();
 
 		printf("%d\n", TeamNumber);
-	}
+	}*/
 
 	return oCreateMove(_this, SampleTime, Command);
 }
