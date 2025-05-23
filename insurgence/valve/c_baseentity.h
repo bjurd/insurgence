@@ -8,6 +8,6 @@
 class C_BaseEntity : public IClientEntity
 {
 public:
-	SIGPROXY(GetAbsOrigin, "client.dll", C_BaseEntity_GetAbsOrigin, Vector&, (void))
-	SIGPROXY(GetAbsAngles, "client.dll", C_BaseEntity_GetAbsAngles, Angle&, (void))
+	CLPROXY(GetAbsOrigin, C_BaseEntity_GetAbsOrigin, Vector&, (void))
+	CLPROXY(GetAbsAngles, C_BaseEntity_GetAbsAngles, Angle&, (void))
 };
