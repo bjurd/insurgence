@@ -44,6 +44,33 @@ public:
 	Vector	operator/(const Vector& v) const;
 	Vector	operator*(float fl) const;
 	Vector	operator/(float fl) const;
+
+public:
+	float DistToSqr(const Vector& Other)
+	{
+		Vector Delta;
+
+		Delta.x = this->x - Other.x;
+		Delta.y = this->y - Other.y;
+		Delta.z = this->z - Other.z;
+
+		return Delta.LengthSqr();
+	}
+
+	float DistTo(const Vector& Other)
+	{
+		return sqrtf(this->DistToSqr(Other));
+	}
+
+	float LengthSqr()
+	{
+		return (this->x * this->x) + (this->y * this->y) + (this->z * this->z);
+	}
+
+	float Length()
+	{
+		return sqrtf(this->LengthSqr());
+	}
 };
 
 class Angle
