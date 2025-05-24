@@ -4,6 +4,8 @@
 #include "vector.h"
 #include "matrix.h"
 
+#define MAXSTUDIOBONES				256
+
 #define BONE_CALCULATE_MASK			0x1F
 #define BONE_PHYSICALLY_SIMULATED	0x01	// bone is physically simulated when physics are active
 #define BONE_PHYSICS_PROCEDURAL		0x02	// procedural when physics is active
@@ -25,6 +27,9 @@
 #define BONE_USED_BY_VERTEX_LOD6	0x00010000
 #define BONE_USED_BY_VERTEX_LOD7	0x00020000
 #define BONE_USED_BY_BONE_MERGE		0x00040000	// bone is available for bone merge to occur against it
+
+#define BONE_USED_BY_VERTEX_AT_LOD(lod) ( BONE_USED_BY_VERTEX_LOD0 << (lod) )
+#define BONE_USED_BY_ANYTHING_AT_LOD(lod) ( ( BONE_USED_BY_ANYTHING & ~BONE_USED_BY_VERTEX_MASK ) | BONE_USED_BY_VERTEX_AT_LOD(lod) )
 
 struct mstudiobone_t
 {
@@ -73,6 +78,11 @@ struct studiohdr_t
 
 	int					numbones;			// bones
 	int					boneindex;
+
+	inline mstudiobone_t* GetBone(int i) const
+	{
+		return (mstudiobone_t*)(((char*)this) + boneindex) + i;
+	};
 
 	int					numbonecontrollers;		// bone controllers
 	int					bonecontrollerindex;
