@@ -50,7 +50,7 @@ public:
 	// Data accessors
 	virtual Vector const& GetRenderOrigin(void) = 0;
 	virtual Angle const& GetRenderAngles(void) = 0;
-	virtual bool					ShouldDraw(void) = 0;
+	//virtual bool					ShouldDraw(void) = 0;
 	virtual bool					IsTransparent(void) = 0;
 	virtual bool					UsesPowerOfTwoFrameBufferTexture() = 0;
 	virtual bool					UsesFullFrameBufferTexture() = 0;

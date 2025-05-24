@@ -6,6 +6,7 @@
 #include "../valve/math.h"
 #include "../signatures.h"
 #include "../nwi/c_insplayer.h"
+#include "../valve/studio.h"
 
 typedef bool (*fnCreateMove)(void* _this, float SampleTime, CUserCmd* Command);
 fnCreateMove oCreateMove;
@@ -14,14 +15,38 @@ bool __fastcall hkCreateMove(void* _this, float SampleTime, CUserCmd* Command)
 {
 	C_BaseEntity* LocalPlayer = (C_BaseEntity*)Globals->PointersManager->EntityList->GetClientEntity(Globals->PointersManager->Client->GetLocalPlayerIndex());
 
-	/*if (LocalPlayer)
+	if (!LocalPlayer)
+		return oCreateMove(_this, SampleTime, Command);
+
+	int Entities = Globals->PointersManager->EntityList->GetHighestEntityIndex();
+
+	for (int i = 1; i < Entities; ++i)
 	{
-		C_INSPlayer* LocalINSPlayer = (C_INSPlayer*)LocalPlayer;
+		C_BaseEntity* Ent = (C_BaseEntity*)Globals->PointersManager->EntityList->GetClientEntity(i);
 
-		int TeamNumber = *LocalINSPlayer->GetTeamNumber();
+		if (!Ent)
+			continue;
 
-		printf("%d\n", TeamNumber);
-	}*/
+		if (strcmp(Ent->GetClassName(), "C_INSPlayer")) // TODO: IsPlayer
+			continue;
+
+		IClientRenderable* Renderable = Ent->GetClientRenderable();
+		
+		if (!Renderable)
+			continue;
+
+		const model_t* Model = Renderable->GetModel();
+
+		if (!Model)
+			continue;
+
+		studiohdr_t* Studio = Globals->PointersManager->ModelInfo->GetStudiomodel(Model);
+
+		if (!Studio)
+			continue;
+
+		printf("got model for %d %s\n", i, Studio->name);
+	}
 
 	return oCreateMove(_this, SampleTime, Command);
 }
