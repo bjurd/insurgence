@@ -55,6 +55,11 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 Device)
         ImGui_ImplDX9_Init(Device);
     }
 
+    static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
+
+    if (ESPFeature)
+        ESPFeature->Render(Device);
+
     ImGui_ImplWin32_NewFrame();
     ImGui_ImplDX9_NewFrame();
     ImGui::NewFrame();
@@ -68,11 +73,6 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 Device)
 
     ImGui::Render();
     ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-
-    static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
-
-    if (ESPFeature)
-        ESPFeature->Render(Device);
 
     return oEndScene(Device);
 }
