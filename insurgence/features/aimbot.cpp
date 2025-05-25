@@ -26,15 +26,10 @@ C_INSPlayer* GetAimbotTarget()
 	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
 	Vector LocalPlayerOrigin = LocalPlayer->GetAbsOrigin();
 
-	int LocalPlayerIndex = *LocalPlayer->EntIndex();
-
 	for (C_INSPlayer* Player : Helpers::PlayerIterator())
 	{
-		if (*Player->EntIndex() == LocalPlayerIndex)
-			continue;
-
-		if (*Player->GetHealth() <= 0)
-			continue;
+		if (Player == LocalPlayer) continue;
+		if (*Player->GetHealth() <= 0) continue;
 
 		IClientRenderable* Renderable = Player->GetClientRenderable();
 		if (!Renderable) continue;
