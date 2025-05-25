@@ -8,6 +8,8 @@
 // #define C_BaseEntity_GetClassName "FF 90 ? ? ? ? 48 8B E8 48 85 C0 74 ? 80 38"
 // #define C_BaseEntity_GetPredDescMap "48 8D 05 ? ? ? ? C3 CC CC CC CC CC CC CC CC 0F B6 81 ? ? ? ? C3 CC CC CC CC CC CC CC CC 48 63 C1"
 
+#define IClientRenderable_SetupBones "40 55 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 80 3D"
+
 // engine.dll
 #define Engine_GetClientState "48 8B 05 ? ? ? ? 48 83 C0" // TODO: This is weird
 

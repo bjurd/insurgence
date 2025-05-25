@@ -3,6 +3,7 @@
 #include "iclientunknown.h"
 #include "vector.h"
 #include "matrix.h"
+#include "../signatures.h"
 #include "../vmt.hpp"
 
 typedef unsigned short ClientRenderHandle_t; // TODO: client_render_handle.h
@@ -151,5 +152,5 @@ public:
 	virtual bool	IgnoresZBuffer(void) const = 0;
 
 public:
-	CLPROXY(SetupBonesReal, "40 55 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 80 3D", bool,(matrix3x4_t* Out, int MaxBones, int Mask, float Time), Out, MaxBones, Mask, Time)
+	CLPROXY(SetupBonesReal, IClientRenderable_SetupBones, bool,(matrix3x4_t* Out, int MaxBones, int Mask, float Time), Out, MaxBones, Mask, Time)
 };
