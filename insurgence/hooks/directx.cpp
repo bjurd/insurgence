@@ -91,6 +91,9 @@ void DirectX::Create()
 
 void DirectX::Destroy()
 {
+    kiero::unbind(16);
+    kiero::unbind(42);
+
     kiero::shutdown();
     ImGui_ImplDX9_Shutdown();
     ImGui_ImplWin32_Shutdown();
