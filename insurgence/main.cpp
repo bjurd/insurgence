@@ -9,6 +9,7 @@ void UnMain(HINSTANCE Instance)
 	{
 		Globals->ExternalConsole->Destroy();
 		Globals->HooksManager->Destroy();
+		Globals->FeaturesManager->Destroy();
 		Globals->PointersManager->Destroy();
 
 		delete Globals;
@@ -24,6 +25,9 @@ void Main(HINSTANCE Instance)
 	Globals->ExternalConsole->Create();
 
 	if (!Globals->PointersManager->Create())
+		return UnMain(Instance);
+
+	if (!Globals->FeaturesManager->Create())
 		return UnMain(Instance);
 
 	if (!Globals->HooksManager->Create())
