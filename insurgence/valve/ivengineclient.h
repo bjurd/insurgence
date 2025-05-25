@@ -8,6 +8,7 @@
 class IVEngineClient
 {
 public:
+	VPROXY(GetScreenSize, 5, void, (int& X, int& Y), VWRAP(X), VWRAP(Y))
 	VPROXY(GetLocalPlayerIndex, 12, int, (void))
 	VPROXY(GetViewAngles, 18, void, (Angle& Angles), VWRAP(Angles))
 	VPROXY(SetViewAngles, 19, void, (Angle& Angles), VWRAP(Angles))

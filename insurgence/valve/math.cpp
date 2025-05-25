@@ -140,9 +140,16 @@ int FrustumTransform(const VMatrix& WorldToSurface, const Vector& Point, Vector&
 	else
 	{
 		float iWidth = 1.f / Width;
+
 		Screen.x *= iWidth;
 		Screen.y *= iWidth;
 	}
+
+	int ScreenWidth, ScreenHeight;
+	Globals->PointersManager->Client->GetScreenSize(ScreenWidth, ScreenHeight);
+
+	Screen.x = (ScreenWidth * 0.5f) + (Screen.x * 0.5f * ScreenWidth);
+	Screen.y = (ScreenHeight * 0.5f) - (Screen.y * 0.5f * ScreenHeight);
 
 	return Hidden;
 }
