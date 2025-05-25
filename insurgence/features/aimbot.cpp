@@ -26,19 +26,13 @@ C_INSPlayer* GetAimbotTarget()
 	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
 	Vector LocalPlayerOrigin = LocalPlayer->GetAbsOrigin();
 
+	int LocalPlayerIndex = *LocalPlayer->EntIndex();
 	int Entities = Globals->PointersManager->EntityList->GetHighestEntityIndex();
 
-	for (int i = 1; i < Entities; ++i)
+	for (C_INSPlayer* Player : Helpers::PlayerIterator())
 	{
-		if (i == Globals->PointersManager->Client->GetLocalPlayerIndex())
+		if (*Player->EntIndex() == LocalPlayerIndex)
 			continue;
-
-		C_BaseEntity* Entity = (C_BaseEntity*)Globals->PointersManager->EntityList->GetClientEntity(i);
-
-		if (!Entity || strcmp(Entity->GetClassName(), "C_INSPlayer")) // TODO: IsPlayer
-			continue;
-
-		C_INSPlayer* Player = (C_INSPlayer*)Entity;
 
 		if (*Player->GetHealth() <= 0)
 			continue;
