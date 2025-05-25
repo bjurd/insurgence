@@ -72,6 +72,26 @@ void ESP::DrawOutlinedRect(LPDIRECT3DDEVICE9 Device, const float X, const float 
 
 void ESP::Render(LPDIRECT3DDEVICE9 Device)
 {
-	this->DrawOutlinedRect(Device, 10, 10, 50, 150, Color(255, 0, 0, 255));
-	this->DrawTextAt(Device, "StormyStyx Sux Dyx", 5, 160, COLOR_WHITE);
+	if (!Globals->PointersManager->Client->IsInGame())
+		return;
+
+	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
+	Vector LocalPlayerOrigin = LocalPlayer->GetAbsOrigin();
+
+	for (C_INSPlayer* Player : Helpers::PlayerIterator())
+	{
+		if (Player == LocalPlayer) continue;
+		if (*Player->GetHealth() <= 0) continue;
+
+		Vector PlayerOrigin = Player->GetAbsOrigin();
+		Vector ScreenOrigin;
+
+		if (!ScreenTransform(PlayerOrigin, ScreenOrigin))
+		{
+			this->DrawTextAt(Device, std::to_string(*Player->GetHealth()), (int)ScreenOrigin.x, (int)ScreenOrigin.y, COLOR_WHITE);
+		}
+	}
+
+	//this->DrawOutlinedRect(Device, 10, 10, 50, 150, Color(255, 0, 0, 255));
+	//this->DrawTextAt(Device, "StormyStyx Sux Dyx", 5, 160, COLOR_WHITE);
 }
