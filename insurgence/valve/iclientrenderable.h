@@ -3,6 +3,7 @@
 #include "iclientunknown.h"
 #include "vector.h"
 #include "matrix.h"
+#include "../vmt.hpp"
 
 typedef unsigned short ClientRenderHandle_t; // TODO: client_render_handle.h
 typedef unsigned short ClientShadowHandle_t;
@@ -82,7 +83,7 @@ public:
 	// currentTime parameter will affect interpolation
 	// nMaxBones specifies how many matrices pBoneToWorldOut can hold. (Should be greater than or
 	// equal to studiohdr_t::numbones. Use MAXSTUDIOBONES to be safe.)
-	virtual bool	SetupBones(matrix3x4_t* pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime) = 0;
+	virtual bool	SetupBonesTheWrongOneDontUseThis(matrix3x4_t* pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime) = 0;
 
 	virtual void	SetupWeights(const matrix3x4_t* pBoneToWorld, int nFlexWeightCount, float* pFlexWeights, float* pFlexDelayedWeights) = 0;
 	virtual void	DoAnimationEvents(void) = 0;
@@ -148,4 +149,7 @@ public:
 	virtual void	RecordToolMessage() = 0;
 
 	virtual bool	IgnoresZBuffer(void) const = 0;
+
+public:
+	CLPROXY(SetupBonesReal, "40 55 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 80 3D", bool,(matrix3x4_t* Out, int MaxBones, int Mask, float Time), Out, MaxBones, Mask, Time)
 };

@@ -8,6 +8,7 @@
 #include "../nwi/c_insplayer.h"
 #include "../valve/studio.h"
 #include "../helpers.h"
+#include "../valve/studio.h"
 
 typedef bool (*fnCreateMove)(void* _this, float SampleTime, CUserCmd* Command);
 fnCreateMove oCreateMove;
@@ -75,8 +76,13 @@ Vector GetTargetAimPosition(C_INSPlayer* Target)
 	studiohdr_t* Studio = Globals->PointersManager->ModelInfo->GetStudiomodel(Model);
 	if (!Studio) return AimPos;
 
-	matrix3x4_t Bones;
-	Target->SetupBones(&Bones, Studio->numbones, BONE_USED_BY_ANYTHING_AT_LOD(0), 0.f);
+	matrix3x4_t BoneMatrix[MAXSTUDIOBONES];
+
+	if (!Target->SetupBonesReal(BoneMatrix, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, 0.f))
+	{
+		printf("Failed to setup bones\n");
+		return Vector();
+	}
 
 	for (int i = 0; i < Studio->numbones; ++i)
 	{
@@ -85,13 +91,13 @@ Vector GetTargetAimPosition(C_INSPlayer* Target)
 		if (!Bone || !(Bone->flags & BONE_USED_BY_HITBOX))
 			continue;
 
-		Vector Origin = Bone->pos;
+		Vector Origin = Vector(BoneMatrix[i][0][3], BoneMatrix[i][1][3], BoneMatrix[i][2][3]);
 		Angle Rotation = Bone->rot.ToAngle();
-
-		std::cout << std::hex << Bone << std::endl;
 
 		return Origin;
 	}
+
+	return Vector();
 }
 
 bool __fastcall hkCreateMove(void* _this, float SampleTime, CUserCmd* Command)
