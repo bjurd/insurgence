@@ -1,10 +1,11 @@
 #include "directx.h"
 
+#include "../features/esp.h"
 #include "../globals.h"
-#include <d3d9.h>
-#include "../kiero.h"
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
+#include "../kiero.h"
+#include <d3d9.h>
 
 typedef long (*fnReset)(LPDIRECT3DDEVICE9, D3DPRESENT_PARAMETERS*);
 fnReset oReset;
@@ -59,6 +60,11 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 Device)
 
     ImGui::Render();
     ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+
+    static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
+
+    if (ESPFeature)
+        ESPFeature->Render(Device);
 
     return oEndScene(Device);
 }
