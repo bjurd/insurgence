@@ -86,7 +86,7 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 		Vector PlayerOrigin = Player->GetAbsOrigin();
 		Vector ScreenOrigin;
 
-		if (!ScreenTransform(PlayerOrigin, ScreenOrigin))
+		if (ScreenTransform(PlayerOrigin, ScreenOrigin))
 		{
 			this->DrawTextAt(Device, std::to_string(*Player->GetHealth()), (int)ScreenOrigin.x, (int)ScreenOrigin.y, COLOR_WHITE);
 		}

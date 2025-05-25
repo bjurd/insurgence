@@ -130,19 +130,19 @@ int FrustumTransform(const VMatrix& WorldToSurface, const Vector& Point, Vector&
 
 	float Width = WorldToSurface[3][0] * Point.x + WorldToSurface[3][1] * Point.y + WorldToSurface[3][2] * Point.z + WorldToSurface[3][3];
 
-	bool Hidden = Width < 0.001f;
+	bool Visible = Width >= 0.001f;
 
-	if (Hidden)
-	{
-		Screen.x *= 100000;
-		Screen.y *= 100000;
-	}
-	else
+	if (Visible)
 	{
 		float iWidth = 1.f / Width;
 
 		Screen.x *= iWidth;
 		Screen.y *= iWidth;
+	}
+	else
+	{
+		Screen.x *= 100000;
+		Screen.y *= 100000;
 	}
 
 	int ScreenWidth, ScreenHeight;
@@ -151,7 +151,7 @@ int FrustumTransform(const VMatrix& WorldToSurface, const Vector& Point, Vector&
 	Screen.x = (ScreenWidth * 0.5f) + (Screen.x * 0.5f * ScreenWidth);
 	Screen.y = (ScreenHeight * 0.5f) - (Screen.y * 0.5f * ScreenHeight);
 
-	return Hidden;
+	return Visible;
 }
 
 int ScreenTransform(const Vector& Point, Vector& Screen)
