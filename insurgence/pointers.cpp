@@ -16,10 +16,10 @@ void Pointers::Create()
 
 	this->ModelInfo = Memory::GetInterface<IVModelInfo*>("engine.dll", "VModelInfoClient006");
 
-	std::cout << "Entity List: 0x" << std::uppercase << std::hex << this->EntityList << std::endl;
-	std::cout << "Client: 0x" << std::uppercase << std::hex << this->Client << std::endl;
-	std::cout << "Client State: 0x" << std::uppercase << std::hex << this->ClientState << std::endl;
-	std::cout << "Model Info: 0x" << std::uppercase << std::hex << this->ModelInfo << std::endl;
+	std::cout << "Entity List: 0x" << std::uppercase << std::hex << this->EntityList << std::dec << std::endl;
+	std::cout << "Client: 0x" << std::uppercase << std::hex << this->Client << std::dec << std::endl;
+	std::cout << "Client State: 0x" << std::uppercase << std::hex << this->ClientState << std::dec << std::endl;
+	std::cout << "Model Info: 0x" << std::uppercase << std::hex << this->ModelInfo << std::dec << std::endl;
 }
 
 void Pointers::Destroy()
