@@ -17,7 +17,7 @@ void Memory::ParseSignature(const std::string& Signature, std::vector<uint8_t>& 
 		}
 		else
 		{
-			uint8_t Byte = static_cast<uint8_t>(std::stoi(Token, nullptr, 16));
+			uint8_t Byte = (uint8_t)std::stoi(Token, nullptr, 16);
 
 			Pattern.push_back(Byte);
 			Mask.push_back(false);
@@ -65,7 +65,7 @@ bool Memory::GetModuleInfo(const wchar_t* Name, uintptr_t& Base, size_t& Size)
 		return false;
 
 	Base = reinterpret_cast<uintptr_t>(Info.lpBaseOfDll);
-	Size = static_cast<size_t>(Info.SizeOfImage);
+	Size = (size_t)(Info.SizeOfImage);
 
 	return true;
 }
