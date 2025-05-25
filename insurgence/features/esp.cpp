@@ -85,6 +85,9 @@ bool ESP::GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Right, float&
 	const Vector Mins = Collideable->OBBMins() + Player->GetAbsOrigin();
 	const Vector Maxs = Collideable->OBBMaxs() + Player->GetAbsOrigin();
 
+	if (!Globals->PointersManager->Client->IsBoxInViewCluster(Mins, Maxs)) return false;
+	if (Globals->PointersManager->Client->CullBox(Mins, Maxs)) return false; // Redundant I think?
+
 	const Vector Corners[8] = {
 		Mins,
 		{ Mins.x, Maxs.y, Mins.z },
@@ -133,7 +136,7 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 			float Height = Bottom - Top;
 
 			this->DrawOutlinedRect(Device, Left, Top, Width, Height, Color(255, 0, 0, 255));
-			this->DrawTextAt(Device, Player->GetPlayerName(), Left, Top, COLOR_WHITE);
+			this->DrawTextAt(Device, Player->GetPlayerName(), (int)Left, (int)Top, COLOR_WHITE);
 		}
 	}
 }
