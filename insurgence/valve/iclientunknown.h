@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ihandleentity.h"
+#include "icollideable.h"
 
 class IClientRenderable;
 class C_BaseEntity;
@@ -8,7 +9,7 @@ class C_BaseEntity;
 class IClientUnknown : public IHandleEntity
 {
 public:
-	virtual void* GetCollideable() = 0;
+	virtual ICollideable* _GetCollideable() = 0; // Might be right, sigging it anyway
 	virtual void* GetClientNetworkable() = 0;
 	virtual IClientRenderable* GetClientRenderable() = 0;
 	virtual void* GetIClientEntity() = 0;

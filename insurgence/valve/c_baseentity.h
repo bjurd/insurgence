@@ -23,4 +23,6 @@ public:
 	{
 		return this->GetPredDescMap()->dataClassName;
 	}
+
+	CLPROXY(GetCollideable, C_BaseEntity_GetCollideable, ICollideable*, (void))
 };

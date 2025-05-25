@@ -70,6 +70,48 @@ void ESP::DrawOutlinedRect(LPDIRECT3DDEVICE9 Device, const float X, const float 
 	this->DrawRect(Device, X + 1, Y + 1, Width - 2, Height - 2, COLOR_BLACK);
 }
 
+bool ESP::GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Right, float& Top, float& Bottom)
+{
+	ICollideable* Collideable = Player->GetCollideable();
+
+	if (!Collideable)
+		return false;
+
+	Left = FLT_MAX;
+	Right = -FLT_MAX;
+	Top = FLT_MAX;
+	Bottom = -FLT_MAX;
+
+	const Vector Mins = Collideable->OBBMins() + Player->GetAbsOrigin();
+	const Vector Maxs = Collideable->OBBMaxs() + Player->GetAbsOrigin();
+
+	const Vector Corners[8] = {
+		Mins,
+		{ Mins.x, Maxs.y, Mins.z },
+		{ Maxs.x, Maxs.y, Mins.z },
+		{ Maxs.x, Mins.y, Mins.z },
+		Maxs,
+		{ Mins.x, Maxs.y, Maxs.z },
+		{ Mins.x, Mins.y, Maxs.z },
+		{ Maxs.x, Mins.y, Maxs.z }
+	};
+
+	for (int i = 0; i < 8; ++i)
+	{
+		Vector Temp;
+		
+		if (!ScreenTransform(Corners[i], Temp))
+			return false;
+
+		Left = fminf(Left, Temp.x);
+		Right = fmaxf(Right, Temp.x);
+		Top = fminf(Top, Temp.y);
+		Bottom = fmaxf(Bottom, Temp.y);
+	}
+
+	return true;
+}
+
 void ESP::Render(LPDIRECT3DDEVICE9 Device)
 {
 	if (!Globals->PointersManager->Client->IsInGame())
@@ -78,20 +120,20 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
 	Vector LocalPlayerOrigin = LocalPlayer->GetAbsOrigin();
 
+	float Left, Right, Top, Bottom;
+
 	for (C_INSPlayer* Player : Helpers::PlayerIterator())
 	{
 		if (Player == LocalPlayer) continue;
 		if (*Player->GetHealth() <= 0) continue;
 
-		Vector PlayerOrigin = Player->GetAbsOrigin();
-		Vector ScreenOrigin;
-
-		if (ScreenTransform(PlayerOrigin, ScreenOrigin))
+		if (this->GetPlayerBounds(Player, Left, Right, Top, Bottom))
 		{
-			this->DrawTextAt(Device, std::to_string(*Player->GetHealth()), (int)ScreenOrigin.x, (int)ScreenOrigin.y, COLOR_WHITE);
+			float Width = Right - Left;
+			float Height = Bottom - Top;
+
+			this->DrawOutlinedRect(Device, Left, Top, Width, Height, Color(255, 0, 0, 255));
+			this->DrawTextAt(Device, Player->GetPlayerName(), Left, Top, COLOR_WHITE);
 		}
 	}
-
-	//this->DrawOutlinedRect(Device, 10, 10, 50, 150, Color(255, 0, 0, 255));
-	//this->DrawTextAt(Device, "StormyStyx Sux Dyx", 5, 160, COLOR_WHITE);
 }
