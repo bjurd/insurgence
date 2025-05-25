@@ -6,6 +6,7 @@
 class C_INSPlayer : public C_BaseEntity
 {
 public:
+	PROXYVAR(GetTeam, int, 0x0120)
 	PROXYVAR(GetHealth, int, 0x012C)
 	PROXYVAR(GetFlags, char, 0x0130) // IsOnGround?
 

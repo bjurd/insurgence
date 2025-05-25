@@ -121,7 +121,7 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 		return;
 
 	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
-	Vector LocalPlayerOrigin = LocalPlayer->GetAbsOrigin();
+	int LocalTeam = *LocalPlayer->GetTeam();
 
 	float Left, Right, Top, Bottom;
 
@@ -129,6 +129,7 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 	{
 		if (Player == LocalPlayer) continue;
 		if (*Player->GetHealth() <= 0) continue;
+		if (*Player->GetTeam() == LocalTeam) continue;
 
 		if (this->GetPlayerBounds(Player, Left, Right, Top, Bottom))
 		{
