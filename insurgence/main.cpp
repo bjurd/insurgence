@@ -7,10 +7,10 @@ void UnMain(HINSTANCE Instance)
 {
 	if (Globals)
 	{
-		Globals->ExternalConsole->Destroy();
 		Globals->HooksManager->Destroy();
 		Globals->FeaturesManager->Destroy();
 		Globals->PointersManager->Destroy();
+		Globals->ExternalConsole->Destroy();
 
 		delete Globals;
 	}
