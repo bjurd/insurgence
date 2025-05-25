@@ -27,7 +27,6 @@ C_INSPlayer* GetAimbotTarget()
 	Vector LocalPlayerOrigin = LocalPlayer->GetAbsOrigin();
 
 	int LocalPlayerIndex = *LocalPlayer->EntIndex();
-	int Entities = Globals->PointersManager->EntityList->GetHighestEntityIndex();
 
 	for (C_INSPlayer* Player : Helpers::PlayerIterator())
 	{
