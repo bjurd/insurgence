@@ -94,7 +94,6 @@ uintptr_t Memory::RelativeToReal(uintptr_t Address, int Offset, int InstructionS
 		return 0;
 
 	int32_t RelativeAddress = *reinterpret_cast<int32_t*>(Address + Offset);
-	uintptr_t RealAddress = Address + InstructionSize;
 
-	return RealAddress;
+	return Address + InstructionSize + RelativeAddress;
 }
