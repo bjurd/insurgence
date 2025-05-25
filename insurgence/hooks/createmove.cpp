@@ -8,7 +8,6 @@
 #include "../nwi/c_insplayer.h"
 #include "../valve/studio.h"
 #include "../helpers.h"
-#include "../valve/studio.h"
 
 typedef bool (*fnCreateMove)(void* _this, float SampleTime, CUserCmd* Command);
 fnCreateMove oCreateMove;
