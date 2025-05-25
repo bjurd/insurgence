@@ -3,23 +3,23 @@
 #include "globals.h"
 #include "signatures.h"
 
-void Pointers::Create()
+bool Pointers::Create()
 {
-	this->EntityList = Memory::GetInterface<IClientEntityList*>("client.dll", "VClientEntityList003");
+	if (!this->PrintGrabInterface<IClientEntityList>("Entity List", "client.dll", "VClientEntityList003", this->EntityList))
+		return false;
 
-	this->Client = Memory::GetInterface<IVEngineClient*>("engine.dll", "VEngineClient014");
+	if (!this->PrintGrabInterface<IVEngineClient>("Engine Client", "engine.dll", "VEngineClient014", this->Client))
+		return false;
 
-	uintptr_t GetClientStateAddr = Memory::FindSignature("engine.dll", Engine_GetClientState);
+	if (!this->PrintGrabInterface<IVModelInfo>("Model Info", "engine.dll", "VModelInfoClient006", this->ModelInfo))
+		return false;
 
-	if (GetClientStateAddr)
-		this->ClientState = reinterpret_cast<CClientState * (__cdecl*)()>(GetClientStateAddr)(); // TODO: Something wack is happening here
+	//uintptr_t GetClientStateAddr = Memory::FindSignature("engine.dll", Engine_GetClientState);
 
-	this->ModelInfo = Memory::GetInterface<IVModelInfo*>("engine.dll", "VModelInfoClient006");
+	//if (GetClientStateAddr)
+	//	this->ClientState = reinterpret_cast<CClientState* (__cdecl*)()>(GetClientStateAddr)(); // TODO: Something wack is happening here
 
-	std::cout << "Entity List: 0x" << std::uppercase << std::hex << this->EntityList << std::dec << std::endl;
-	std::cout << "Client: 0x" << std::uppercase << std::hex << this->Client << std::dec << std::endl;
-	std::cout << "Client State: 0x" << std::uppercase << std::hex << this->ClientState << std::dec << std::endl;
-	std::cout << "Model Info: 0x" << std::uppercase << std::hex << this->ModelInfo << std::dec << std::endl;
+	return true;
 }
 
 void Pointers::Destroy()

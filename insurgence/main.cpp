@@ -23,7 +23,9 @@ void Main(HINSTANCE Instance)
 	Globals = new Insurgence();
 
 	Globals->ExternalConsole->Create();
-	Globals->PointersManager->Create();
+
+	if (!Globals->PointersManager->Create())
+		return UnMain(Instance);
 
 	if (!Globals->HooksManager->Create())
 		return UnMain(Instance);
