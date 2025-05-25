@@ -13,6 +13,9 @@ fnReset oReset;
 typedef long (*fnEndScene)(LPDIRECT3DDEVICE9);
 fnEndScene oEndScene;
 
+static uintptr_t SteamOverlayStart = 0;
+static uintptr_t SteamOverlayEnd = 0;
+
 long __fastcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* PresentationParameters)
 {
     ImGui_ImplDX9_InvalidateDeviceObjects();
@@ -26,6 +29,11 @@ long __fastcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* Present
 
 long __stdcall hkEndScene(LPDIRECT3DDEVICE9 Device)
 {
+    uintptr_t ReturnAddr = reinterpret_cast<uintptr_t>(_ReturnAddress());
+
+    if (ReturnAddr >= SteamOverlayStart && ReturnAddr < SteamOverlayEnd)
+        return oEndScene(Device); // Don't render in overlay
+
     static bool SetupUI = false;
 
     if (!SetupUI)
@@ -86,6 +94,16 @@ void DirectX::Create()
     if (kiero::bind(42, (void**)&oEndScene, hkEndScene) != kiero::Status::Success)
     {
         printf("No endscene\n");
+        return;
+    }
+
+    uintptr_t Base = 0;
+    size_t Size = 0;
+
+    if (Memory::GetModuleInfo(L"gameoverlayrenderer64.dll", Base, Size))
+    {
+        SteamOverlayStart = Base;
+        SteamOverlayEnd = Base + Size;
     }
 }
 
