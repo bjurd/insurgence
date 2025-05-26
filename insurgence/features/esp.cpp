@@ -117,6 +117,92 @@ bool ESP::GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Right, float&
 	return true;
 }
 
+void ESP::PreRender(LPDIRECT3DDEVICE9 Device)
+{
+	if (!SUCCEEDED(Device->CreateStateBlock(D3DSBT_ALL, &this->StateBlock)))
+		return;
+
+	if (!SUCCEEDED(this->StateBlock->Capture()))
+	{
+		this->StateBlock->Release();
+		return;
+	}
+
+	Device->GetTransform(D3DTS_WORLD, &this->LastWorld);
+	Device->GetTransform(D3DTS_VIEW, &this->LastView);
+	Device->GetTransform(D3DTS_PROJECTION, &this->LastProjection);
+
+	this->SetupRenderState(Device);
+}
+
+void ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
+{
+	D3DVIEWPORT9 ViewPort;
+	ViewPort.X = ViewPort.Y = 0;
+	ViewPort.MinZ = 0.0f;
+	ViewPort.MaxZ = 1.0f;
+
+	int ScreenWidth, ScreenHeight;
+	Globals->PointersManager->Client->GetScreenSize(ScreenWidth, ScreenHeight);
+
+	ViewPort.Width = (DWORD)ScreenWidth;
+	ViewPort.Height = (DWORD)ScreenHeight;
+
+	Device->SetViewport(&ViewPort);
+
+	Device->SetPixelShader(nullptr); // (Mostly) Stolen from ImGui
+	Device->SetVertexShader(nullptr);
+	Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	Device->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
+	Device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	Device->SetRenderState(D3DRS_ZENABLE, FALSE);
+	Device->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
+	Device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	Device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	Device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	Device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	Device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
+	Device->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
+	Device->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
+	Device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
+	Device->SetRenderState(D3DRS_FOGENABLE, FALSE);
+	Device->SetRenderState(D3DRS_RANGEFOGENABLE, FALSE);
+	Device->SetRenderState(D3DRS_SPECULARENABLE, FALSE);
+	Device->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+	Device->SetRenderState(D3DRS_CLIPPING, TRUE);
+	Device->SetRenderState(D3DRS_LIGHTING, FALSE);
+	Device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+	Device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	Device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+	Device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	Device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	Device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+	Device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
+	Device->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
+	Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+	Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+	Device->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+	Device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+
+	Device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
+
+	VMatrix VIdentity;
+	VIdentity.SetIdentity();
+
+	D3DMATRIX Identity = VIdentity.ToDirectX();
+
+	Device->SetTransform(D3DTS_WORLD, &Identity);
+	Device->SetTransform(D3DTS_VIEW, &Identity);
+	/* Device->SetTransform(D3DTS_PROJECTION, &Globals->PointersManager->Client->WorldToViewMatrix().ToDirectX()); */
+
+	D3DXMATRIX Ortho;
+	D3DXMatrixOrthoOffCenterLH(&Ortho, 0.f, (float)ScreenWidth, (float)ScreenHeight, 0.f, 0.f, 1.f);
+
+	Device->SetTransform(D3DTS_PROJECTION, &Ortho);
+}
+
 void ESP::Render(LPDIRECT3DDEVICE9 Device)
 {
 	if (!this->Enabled)
@@ -124,6 +210,8 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 
 	if (!Globals->PointersManager->Client->IsInGame())
 		return;
+
+	this->PreRender(Device);
 
 	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
 	int LocalTeam = *LocalPlayer->GetTeam();
@@ -147,4 +235,16 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 			if (this->Names) this->DrawTextAt(Device, Player->GetPlayerName(), (int)Left, (int)Top, COLOR_WHITE);
 		}
 	}
+
+	this->PostRender(Device);
+}
+
+void ESP::PostRender(LPDIRECT3DDEVICE9 Device)
+{
+	Device->SetTransform(D3DTS_WORLD, &this->LastWorld);
+	Device->SetTransform(D3DTS_VIEW, &this->LastView);
+	Device->SetTransform(D3DTS_PROJECTION, &this->LastProjection);
+
+	this->StateBlock->Apply();
+	this->StateBlock->Release();
 }

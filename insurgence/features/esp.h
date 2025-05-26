@@ -13,6 +13,10 @@ public: // TODO: A config system with JSON or YAML or something
 	bool Boxes;
 	bool Names;
 
+private:
+	IDirect3DStateBlock9* StateBlock;
+	D3DMATRIX LastWorld, LastView, LastProjection;
+
 public:
 	void Create();
 	void Destroy();
@@ -30,5 +34,8 @@ public:
 
 	bool GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Top, float& Right, float& Bottom);
 
+	void PreRender(LPDIRECT3DDEVICE9 Device);
+	void SetupRenderState(LPDIRECT3DDEVICE9 Device);
 	void Render(LPDIRECT3DDEVICE9 Device);
+	void PostRender(LPDIRECT3DDEVICE9 Device);
 };
