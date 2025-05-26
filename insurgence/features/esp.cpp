@@ -127,6 +127,8 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 
 	for (C_INSPlayer* Player : Helpers::PlayerIterator())
 	{
+		if (!Player) continue;
+
 		if (Player == LocalPlayer) continue;
 		if (*Player->GetHealth() <= 0) continue;
 		if (*Player->GetTeam() == LocalTeam) continue;
