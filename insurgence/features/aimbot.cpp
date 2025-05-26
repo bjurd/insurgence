@@ -29,6 +29,8 @@ C_INSPlayer* GetAimbotTarget()
 
 	for (C_INSPlayer* Player : Helpers::PlayerIterator())
 	{
+		if (!Player) continue;
+
 		if (Player == LocalPlayer) continue;
 		if (*Player->GetHealth() <= 0) continue;
 		if (*Player->GetTeam() == LocalTeam) continue;
@@ -85,9 +87,9 @@ Vector GetTargetAimPosition(C_INSPlayer* Target)
 
 		for (int h = 0; h < HitboxSet->numhitboxes; ++h)
 		{
-			mstudiobbox_t* Hitbox = Studio->GetHitbox(h, s);
+			mstudiobbox_t* Hitbox = HitboxSet->GetHitbox(h);
 
-			if (!Hitbox /* || Hitbox->group != HITGROUP_HEAD*/)
+			if (!Hitbox || Hitbox->group != HITGROUP_HEAD)
 				continue;
 
 			mstudiobone_t* Bone = Studio->GetBone(Hitbox->bone);
@@ -111,21 +113,6 @@ Vector GetTargetAimPosition(C_INSPlayer* Target)
 			return Origin +((Mins + Maxs) / 2.f);
 		}
 	}
-
-	/*for (int i = 0; i < Studio->numbones; ++i)
-	{
-		mstudiobone_t* Bone = Studio->GetBone(i);
-
-		if (!Bone || !(Bone->flags & BONE_USED_BY_HITBOX))
-			continue;
-
-		Vector Origin = Vector(BoneMatrix[i][0][3], BoneMatrix[i][1][3], BoneMatrix[i][2][3]);
-		Angle Rotation = Bone->rot.ToAngle();
-
-		return Origin;
-	}*/
-
-	printf("Found no hitboxes\n");
 
 	return AimPos;
 }
