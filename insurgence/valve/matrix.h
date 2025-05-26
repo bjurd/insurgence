@@ -39,6 +39,26 @@ public:
 		m[3][3] = 1.f;
 	}
 
+	VMatrix(float* Matrix)
+	{
+		m[0][0] = Matrix[0];
+		m[0][1] = Matrix[1];
+		m[0][2] = Matrix[2];
+		m[0][3] = Matrix[3];
+		m[1][0] = Matrix[4];
+		m[1][1] = Matrix[5];
+		m[1][2] = Matrix[6];
+		m[1][3] = Matrix[7];
+		m[2][0] = Matrix[8];
+		m[2][1] = Matrix[9];
+		m[2][2] = Matrix[10];
+		m[2][3] = Matrix[11];
+		m[3][0] = Matrix[12];
+		m[3][1] = Matrix[13];
+		m[3][2] = Matrix[14];
+		m[3][3] = Matrix[15];
+	}
+
 	inline float* operator[](int i)
 	{
 		return m[i];
