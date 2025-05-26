@@ -1,11 +1,13 @@
 #include "directx.h"
 
-#include "../features/esp.h"
 #include "../globals.h"
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
 #include "../kiero.h"
 #include <d3d9.h>
+
+#include "../features/esp.h"
+#include "../features/menu.h"
 
 typedef long (*fnReset)(LPDIRECT3DDEVICE9, D3DPRESENT_PARAMETERS*);
 fnReset oReset;
@@ -34,45 +36,18 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 Device)
     if (ReturnAddr >= SteamOverlayStart && ReturnAddr < SteamOverlayEnd)
         return oEndScene(Device); // Don't render in overlay
 
-    static bool SetupUI = false;
+    static Menu* MenuFeature = (Menu*)Globals->FeaturesManager->Get("Menu");
 
-    if (!SetupUI)
-    {
-        SetupUI = true;
-
-        ImGui::CreateContext();
-
-        ImGuiIO& IO = ImGui::GetIO();
-        IO.WantCaptureMouse = true;
-        IO.WantCaptureKeyboard = true;
-        IO.IniFilename = NULL;
-        IO.LogFilename = NULL;
-
-        D3DDEVICE_CREATION_PARAMETERS CreationParameters;
-        Device->GetCreationParameters(&CreationParameters);
-
-        ImGui_ImplWin32_Init(CreationParameters.hFocusWindow);
-        ImGui_ImplDX9_Init(Device);
-    }
+    if (MenuFeature)
+        MenuFeature->Setup(Device);
 
     static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
 
     if (ESPFeature)
         ESPFeature->Render(Device);
 
-    ImGui_ImplWin32_NewFrame();
-    ImGui_ImplDX9_NewFrame();
-    ImGui::NewFrame();
-
-    if (ImGui::Begin("Hello World", nullptr, ImGuiWindowFlags_NoCollapse))
-    {
-        ImGui::End();
-    }
-
-    ImGui::EndFrame();
-
-    ImGui::Render();
-    ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+    if (MenuFeature)
+        MenuFeature->Render();
 
     return oEndScene(Device);
 }

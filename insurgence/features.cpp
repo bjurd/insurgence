@@ -4,11 +4,13 @@
 
 #include "features/aimbot.h"
 #include "features/esp.h"
+#include "features/menu.h"
 
 bool Features::Create()
 {
 	this->List["Aimbot"] = new Aimbot();
 	this->List["ESP"] = new ESP();
+	this->List["Menu"] = new Menu();
 
 	for (auto Current : this->List)
 		Current.second->Create();
