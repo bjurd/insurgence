@@ -9,16 +9,19 @@
 #include "../features/esp.h"
 #include "../features/menu.h"
 
-typedef long (*fnReset)(LPDIRECT3DDEVICE9, D3DPRESENT_PARAMETERS*);
+typedef HRESULT(*fnReset)(LPDIRECT3DDEVICE9, D3DPRESENT_PARAMETERS*);
 fnReset oReset;
 
-typedef long (*fnEndScene)(LPDIRECT3DDEVICE9);
+typedef HRESULT(*fnPresent)(LPDIRECT3DDEVICE9, const RECT*, const RECT*, HWND, const RGNDATA*);
+fnPresent oPresent;
+
+typedef HRESULT(*fnEndScene)(LPDIRECT3DDEVICE9);
 fnEndScene oEndScene;
 
 static uintptr_t SteamOverlayStart = 0;
 static uintptr_t SteamOverlayEnd = 0;
 
-long __fastcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* PresentationParameters)
+HRESULT __stdcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* PresentationParameters)
 {
     ImGui_ImplDX9_InvalidateDeviceObjects();
 
@@ -29,7 +32,17 @@ long __fastcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* Present
     return Result;
 }
 
-long __stdcall hkEndScene(LPDIRECT3DDEVICE9 Device)
+HRESULT __stdcall hkPresent(LPDIRECT3DDEVICE9 Device, const RECT* Source, const RECT* Destination, HWND Window, const RGNDATA* Dirty)
+{
+    static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
+
+    if (ESPFeature)
+        ESPFeature->Render(Device);
+
+    return oPresent(Device, Source, Destination, Window, Dirty);
+}
+
+HRESULT __stdcall hkEndScene(LPDIRECT3DDEVICE9 Device)
 {
     uintptr_t ReturnAddr = reinterpret_cast<uintptr_t>(_ReturnAddress());
 
@@ -39,15 +52,10 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 Device)
     static Menu* MenuFeature = (Menu*)Globals->FeaturesManager->Get("Menu");
 
     if (MenuFeature)
+    {
         MenuFeature->Setup(Device);
-
-    static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
-
-    if (ESPFeature)
-        ESPFeature->Render(Device);
-
-    if (MenuFeature)
         MenuFeature->Render();
+    }
 
     return oEndScene(Device);
 }
@@ -63,6 +71,12 @@ void DirectX::Create()
     if (kiero::bind(16, (void**)&oReset, hkReset) != kiero::Status::Success)
     {
         printf("No reset\n");
+        return;
+    }
+
+    if (kiero::bind(17, (void**)&oPresent, hkPresent) != kiero::Status::Success)
+    {
+        printf("No present\n");
         return;
     }
 
@@ -85,6 +99,7 @@ void DirectX::Create()
 void DirectX::Destroy()
 {
     kiero::unbind(16);
+    kiero::unbind(17);
     kiero::unbind(42);
 
     kiero::shutdown();
