@@ -18,7 +18,8 @@ public:
 
     C_INSPlayer* operator*() const
     {
-        return (C_INSPlayer*)Globals->PointersManager->EntityList->GetClientEntity(Index);
+        C_INSPlayer* Player = (C_INSPlayer*)Globals->PointersManager->EntityList->GetClientEntity(Index);
+        return Player;
     }
 
     PlayerIterator& operator++()
