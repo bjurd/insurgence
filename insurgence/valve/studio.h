@@ -47,6 +47,11 @@ struct mstudiobone_t
 
 	int					sznameindex;
 
+	inline char* const GetName(void) const
+	{
+		return ((char*)this) + sznameindex;
+	}
+
 	int		 			parent;
 	int					bonecontroller[6];
 
@@ -60,6 +65,16 @@ struct mstudiobone_t
 	matrix3x4_t			poseToBone;
 	Quaternion			qAlignment;
 	int					flags;
+
+	int					proctype;
+	int					procindex;
+	mutable int			physicsbone;
+
+	int					surfacepropidx;
+
+	int					contents;
+
+	int					unused[8];
 };
 
 struct mstudiobbox_t
@@ -68,11 +83,13 @@ struct mstudiobbox_t
 
 	int					bone;
 
-	int					group;				// intersection group
-	Vector				bbmin;				// bounding box
+	int					group;
+	Vector				bbmin;
 	Vector				bbmax;
 
-	int					szhitboxnameindex;	// offset to the name of the hitbox.
+	int					szhitboxnameindex;
+
+	int					unused[8];
 };
 
 struct mstudiohitboxset_t
@@ -102,19 +119,19 @@ struct studiohdr_t
 	char				name[64];
 	int					length;
 
-	Vector				eyeposition;	// ideal eye position
+	Vector				eyeposition;
 
-	Vector				illumposition;	// illumination center
+	Vector				illumposition;
 
-	Vector				hull_min;		// ideal movement hull size
+	Vector				hull_min;
 	Vector				hull_max;
 
-	Vector				view_bbmin;		// clipping bounding box
+	Vector				view_bbmin;
 	Vector				view_bbmax;
 
 	int					flags;
 
-	int					numbones;			// bones
+	int					numbones;
 	int					boneindex;
 
 	inline mstudiobone_t* GetBone(int i) const
@@ -122,7 +139,7 @@ struct studiohdr_t
 		return (mstudiobone_t*)(((char*)this) + boneindex) + i;
 	};
 
-	int					numbonecontrollers;		// bone controllers
+	int					numbonecontrollers;
 	int					bonecontrollerindex;
 
 	int					numhitboxsets;
@@ -142,4 +159,100 @@ struct studiohdr_t
 
 		return Set->GetHitbox(i);
 	};
+
+	int					numlocalanim;
+	int					localanimindex;
+
+	int					numlocalseq;
+	int					localseqindex;
+
+	mutable int			activitylistversion;
+	mutable int			eventsindexed;
+
+	int					numtextures;
+	int					textureindex;
+
+	int					numcdtextures;
+	int					cdtextureindex;
+
+	int					numskinref;
+	int					numskinfamilies;
+	int					skinindex;
+
+	int					numbodyparts;
+	int					bodypartindex;
+
+	int					numlocalattachments;
+	int					localattachmentindex;
+
+	int					numlocalnodes;
+	int					localnodeindex;
+	int					localnodenameindex;
+
+	int					numflexdesc;
+	int					flexdescindex;
+
+	int					numflexcontrollers;
+	int					flexcontrollerindex;
+
+	int					numflexrules;
+	int					flexruleindex;
+
+	int					numikchains;
+	int					ikchainindex;
+
+	int					nummouths;
+	int					mouthindex;
+
+	int					numlocalposeparameters;
+	int					localposeparamindex;
+
+	int					surfacepropindex;
+
+	int					keyvalueindex;
+	int					keyvaluesize;
+
+	int					numlocalikautoplaylocks;
+	int					localikautoplaylockindex;
+
+	float				mass;
+	int					contents;
+
+	int					numincludemodels;
+	int					includemodelindex;
+
+	mutable void*		virtualModel;
+
+	int					szanimblocknameindex;
+
+	int					numanimblocks;
+	int					animblockindex;
+
+	mutable void*		animblockModel;
+
+	int					bonetablebynameindex;
+
+	void*				pVertexBase;
+	void*				pIndexBase;
+
+	char				constdirectionallightdot;
+
+	char				rootLOD;
+
+	char				numAllowedRootLODs;
+
+	char				unused[1];
+
+	int					unused4;
+
+	int					numflexcontrollerui;
+	int					flexcontrolleruiindex;
+
+	float				flVertAnimFixedPointScale;
+
+	int					unused2[1];
+
+	int					studiohdr2index;
+
+	int					unused3[1];
 };
