@@ -117,22 +117,31 @@ bool ESP::GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Right, float&
 	return true;
 }
 
-void ESP::PreRender(LPDIRECT3DDEVICE9 Device)
+void ESP::SetupRenderStateBlock(LPDIRECT3DDEVICE9 Device)
 {
-	if (!SUCCEEDED(Device->CreateStateBlock(D3DSBT_ALL, &this->StateBlock)))
-		return;
+	if (this->RenderStateBlock)
+		this->DestroyStateBlocks();
 
-	if (!SUCCEEDED(this->StateBlock->Capture()))
+	Device->BeginStateBlock();
 	{
-		this->StateBlock->Release();
-		return;
+		this->SetupRenderState(Device);
 	}
+	Device->EndStateBlock(&this->RenderStateBlock);
+}
 
-	Device->GetTransform(D3DTS_WORLD, &this->LastWorld);
-	Device->GetTransform(D3DTS_VIEW, &this->LastView);
-	Device->GetTransform(D3DTS_PROJECTION, &this->LastProjection);
-
-	this->SetupRenderState(Device);
+void ESP::DestroyStateBlocks()
+{
+	if (this->RenderStateBlock)
+	{
+		this->RenderStateBlock->Release();
+		this->RenderStateBlock = nullptr;
+	}
+	
+	if (this->GameStateBlock)
+	{
+		this->GameStateBlock->Release();
+		this->GameStateBlock = nullptr;
+	}
 }
 
 void ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
@@ -174,7 +183,7 @@ void ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
 	Device->SetRenderState(D3DRS_CLIPPING, TRUE);
 	Device->SetRenderState(D3DRS_LIGHTING, FALSE);
 	Device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-	Device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	Device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
 	Device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 	Device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	Device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
@@ -188,10 +197,8 @@ void ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
 
 	Device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
 
-	VMatrix VIdentity;
-	VIdentity.SetIdentity();
-
-	D3DMATRIX Identity = VIdentity.ToDirectX();
+	D3DXMATRIX Identity;
+	D3DXMatrixIdentity(&Identity);
 
 	Device->SetTransform(D3DTS_WORLD, &Identity);
 	Device->SetTransform(D3DTS_VIEW, &Identity);
@@ -205,46 +212,52 @@ void ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
 
 void ESP::Render(LPDIRECT3DDEVICE9 Device)
 {
-	if (!this->Enabled)
+	if (!this->Enabled || !Globals->PointersManager->Client->IsInGame())
 		return;
 
-	if (!Globals->PointersManager->Client->IsInGame())
-		return;
-
-	this->PreRender(Device);
-
-	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
-	int LocalTeam = *LocalPlayer->GetTeam();
-
-	float Left, Right, Top, Bottom;
-
-	for (C_INSPlayer* Player : Helpers::PlayerIterator())
+	if (!this->GameStateBlock)
 	{
-		if (!Player) continue;
-
-		if (Player == LocalPlayer) continue;
-		if (*Player->GetHealth() <= 0) continue;
-		if (*Player->GetTeam() == LocalTeam) continue;
-
-		if (this->GetPlayerBounds(Player, Left, Right, Top, Bottom))
-		{
-			float Width = Right - Left;
-			float Height = Bottom - Top;
-
-			if (this->Boxes) this->DrawOutlinedRect(Device, Left, Top, Width, Height, Color(255, 0, 0, 255));
-			if (this->Names) this->DrawTextAt(Device, Player->GetPlayerName(), (int)Left, (int)Top, COLOR_WHITE);
-		}
+		if (FAILED(Device->CreateStateBlock(D3DSBT_ALL, &this->GameStateBlock)))
+			return;
 	}
 
-	this->PostRender(Device);
-}
+	if (!this->RenderStateBlock)
+		this->SetupRenderStateBlock(Device);
 
-void ESP::PostRender(LPDIRECT3DDEVICE9 Device)
-{
-	Device->SetTransform(D3DTS_WORLD, &this->LastWorld);
-	Device->SetTransform(D3DTS_VIEW, &this->LastView);
-	Device->SetTransform(D3DTS_PROJECTION, &this->LastProjection);
+	if (FAILED(this->GameStateBlock->Capture()))
+		return;
 
-	this->StateBlock->Apply();
-	this->StateBlock->Release();
+	if (FAILED(this->RenderStateBlock->Apply()))
+		return;
+
+	this->InScene = true;
+	Device->BeginScene();
+	{
+		C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
+		int LocalTeam = *LocalPlayer->GetTeam();
+
+		float Left, Right, Top, Bottom;
+
+		for (C_INSPlayer* Player : Helpers::PlayerIterator())
+		{
+			if (!Player) continue;
+
+			if (Player == LocalPlayer) continue;
+			if (*Player->GetHealth() <= 0) continue;
+			if (*Player->GetTeam() == LocalTeam) continue;
+
+			if (this->GetPlayerBounds(Player, Left, Right, Top, Bottom))
+			{
+				float Width = Right - Left;
+				float Height = Bottom - Top;
+
+				if (this->Boxes) this->DrawOutlinedRect(Device, Left, Top, Width, Height, Color(255, 0, 0, 255));
+				if (this->Names) this->DrawTextAt(Device, Player->GetPlayerName(), (int)Left, (int)Top, COLOR_WHITE);
+			}
+		}
+	}
+	Device->EndScene();
+	this->InScene = false;
+
+	this->GameStateBlock->Apply();
 }

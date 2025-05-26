@@ -23,9 +23,20 @@ static uintptr_t SteamOverlayEnd = 0;
 
 HRESULT __stdcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* PresentationParameters)
 {
+    static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
+
+    if (ESPFeature)
+        ESPFeature->DestroyStateBlocks();
+
     ImGui_ImplDX9_InvalidateDeviceObjects();
 
-    long Result = oReset(Device, PresentationParameters);
+    HRESULT Result = oReset(Device, PresentationParameters);
+
+    if (SUCCEEDED(Result))
+    {
+        if (ESPFeature)
+            ESPFeature->SetupRenderStateBlock(Device);
+    }
 
     ImGui_ImplDX9_CreateDeviceObjects();
 
@@ -44,6 +55,11 @@ HRESULT __stdcall hkPresent(LPDIRECT3DDEVICE9 Device, const RECT* Source, const 
 
 HRESULT __stdcall hkEndScene(LPDIRECT3DDEVICE9 Device)
 {
+    static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
+
+    if (ESPFeature && ESPFeature->InScene)
+        return oEndScene(Device);
+
     uintptr_t ReturnAddr = reinterpret_cast<uintptr_t>(_ReturnAddress());
 
     if (ReturnAddr >= SteamOverlayStart && ReturnAddr < SteamOverlayEnd)
