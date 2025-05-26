@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vector.h"
+#include <d3d9.h>
 
 typedef float matrix3x4_t[3][4];
 
@@ -58,9 +59,11 @@ public:
 		return &m[0][0];
 	}
 
+	void SetIdentity();
+
+	void SetForward(const Vector& Forward);
 	void SetLeft(const Vector& Left);
 	void SetUp(const Vector& Up);
-	void SetForward(const Vector& Forward);
 		 
 	void GetBasisVectors(Vector& Forward, Vector& Left, Vector& Up);
 	void SetBasisVectors(const Vector& Forward, const Vector& Left, const Vector& Up);
@@ -69,4 +72,6 @@ public:
 	void SetTranslation(const Vector& Translation);
 
 	void GetAngles(Angle& Angles);
+
+	D3DMATRIX ToDirectX();
 };

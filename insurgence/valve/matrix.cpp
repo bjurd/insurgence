@@ -3,6 +3,14 @@
 #include "vector.h"
 #include "math.h"
 
+void VMatrix::SetIdentity()
+{
+	m[0][0] = 1.0f; m[0][1] = 0.0f; m[0][2] = 0.0f; m[0][3] = 0.0f;
+	m[1][0] = 0.0f; m[1][1] = 1.0f; m[1][2] = 0.0f; m[1][3] = 0.0f;
+	m[2][0] = 0.0f; m[2][1] = 0.0f; m[2][2] = 1.0f; m[2][3] = 0.0f;
+	m[3][0] = 0.0f; m[3][1] = 0.0f; m[3][2] = 0.0f; m[3][3] = 1.0f;
+}
+
 void VMatrix::SetForward(const Vector& Forward)
 {
 	m[0][0] = Forward.x;
@@ -71,4 +79,12 @@ void VMatrix::GetAngles(Angle& Angles)
 	float d2 = DotProduct(Up, Up);
 
 	Angles.r = RAD2DEG(atan2f(d1, d2));
+}
+
+D3DMATRIX VMatrix::ToDirectX()
+{
+	D3DMATRIX DirectX;
+	memcpy(&DirectX, this->m, sizeof(DirectX));
+
+	return DirectX;
 }
