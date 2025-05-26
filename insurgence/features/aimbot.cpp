@@ -66,16 +66,53 @@ Vector GetTargetAimPosition(C_INSPlayer* Target)
 
 	studiohdr_t* Studio = Globals->PointersManager->ModelInfo->GetStudiomodel(Model);
 	if (!Studio) return AimPos;
+	if (Studio->numhitboxsets < 1) return AimPos;
 
-	matrix3x4_t BoneMatrix[MAXSTUDIOBONES];
+	matrix3x4_t BoneMatrices[MAXSTUDIOBONES];
 
-	if (!Target->SetupBonesReal(BoneMatrix, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, 0.f))
+	if (!Target->SetupBonesReal(BoneMatrices, MAXSTUDIOBONES, BONE_USED_BY_ANYTHING, 0.f))
 	{
 		printf("Failed to setup bones\n");
 		return Vector();
 	}
 
-	for (int i = 0; i < Studio->numbones; ++i)
+	for (int s = 0; s < Studio->numhitboxsets; ++s)
+	{
+		mstudiohitboxset_t* HitboxSet = Studio->GetHitboxSet(s);
+
+		if (!HitboxSet || HitboxSet->numhitboxes < 1)
+			continue;
+
+		for (int h = 0; h < HitboxSet->numhitboxes; ++h)
+		{
+			mstudiobbox_t* Hitbox = Studio->GetHitbox(h, s);
+
+			if (!Hitbox /* || Hitbox->group != HITGROUP_HEAD*/)
+				continue;
+
+			mstudiobone_t* Bone = Studio->GetBone(Hitbox->bone);
+
+			if (!Bone || !(Bone->flags & BONE_USED_BY_HITBOX)) // Should never happen
+				continue;
+
+			VMatrix BoneMatrix = BoneMatrices[Hitbox->bone];
+
+			Vector Origin;
+			Angle Angles;
+
+			BoneMatrix.GetTranslation(Origin);
+			BoneMatrix.GetAngles(Angles);
+
+			Vector Mins = Hitbox->bbmin;
+			Vector Maxs = Hitbox->bbmax;
+			VectorRotate(Mins, Angles, Mins);
+			VectorRotate(Maxs, Angles, Maxs);
+
+			return Origin +((Mins + Maxs) / 2.f);
+		}
+	}
+
+	/*for (int i = 0; i < Studio->numbones; ++i)
 	{
 		mstudiobone_t* Bone = Studio->GetBone(i);
 
@@ -86,9 +123,11 @@ Vector GetTargetAimPosition(C_INSPlayer* Target)
 		Angle Rotation = Bone->rot.ToAngle();
 
 		return Origin;
-	}
+	}*/
 
-	return Vector();
+	printf("Found no hitboxes\n");
+
+	return AimPos;
 }
 
 void Aimbot::OnCreateMove(CUserCmd* Command)

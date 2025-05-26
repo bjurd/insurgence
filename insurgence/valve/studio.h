@@ -31,12 +31,22 @@
 #define BONE_USED_BY_VERTEX_AT_LOD(lod) ( BONE_USED_BY_VERTEX_LOD0 << (lod) )
 #define BONE_USED_BY_ANYTHING_AT_LOD(lod) ( ( BONE_USED_BY_ANYTHING & ~BONE_USED_BY_VERTEX_MASK ) | BONE_USED_BY_VERTEX_AT_LOD(lod) )
 
+#define	HITGROUP_GENERIC	0 // shareddefs.h
+#define	HITGROUP_HEAD		1
+#define	HITGROUP_CHEST		2
+#define	HITGROUP_STOMACH	3
+#define HITGROUP_LEFTARM	4	
+#define HITGROUP_RIGHTARM	5
+#define HITGROUP_LEFTLEG	6
+#define HITGROUP_RIGHTLEG	7
+#define HITGROUP_GEAR		10
+
 struct mstudiobone_t
 {
-	static datamap_t	m_DataMap;
+	// static datamap_t	m_DataMap;
 
 	int					sznameindex;
-	inline char* const	pszName(void) const { return ((char*)this) + sznameindex; }
+
 	int		 			parent;
 	int					bonecontroller[6];
 
@@ -52,9 +62,37 @@ struct mstudiobone_t
 	int					flags;
 };
 
+struct mstudiobbox_t
+{
+	// static datamap_t	m_DataMap;
+
+	int					bone;
+
+	int					group;				// intersection group
+	Vector				bbmin;				// bounding box
+	Vector				bbmax;
+
+	int					szhitboxnameindex;	// offset to the name of the hitbox.
+};
+
+struct mstudiohitboxset_t
+{
+	// static datamap_t	m_DataMap;
+
+	int					sznameindex;
+
+	int					numhitboxes;
+	int					hitboxindex;
+
+	inline mstudiobbox_t* GetHitbox(int i) const
+	{
+		return (mstudiobbox_t*)(((char*)this) + hitboxindex) + i;
+	};
+};
+
 struct studiohdr_t
 {
-	static datamap_t	m_DataMap;
+	// static datamap_t	m_DataMap;
 
 	int					id;
 	int					version;
@@ -89,4 +127,19 @@ struct studiohdr_t
 
 	int					numhitboxsets;
 	int					hitboxsetindex;
+
+	mstudiohitboxset_t* GetHitboxSet(int i) const
+	{
+		return (mstudiohitboxset_t*)(((char*)this) + hitboxsetindex) + i;
+	};
+
+	inline mstudiobbox_t* GetHitbox(int i, int set) const
+	{
+		mstudiohitboxset_t const* Set = GetHitboxSet(set);
+
+		if (!Set)
+			return NULL;
+
+		return Set->GetHitbox(i);
+	};
 };
