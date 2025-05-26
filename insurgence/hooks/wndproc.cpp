@@ -22,6 +22,7 @@ LRESULT __stdcall hkWndProc(HWND Window, UINT Message, WPARAM Wide, LPARAM Long)
         switch (Message)
         {
             // Don't bother with IO since they're both forced to true in Menu setup
+            case WM_INPUT:
             case WM_MOUSEMOVE:
             case WM_LBUTTONDOWN:
             case WM_LBUTTONUP:
