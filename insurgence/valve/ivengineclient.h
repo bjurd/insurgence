@@ -19,4 +19,5 @@ public:
 	VPROXY(IsBoxInViewCluster, 35, int, (const Vector& Mins, const Vector& Maxs), VWRAP(Mins), VWRAP(Maxs))
 	VPROXY(CullBox, 36, bool, (const Vector& Mins, const Vector& Maxs), VWRAP(Mins), VWRAP(Maxs))
 	VPROXY(WorldToScreenMatrix, 39, VMatrix&, (void))
+	VPROXY(WorldToViewMatrix, 40, VMatrix&, (void))
 };
