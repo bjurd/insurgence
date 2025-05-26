@@ -110,7 +110,7 @@ Vector GetTargetAimPosition(C_INSPlayer* Target)
 			VectorRotate(Mins, Angles, Mins);
 			VectorRotate(Maxs, Angles, Maxs);
 
-			return Origin +((Mins + Maxs) / 2.f);
+			return Origin + ((Mins + Maxs) / 2.f);
 		}
 	}
 
