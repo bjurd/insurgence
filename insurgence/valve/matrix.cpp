@@ -1,6 +1,7 @@
 #include "matrix.h"
 
 #include "vector.h"
+#include "math.h"
 
 void VMatrix::SetForward(const Vector& Forward)
 {
@@ -57,4 +58,17 @@ void VMatrix::SetTranslation(const Vector& Translation)
 	m[0][3] = Translation.x;
 	m[1][3] = Translation.y;
 	m[2][3] = Translation.z;
+}
+
+void VMatrix::GetAngles(Angle& Angles)
+{
+	Vector Forward, Left, Up;
+	this->GetBasisVectors(Forward, Left, Up);
+
+	VectorAngles(Forward, Angles);
+
+	float d1 = DotProduct(Left, Up);
+	float d2 = DotProduct(Up, Up);
+
+	Angles.r = RAD2DEG(atan2f(d1, d2));
 }
