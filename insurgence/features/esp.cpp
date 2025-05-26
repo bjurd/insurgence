@@ -26,7 +26,7 @@ void ESP::SetupFont(LPDIRECT3DDEVICE9 Device)
 	D3DXCreateFont(Device, 24, 0, FW_NORMAL, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Tahoma"), &this->Font);
 }
 
-void ESP::DrawTextAt(LPDIRECT3DDEVICE9 Device, std::string Text, const int X, const int Y, const Color TextColor)
+void ESP::DrawTextAt(LPDIRECT3DDEVICE9 Device, const std::string Text, const int X, const int Y, const Color TextColor)
 {
 	if (!this->Font)
 		this->SetupFont(Device);
