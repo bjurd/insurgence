@@ -10,7 +10,9 @@
 
 void ESP::Create()
 {
-	
+	this->Enabled = true;
+	this->Boxes = true;
+	this->Names = true;
 }
 
 void ESP::Destroy()
@@ -117,6 +119,9 @@ bool ESP::GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Right, float&
 
 void ESP::Render(LPDIRECT3DDEVICE9 Device)
 {
+	if (!this->Enabled)
+		return;
+
 	if (!Globals->PointersManager->Client->IsInGame())
 		return;
 
@@ -138,8 +143,8 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 			float Width = Right - Left;
 			float Height = Bottom - Top;
 
-			this->DrawOutlinedRect(Device, Left, Top, Width, Height, Color(255, 0, 0, 255));
-			this->DrawTextAt(Device, Player->GetPlayerName(), (int)Left, (int)Top, COLOR_WHITE);
+			if (this->Boxes) this->DrawOutlinedRect(Device, Left, Top, Width, Height, Color(255, 0, 0, 255));
+			if (this->Names) this->DrawTextAt(Device, Player->GetPlayerName(), (int)Left, (int)Top, COLOR_WHITE);
 		}
 	}
 }

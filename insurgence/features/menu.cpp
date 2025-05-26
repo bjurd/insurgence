@@ -1,7 +1,11 @@
 #include "menu.h"
 
+#include "../globals.h"
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
+
+#include "esp.h"
+#include "aimbot.h"
 
 void Menu::Create()
 {
@@ -49,9 +53,18 @@ void Menu::Render()
     ImGui_ImplDX9_NewFrame();
     ImGui::NewFrame();
 
-    if (ImGui::Begin("Hello World", nullptr, ImGuiWindowFlags_NoCollapse))
+    if (ImGui::Begin("Assistance Software", nullptr, ImGuiWindowFlags_NoCollapse))
     {
+        static Aimbot* AimbotFeature = (Aimbot*)Globals->FeaturesManager->Get("Aimbot");
 
+        static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
+
+        if (ESPFeature)
+        {
+            ImGui::Checkbox("ESP", &ESPFeature->Enabled);
+            ImGui::Checkbox("Player Boxes", &ESPFeature->Boxes);
+            ImGui::Checkbox("Player Names", &ESPFeature->Names);
+        }
     }
     ImGui::End();
 

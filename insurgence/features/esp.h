@@ -8,6 +8,11 @@
 
 class ESP : public Feature
 {
+public: // TODO: A config system with JSON or YAML or something
+	bool Enabled;
+	bool Boxes;
+	bool Names;
+
 public:
 	void Create();
 	void Destroy();
