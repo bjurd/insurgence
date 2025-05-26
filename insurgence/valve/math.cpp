@@ -23,6 +23,11 @@ float __fastcall VectorNormalize(Vector& Target)
 	return Radius;
 }
 
+float DotProduct(const Vector& A, const Vector& B)
+{
+	return(A.x * B.x + A.y * B.y + A.z * B.z);
+}
+
 void VectorVectors(const Vector& Forward, Vector& Right, Vector& Up)
 {
 	Vector Temp;
@@ -81,6 +86,22 @@ void VectorAngles(const Vector& Forward, Angle& Angles)
 	Angles.r = 0.f;
 }
 
+void VectorRotate(const Vector& Target, const matrix3x4_t& Rotation, Vector& Output)
+{
+	// DotProduct doesn't accept matrix3x4_t so do it manually, ;(
+	Output.x = Target.x * Rotation[0][0] + Target.y * Rotation[0][1] + Target.z * Rotation[0][2];
+	Output.y = Target.x * Rotation[1][0] + Target.y * Rotation[1][1] + Target.z * Rotation[1][2];
+	Output.z = Target.x * Rotation[2][0] + Target.y * Rotation[2][1] + Target.z * Rotation[2][2];
+}
+
+void VectorRotate(const Vector& Target, const Angle& Rotation, Vector& Output)
+{
+	matrix3x4_t Rotate;
+	AngleMatrix(Rotation, Rotate);
+
+	VectorRotate(Target, Rotate, Output);
+}
+
 void AngleVectors(const Angle& Angles, Vector& Forward)
 {
 	float RadPitch = DEG2RAD(Angles.p);
@@ -120,6 +141,41 @@ void AngleVectors(const Angle& Angles, Vector& Forward, Vector& Right, Vector& U
 	Up.x = Cr * Sp * Cy + Sr * Sy;
 	Up.y = Cr * Sp * Sy - Sr * Cy;
 	Up.z = Cr * Cp;
+}
+
+void AngleMatrix(const Angle& Angles, matrix3x4_t& Matrix)
+{
+	float RadPitch = DEG2RAD(Angles.p);
+	float RadYaw = DEG2RAD(Angles.y);
+	float RadRoll = DEG2RAD(Angles.r);
+
+	float Sp = sinf(RadPitch);
+	float Cp = cosf(RadPitch);
+	float Sy = sinf(RadYaw);
+	float Cy = cosf(RadYaw);
+	float Sr = sinf(RadRoll);
+	float Cr = cosf(RadRoll);
+
+	Matrix[0][0] = Cp * Cy;
+	Matrix[1][0] = Cp * Sy;
+	Matrix[2][0] = -Sp;
+
+	float CrCy = Cr * Cy;
+	float CrSy = Cr * Sy;
+	float SrCy = Sr * Cy;
+	float SrSy = Sr * Sy;
+
+	Matrix[0][1] = Sp * SrCy - CrSy;
+	Matrix[1][1] = Sp * SrSy + CrCy;
+	Matrix[2][1] = Sr * Cp;
+
+	Matrix[0][2] = (Sp * CrCy + SrSy);
+	Matrix[1][2] = (Sp * CrSy - SrCy);
+	Matrix[2][2] = Cr * Cp;
+
+	Matrix[0][3] = 0.f;
+	Matrix[1][3] = 0.f;
+	Matrix[2][3] = 0.f;
 }
 
 int FrustumTransform(const VMatrix& WorldToSurface, const Vector& Point, Vector& Screen)
