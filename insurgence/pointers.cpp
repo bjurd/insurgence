@@ -2,16 +2,17 @@
 
 #include "globals.h"
 #include "signatures.h"
+#include "valve/interfaces.h"
 
 bool Pointers::Create()
 {
-	if (!this->PrintGrabInterface<IClientEntityList>("Entity List", "client.dll", "VClientEntityList003", this->EntityList))
+	if (!this->PrintGrabInterface<IClientEntityList>("Entity List", "client.dll", VCLIENTENTITYLIST_INTERFACE_VERSION, this->EntityList))
 		return false;
 
-	if (!this->PrintGrabInterface<IVEngineClient>("Engine Client", "engine.dll", "VEngineClient014", this->Client))
+	if (!this->PrintGrabInterface<IVEngineClient>("Engine Client", "engine.dll", VENGINE_CLIENT_INTERFACE_VERSION, this->Client))
 		return false;
 
-	if (!this->PrintGrabInterface<IVModelInfo>("Model Info", "engine.dll", "VModelInfoClient006", this->ModelInfo))
+	if (!this->PrintGrabInterface<IVModelInfo>("Model Info", "engine.dll", VMODELINFO_CLIENT_INTERFACE_VERSION, this->ModelInfo))
 		return false;
 
 	//uintptr_t GetClientStateAddr = Memory::FindSignature("engine.dll", Engine_GetClientState);

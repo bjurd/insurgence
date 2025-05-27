@@ -1,0 +1,9 @@
+#pragma once
+
+// client.dll
+#define VCLIENTENTITYLIST_INTERFACE_VERSION "VClientEntityList003"
+
+// engine.dll
+#define VENGINE_CLIENT_INTERFACE_VERSION "VEngineClient014"
+#define VMODELINFO_CLIENT_INTERFACE_VERSION	"VModelInfoClient006"
+#define INTERFACEVERSION_ENGINETRACE_CLIENT "EngineTraceClient004"
