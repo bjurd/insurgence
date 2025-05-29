@@ -7,6 +7,9 @@
 #include "../valve/math.h"
 #include "../valve/studio.h"
 #include "../valve/render.h"
+#include "../valve/gametrace.h"
+#include "../valve/const.h"
+#include "../valve/bspflags.h"
 
 void Aimbot::Create()
 {
@@ -16,47 +19,10 @@ void Aimbot::Destroy()
 {
 }
 
-C_INSPlayer* GetAimbotTarget()
-{
-	C_INSPlayer* Closest = nullptr;
-	float Distance = FLT_MAX;
-
-	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
-	Vector LocalPlayerOrigin = LocalPlayer->GetAbsOrigin();
-	int LocalTeam = *LocalPlayer->GetTeam();
-
-	for (C_INSPlayer* Player : Helpers::PlayerIterator())
-	{
-		if (!Player) continue;
-
-		if (Player == LocalPlayer) continue;
-		if (*Player->GetHealth() <= 0) continue;
-		if (*Player->GetTeam() == LocalTeam) continue;
-
-		IClientRenderable* Renderable = Player->GetClientRenderable();
-		if (!Renderable) continue;
-
-		const model_t* Model = Renderable->GetModel();
-		if (!Model) continue;
-
-		studiohdr_t* Studio = Globals->PointersManager->ModelInfo->GetStudiomodel(Model);
-		if (!Studio) continue;
-
-		float CurrentDistance = Player->GetAbsOrigin().DistToSqr(LocalPlayerOrigin);
-
-		if (CurrentDistance < Distance)
-		{
-			Distance = CurrentDistance;
-			Closest = Player;
-		}
-	}
-
-	return Closest;
-}
-
 Vector GetTargetAimPosition(C_INSPlayer* Target)
 {
 	Vector AimPos;
+	AimPos.Invalidate();
 
 	IClientRenderable* Renderable = Target->GetClientRenderable();
 	if (!Renderable) return AimPos;
@@ -73,8 +39,11 @@ Vector GetTargetAimPosition(C_INSPlayer* Target)
 	if (!Target->SetupBonesReal(BoneMatrices, MAXSTUDIOBONES, BONE_USED_BY_ANYTHING, 0.f))
 	{
 		printf("Failed to setup bones\n");
-		return Vector();
+		return AimPos;
 	}
+
+	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
+	Vector ViewOrigin = GetMainViewOrigin();
 
 	for (int s = 0; s < Studio->numhitboxsets; ++s)
 	{
@@ -108,7 +77,63 @@ Vector GetTargetAimPosition(C_INSPlayer* Target)
 			VectorRotate(Mins, Angles, Mins);
 			VectorRotate(Maxs, Angles, Maxs);
 
-			return Origin + ((Mins + Maxs) / 2.f);
+			Origin += ((Mins + Maxs) / 2.f);
+
+			Ray_t Ray;
+			Ray.Init(ViewOrigin, Origin);
+
+			CTraceFilterSimple traceFilter(LocalPlayer, COLLISION_GROUP_NONE);
+
+			CGameTrace Result;
+			Globals->PointersManager->EngineTrace->TraceRay(Ray, MASK_SHOT, nullptr, &Result);
+
+			if (Result.DidHit() && Result.m_pEnt == Target)
+				return Origin;
+		}
+	}
+
+	return AimPos;
+}
+
+Vector GetAimbotTarget()
+{
+	Vector AimPos;
+	AimPos.Invalidate();
+
+	float Distance = FLT_MAX;
+
+	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
+	Vector LocalPlayerOrigin = LocalPlayer->GetAbsOrigin();
+	int LocalTeam = *LocalPlayer->GetTeam();
+
+	for (C_INSPlayer* Player : Helpers::PlayerIterator())
+	{
+		if (!Player) continue;
+
+		if (Player == LocalPlayer) continue;
+		if (*Player->GetHealth() <= 0) continue;
+		if (*Player->GetTeam() == LocalTeam) continue;
+
+		IClientRenderable* Renderable = Player->GetClientRenderable();
+		if (!Renderable) continue;
+
+		const model_t* Model = Renderable->GetModel();
+		if (!Model) continue;
+
+		studiohdr_t* Studio = Globals->PointersManager->ModelInfo->GetStudiomodel(Model);
+		if (!Studio) continue;
+
+		float CurrentDistance = Player->GetAbsOrigin().DistToSqr(LocalPlayerOrigin);
+
+		if (CurrentDistance < Distance)
+		{
+			Vector CurrentAimPos = GetTargetAimPosition(Player);
+
+			if (CurrentAimPos.IsValid())
+			{
+				AimPos = CurrentAimPos;
+				Distance = CurrentDistance;
+			}
 		}
 	}
 
@@ -119,13 +144,12 @@ void Aimbot::OnCreateMove(CUserCmd* Command)
 {
 	if (GetAsyncKeyState(VK_XBUTTON2) && Command->CommandNumber > 0 && Command->TickCount > 0)
 	{
-		C_INSPlayer* Target = GetAimbotTarget();
+		Vector AimPos = GetAimbotTarget();
 
-		if (Target)
+		if (AimPos.IsValid())
 		{
-			C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
+			// C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
 
-			Vector AimPos = GetTargetAimPosition(Target);
 			Vector AimDir = AimPos - GetMainViewOrigin(); // LocalPlayer->GetAbsOrigin();
 
 			Angle AimAng;
