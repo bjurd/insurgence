@@ -1,7 +1,3 @@
-/insurgence/.vs
-insurgence/insurgence.sln
-insurgence/insurgence.vcxproj
-insurgence/insurgence.vcxproj.user
-insurgence/insurgence.vcxproj.filters
-/insurgence/insurgence
-/insurgence/x64
+/.vs
+/build
+*.sln
