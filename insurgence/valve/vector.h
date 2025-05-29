@@ -71,6 +71,18 @@ public:
 	{
 		return sqrtf(this->LengthSqr());
 	}
+
+	bool IsValid()
+	{
+		return isfinite(this->x) && isfinite(this->y) && isfinite(this->z);
+	}
+
+	void Invalidate()
+	{
+		this->x = INFINITY;
+		this->y = INFINITY;
+		this->z = INFINITY;
+	}
 };
 
 class Angle
