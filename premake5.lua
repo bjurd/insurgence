@@ -18,7 +18,7 @@ project "Insurgence"
 	links { "d3d9.lib", "d3dx9.lib", "dxerr.lib", "dxguid.lib" }
 
 	filter "configurations:Debug"
-		defines { "DEBUG" }
+		defines { "_DEBUG" }
 		symbols "On"
 	filter "configurations:Release"
 		defines { "NDEBUG" }
