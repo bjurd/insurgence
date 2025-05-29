@@ -1,5 +1,5 @@
 # Insurgence
-Insurgency ([this one](https://store.steampowered.com/app/222880/Insurgency/)) assistance software, x86-64 (64-bit) only.
+Insurgency ([this one](https://store.steampowered.com/app/222880/Insurgency/)) assistance software, x86-64 (64-bit) Windows only.
 
 ## Features!!
 Nothing notable, yet. Unless you count an ImGui menu with 3 options as notable :^)
