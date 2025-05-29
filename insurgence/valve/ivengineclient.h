@@ -3,7 +3,7 @@
 #include "vector.h"
 #include "matrix.h"
 #include "buttoncode.h"
-#include "../vmt.hpp"
+#include "../vmt.h"
 
 class IVEngineClient
 {

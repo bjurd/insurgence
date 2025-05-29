@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../signatures.h"
-#include "../vmt.hpp"
+#include "../vmt.h"
 #include "icliententity.h"
 #include "vector.h"
 #include "datamap.h"

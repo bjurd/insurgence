@@ -4,7 +4,7 @@
 #include "vector.h"
 #include "matrix.h"
 #include "../signatures.h"
-#include "../vmt.hpp"
+#include "../vmt.h"
 
 typedef unsigned short ClientRenderHandle_t; // TODO: client_render_handle.h
 typedef unsigned short ClientShadowHandle_t;
