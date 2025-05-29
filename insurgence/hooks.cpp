@@ -30,7 +30,12 @@ void Hooks::Destroy()
 	MH_DisableHook(MH_ALL_HOOKS);
 
 	for (Hook* Current : this->List)
+	{
 		Current->Destroy();
+
+		delete Current;
+	}
+	this->List.clear();
 
 	MH_RemoveHook(MH_ALL_HOOKS);
 

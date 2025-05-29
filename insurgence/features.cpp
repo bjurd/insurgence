@@ -8,6 +8,7 @@
 
 bool Features::Create()
 {
+	this->List = std::unordered_map<std::string, Feature*>();
 	this->List["Aimbot"] = new Aimbot();
 	this->List["ESP"] = new ESP();
 	this->List["Menu"] = new Menu();
@@ -21,7 +22,12 @@ bool Features::Create()
 void Features::Destroy()
 {
 	for (auto Current : this->List)
+	{
 		Current.second->Destroy();
+
+		delete Current.second;
+	}
+	this->List.clear();
 }
 
 Feature* Features::Get(std::string Name)
