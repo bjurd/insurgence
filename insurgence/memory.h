@@ -8,18 +8,17 @@
 
 typedef void* (*CreateInterfaceFn)(const char*, int*);
 
-class Memory
+namespace Memory
 {
-public:
-	static void ParseSignature(const std::string& Signature, std::vector<uint8_t>& Pattern, std::vector<bool>& Mask);
-	static uintptr_t ScanMemory(uintptr_t Base, size_t Size, std::vector<uint8_t>& Pattern, std::vector<bool>& Mask);
-	static bool GetModuleInfo(const wchar_t* Name, uintptr_t& Base, size_t& Size);
-	static uintptr_t FindSignature(const std::string Module, const std::string Signature);
+	void ParseSignature(const std::string& Signature, std::vector<uint8_t>& Pattern, std::vector<bool>& Mask);
+	uintptr_t ScanMemory(uintptr_t Base, size_t Size, std::vector<uint8_t>& Pattern, std::vector<bool>& Mask);
+	bool GetModuleInfo(const wchar_t* Name, uintptr_t& Base, size_t& Size);
+	uintptr_t FindSignature(const std::string Module, const std::string Signature);
 
-	static uintptr_t RelativeToReal(uintptr_t Address, int Offset, int InstructionSize);
+	uintptr_t RelativeToReal(uintptr_t Address, int Offset, int InstructionSize);
 
 	template <typename T>
-	static T ResolveMethod(uintptr_t Address, int Offset, int InstructionSize)
+	T ResolveMethod(uintptr_t Address, int Offset, int InstructionSize)
 	{
 		uintptr_t RealAddress = RelativeToReal(Address, Offset, InstructionSize);
 
@@ -27,7 +26,7 @@ public:
 	}
 
 	template <typename T>
-	static T GetInterface(const std::string ModuleName, const std::string InterfaceName)
+	T GetInterface(const std::string ModuleName, const std::string InterfaceName)
 	{
 		HMODULE Module = GetModuleHandleA(ModuleName.c_str());
 
