@@ -4,6 +4,7 @@
 #include "valve/ivengineclient.h"
 #include "valve/client.h"
 #include "valve/ivmodelinfo.h"
+#include "valve/enginetrace.h"
 
 #include <iostream>
 #include <cinttypes>
@@ -16,6 +17,7 @@ public:
 	IVEngineClient* Client;
 	CClientState* ClientState;
 	IVModelInfo* ModelInfo;
+	CEngineTrace* EngineTrace;
 
 public:
 	template <typename T>

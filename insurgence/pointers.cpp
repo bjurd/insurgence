@@ -15,6 +15,9 @@ bool Pointers::Create()
 	if (!this->PrintGrabInterface<IVModelInfo>("Model Info", "engine.dll", VMODELINFO_CLIENT_INTERFACE_VERSION, this->ModelInfo))
 		return false;
 
+	if (!this->PrintGrabInterface<CEngineTrace>("Engine Trace", "engine.dll", ENGINETRACE_CLIENT_INTERFACE_VERSION, this->EngineTrace))
+		return false;
+
 	//uintptr_t GetClientStateAddr = Memory::FindSignature("engine.dll", Engine_GetClientState);
 
 	//if (GetClientStateAddr)
