@@ -150,8 +150,6 @@ public:
 	}
 };
 
-
-
 // Operators yay!
 inline Vector& Vector::operator+=(const Vector& v)
 {

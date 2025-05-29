@@ -48,15 +48,15 @@ BOOL WINAPI DllMain(HINSTANCE Instance, DWORD Reason, LPVOID Reserved)
 {
 	switch (Reason)
 	{
-		case DLL_PROCESS_ATTACH:
-			DisableThreadLibraryCalls(Instance);
+	case DLL_PROCESS_ATTACH:
+		DisableThreadLibraryCalls(Instance);
 
-			HANDLE Thread = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Main, Instance, NULL, NULL);
+		HANDLE Thread = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Main, Instance, NULL, NULL);
 
-			if (Thread)
-				CloseHandle(Thread);
+		if (Thread)
+			CloseHandle(Thread);
 
-			break;
+		break;
 	}
 
 	return TRUE;

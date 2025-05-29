@@ -23,103 +23,103 @@ static uintptr_t SteamOverlayEnd = 0;
 
 HRESULT __stdcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* PresentationParameters)
 {
-    static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
+	static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
 
-    if (ESPFeature)
-        ESPFeature->DestroyStateBlocks();
+	if (ESPFeature)
+		ESPFeature->DestroyStateBlocks();
 
-    ImGui_ImplDX9_InvalidateDeviceObjects();
+	ImGui_ImplDX9_InvalidateDeviceObjects();
 
-    HRESULT Result = oReset(Device, PresentationParameters);
+	HRESULT Result = oReset(Device, PresentationParameters);
 
-    if (SUCCEEDED(Result))
-    {
-        if (ESPFeature)
-            ESPFeature->SetupRenderStateBlock(Device);
-    }
+	if (SUCCEEDED(Result))
+	{
+		if (ESPFeature)
+			ESPFeature->SetupRenderStateBlock(Device);
+	}
 
-    ImGui_ImplDX9_CreateDeviceObjects();
+	ImGui_ImplDX9_CreateDeviceObjects();
 
-    return Result;
+	return Result;
 }
 
 HRESULT __stdcall hkPresent(LPDIRECT3DDEVICE9 Device, const RECT* Source, const RECT* Destination, HWND Window, const RGNDATA* Dirty)
 {
-    static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
+	static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
 
-    if (ESPFeature)
-        ESPFeature->Render(Device);
+	if (ESPFeature)
+		ESPFeature->Render(Device);
 
-    return oPresent(Device, Source, Destination, Window, Dirty);
+	return oPresent(Device, Source, Destination, Window, Dirty);
 }
 
 HRESULT __stdcall hkEndScene(LPDIRECT3DDEVICE9 Device)
 {
-    static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
+	static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
 
-    if (ESPFeature && ESPFeature->InScene)
-        return oEndScene(Device);
+	if (ESPFeature && ESPFeature->InScene)
+		return oEndScene(Device);
 
-    uintptr_t ReturnAddr = reinterpret_cast<uintptr_t>(_ReturnAddress());
+	uintptr_t ReturnAddr = reinterpret_cast<uintptr_t>(_ReturnAddress());
 
-    if (ReturnAddr >= SteamOverlayStart && ReturnAddr < SteamOverlayEnd)
-        return oEndScene(Device); // Don't render in overlay
+	if (ReturnAddr >= SteamOverlayStart && ReturnAddr < SteamOverlayEnd)
+		return oEndScene(Device); // Don't render in overlay
 
-    static Menu* MenuFeature = (Menu*)Globals->FeaturesManager->Get("Menu");
+	static Menu* MenuFeature = (Menu*)Globals->FeaturesManager->Get("Menu");
 
-    if (MenuFeature)
-    {
-        MenuFeature->Setup(Device);
-        MenuFeature->Render();
-    }
+	if (MenuFeature)
+	{
+		MenuFeature->Setup(Device);
+		MenuFeature->Render();
+	}
 
-    return oEndScene(Device);
+	return oEndScene(Device);
 }
 
 void DirectX::Create()
 {
-    if (kiero::init(kiero::RenderType::D3D9) != kiero::Status::Success)
-    {
-        printf("No init\n");
-        return;
-    }
+	if (kiero::init(kiero::RenderType::D3D9) != kiero::Status::Success)
+	{
+		printf("No init\n");
+		return;
+	}
 
-    if (kiero::bind(16, (void**)&oReset, hkReset) != kiero::Status::Success)
-    {
-        printf("No reset\n");
-        return;
-    }
+	if (kiero::bind(16, (void**)&oReset, hkReset) != kiero::Status::Success)
+	{
+		printf("No reset\n");
+		return;
+	}
 
-    if (kiero::bind(17, (void**)&oPresent, hkPresent) != kiero::Status::Success)
-    {
-        printf("No present\n");
-        return;
-    }
+	if (kiero::bind(17, (void**)&oPresent, hkPresent) != kiero::Status::Success)
+	{
+		printf("No present\n");
+		return;
+	}
 
-    if (kiero::bind(42, (void**)&oEndScene, hkEndScene) != kiero::Status::Success)
-    {
-        printf("No endscene\n");
-        return;
-    }
+	if (kiero::bind(42, (void**)&oEndScene, hkEndScene) != kiero::Status::Success)
+	{
+		printf("No endscene\n");
+		return;
+	}
 
-    uintptr_t Base = 0;
-    size_t Size = 0;
+	uintptr_t Base = 0;
+	size_t Size = 0;
 
-    if (Memory::GetModuleInfo(L"gameoverlayrenderer64.dll", Base, Size))
-    {
-        SteamOverlayStart = Base;
-        SteamOverlayEnd = Base + Size;
-    }
+	if (Memory::GetModuleInfo(L"gameoverlayrenderer64.dll", Base, Size))
+	{
+		SteamOverlayStart = Base;
+		SteamOverlayEnd = Base + Size;
+	}
 }
 
 void DirectX::Destroy()
 {
-    kiero::unbind(16);
-    kiero::unbind(17);
-    kiero::unbind(42);
+	kiero::unbind(16);
+	kiero::unbind(17);
+	kiero::unbind(42);
 
-    kiero::shutdown();
-    ImGui_ImplDX9_Shutdown();
-    ImGui_ImplWin32_Shutdown();
-    ImGui::DestroyContext();
+	kiero::shutdown();
+	ImGui_ImplDX9_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 }

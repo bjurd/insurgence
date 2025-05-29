@@ -17,7 +17,7 @@ enum TraceType_t
 class ITraceFilter
 {
 public:
-	virtual bool ShouldHitEntity(IHandleEntity * pEntity, int contentsMask) = 0;
+	virtual bool ShouldHitEntity(IHandleEntity* pEntity, int contentsMask) = 0;
 	virtual TraceType_t	GetTraceType() const = 0;
 };
 
@@ -69,7 +69,6 @@ public:
 	// HACKHACK: Temp for performance measurments
 	virtual int GetStatByIndex(int index, bool bClear) = 0;
 
-
 	//finds brushes in an AABB, prone to some false positives
 	virtual void GetBrushesInAABB(const Vector& vMins, const Vector& vMaxs, void* pOutput, int iContentsMask = 0xFFFFFFFF) = 0; // TODO: CUtlVector<int>
 
@@ -91,5 +90,4 @@ public:
 class CEngineTrace : public IEngineTrace // Actually CEngineTraceClient
 {
 public:
-
 };

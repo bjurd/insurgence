@@ -9,11 +9,10 @@ class VMatrix
 {
 public:
 	float m[4][4];
-	
+
 public:
 	VMatrix()
 	{
-		
 	}
 
 	VMatrix(const matrix3x4_t& Matrix)
@@ -84,10 +83,10 @@ public:
 	void SetForward(const Vector& Forward);
 	void SetLeft(const Vector& Left);
 	void SetUp(const Vector& Up);
-		 
+
 	void GetBasisVectors(Vector& Forward, Vector& Left, Vector& Up);
 	void SetBasisVectors(const Vector& Forward, const Vector& Left, const Vector& Up);
-		 
+
 	void GetTranslation(Vector& Translation);
 	void SetTranslation(const Vector& Translation);
 

@@ -17,7 +17,7 @@ public: // TODO: A config system with JSON or YAML or something
 	bool Names;
 
 private:
-	IDirect3DStateBlock9* GameStateBlock, *RenderStateBlock;
+	IDirect3DStateBlock9* GameStateBlock, * RenderStateBlock;
 
 public:
 	void Create();

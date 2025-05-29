@@ -96,5 +96,4 @@ struct datamap_t
 	// Have the "packed" offsets been computed
 	bool				packed_offsets_computed;
 	int					packed_size;
-
 };

@@ -19,7 +19,7 @@ enum soundlevel_t // TODO: soundflags.h
 	SNDLVL_50dB = 50,	// 3.9	// average home
 	SNDLVL_55dB = 55,	// 3.0
 
-	SNDLVL_IDLE = 60,	// 2.0	
+	SNDLVL_IDLE = 60,	// 2.0
 	SNDLVL_60dB = 60,	// 2.0	// normal conversation, clothes dryer
 
 	SNDLVL_65dB = 65,	// 1.5	// washing machine, dishwasher

@@ -27,7 +27,7 @@ class IClientNetworkable
 {
 public:
 	// Gets at the containing class...
-	virtual IClientUnknown * GetIClientUnknown() = 0;
+	virtual IClientUnknown* GetIClientUnknown() = 0;
 
 	// Called by the engine when the server deletes the entity.
 	virtual void			Release() = 0;
@@ -39,18 +39,16 @@ public:
 	// Note: This used to be EntityEnteredPVS/EntityRemainedInPVS/EntityLeftPVS.
 	virtual void			NotifyShouldTransmit(ShouldTransmitState_t state) = 0;
 
-
-
 	//
-	// NOTE FOR ENTITY WRITERS: 
+	// NOTE FOR ENTITY WRITERS:
 	//
-	// In 90% of the cases, you should hook OnPreDataChanged/OnDataChanged instead of 
+	// In 90% of the cases, you should hook OnPreDataChanged/OnDataChanged instead of
 	// PreDataUpdate/PostDataUpdate.
 	//
 	// The DataChanged events are only called once per frame whereas Pre/PostDataUpdate
 	// are called once per packet (and sometimes multiple times per frame).
 	//
-	// OnDataChanged is called during simulation where entity origins are correct and 
+	// OnDataChanged is called during simulation where entity origins are correct and
 	// attachments can be used. whereas PostDataUpdate is called while parsing packets
 	// so attachments and other entity origins may not be valid yet.
 	//
@@ -62,7 +60,6 @@ public:
 	// Only low-level entities should need to know about these.
 	virtual void			PreDataUpdate(DataUpdateType_t updateType) = 0;
 	virtual void			PostDataUpdate(DataUpdateType_t updateType) = 0;
-
 
 	// Objects become dormant on the client if they leave the PVS on the server.
 	virtual bool			IsDormant(void) = 0;

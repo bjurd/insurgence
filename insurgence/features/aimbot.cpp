@@ -10,12 +10,10 @@
 
 void Aimbot::Create()
 {
-
 }
 
 void Aimbot::Destroy()
 {
-
 }
 
 C_INSPlayer* GetAimbotTarget()

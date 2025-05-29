@@ -19,8 +19,8 @@
 #define BONE_USED_BY_ATTACHMENT		0x00000200	// bone (or child) is used by an attachment point
 #define BONE_USED_BY_VERTEX_MASK	0x0003FC00
 #define BONE_USED_BY_VERTEX_LOD0	0x00000400	// bone (or child) is used by the toplevel model via skinned vertex
-#define BONE_USED_BY_VERTEX_LOD1	0x00000800	
-#define BONE_USED_BY_VERTEX_LOD2	0x00001000  
+#define BONE_USED_BY_VERTEX_LOD1	0x00000800
+#define BONE_USED_BY_VERTEX_LOD2	0x00001000
 #define BONE_USED_BY_VERTEX_LOD3	0x00002000
 #define BONE_USED_BY_VERTEX_LOD4	0x00004000
 #define BONE_USED_BY_VERTEX_LOD5	0x00008000
@@ -35,7 +35,7 @@
 #define	HITGROUP_HEAD		1
 #define	HITGROUP_CHEST		2
 #define	HITGROUP_STOMACH	3
-#define HITGROUP_LEFTARM	4	
+#define HITGROUP_LEFTARM	4
 #define HITGROUP_RIGHTARM	5
 #define HITGROUP_LEFTLEG	6
 #define HITGROUP_RIGHTLEG	7
@@ -221,19 +221,19 @@ struct studiohdr_t
 	int					numincludemodels;
 	int					includemodelindex;
 
-	mutable void*		virtualModel;
+	mutable void* virtualModel;
 
 	int					szanimblocknameindex;
 
 	int					numanimblocks;
 	int					animblockindex;
 
-	mutable void*		animblockModel;
+	mutable void* animblockModel;
 
 	int					bonetablebynameindex;
 
-	void*				pVertexBase;
-	void*				pIndexBase;
+	void* pVertexBase;
+	void* pIndexBase;
 
 	char				constdirectionallightdot;
 

@@ -28,5 +28,4 @@ void CreateMove::Create()
 
 void CreateMove::Destroy()
 {
-	
 }

@@ -17,7 +17,6 @@ void ESP::Create()
 
 void ESP::Destroy()
 {
-
 }
 
 void ESP::SetupFont(LPDIRECT3DDEVICE9 Device)
@@ -104,7 +103,7 @@ bool ESP::GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Right, float&
 	for (int i = 0; i < 8; ++i)
 	{
 		Vector Temp;
-		
+
 		if (!ScreenTransform(Corners[i], Temp))
 			return false;
 
@@ -136,7 +135,7 @@ void ESP::DestroyStateBlocks()
 		this->RenderStateBlock->Release();
 		this->RenderStateBlock = nullptr;
 	}
-	
+
 	if (this->GameStateBlock)
 	{
 		this->GameStateBlock->Release();

@@ -7,66 +7,66 @@
 class PlayerIterator
 {
 public:
-    int Index;
+	int Index;
 
 public:
-    PlayerIterator(int Index)
-    {
-        this->Index = Index;
-        this->Advance();
-    }
+	PlayerIterator(int Index)
+	{
+		this->Index = Index;
+		this->Advance();
+	}
 
-    C_INSPlayer* operator*() const
-    {
-        C_INSPlayer* Player = (C_INSPlayer*)Globals->PointersManager->EntityList->GetClientEntity(Index);
-        return Player;
-    }
+	C_INSPlayer* operator*() const
+	{
+		C_INSPlayer* Player = (C_INSPlayer*)Globals->PointersManager->EntityList->GetClientEntity(Index);
+		return Player;
+	}
 
-    PlayerIterator& operator++()
-    {
-        Index++;
-        this->Advance();
+	PlayerIterator& operator++()
+	{
+		Index++;
+		this->Advance();
 
-        return *this;
-    }
+		return *this;
+	}
 
-    bool operator!=(const PlayerIterator& Other) const
-    {
-        return Index != Other.Index;
-    }
+	bool operator!=(const PlayerIterator& Other) const
+	{
+		return Index != Other.Index;
+	}
 
 private:
-    void Advance()
-    {
-        int Entities = Globals->PointersManager->EntityList->GetHighestEntityIndex();
+	void Advance()
+	{
+		int Entities = Globals->PointersManager->EntityList->GetHighestEntityIndex();
 
-        while (Index < Entities)
-        {
-            C_BaseEntity* Entity = (C_BaseEntity*)Globals->PointersManager->EntityList->GetClientEntity(Index);
+		while (Index < Entities)
+		{
+			C_BaseEntity* Entity = (C_BaseEntity*)Globals->PointersManager->EntityList->GetClientEntity(Index);
 
-            if (!Entity || strcmp(Entity->GetClassName(), "C_INSPlayer") != 0)
-            {
-                Index++;
-                continue;
-            }
+			if (!Entity || strcmp(Entity->GetClassName(), "C_INSPlayer") != 0)
+			{
+				Index++;
+				continue;
+			}
 
-            break;
-        }
-    }
+			break;
+		}
+	}
 };
 
 class PlayerRange
 {
 public:
-    PlayerIterator begin()
-    {
-        return PlayerIterator(1);
-    }
+	PlayerIterator begin()
+	{
+		return PlayerIterator(1);
+	}
 
-    PlayerIterator end()
-    {
-        return PlayerIterator(Globals->PointersManager->EntityList->GetHighestEntityIndex());
-    }
+	PlayerIterator end()
+	{
+		return PlayerIterator(Globals->PointersManager->EntityList->GetHighestEntityIndex());
+	}
 };
 
 class Helpers
@@ -75,8 +75,8 @@ public:
 	static C_BaseEntity* GetLocalPlayerEntity();
 	static C_INSPlayer* GetLocalPlayer();
 
-    static inline PlayerRange PlayerIterator()
-    {
-        return PlayerRange();
-    }
+	static inline PlayerRange PlayerIterator()
+	{
+		return PlayerRange();
+	}
 };

@@ -31,7 +31,7 @@ struct model_t // TODO: gl_model_private.h
 	//modtype_t			type;
 	//int					flags;			// MODELFLAG_???
 
-	//// volume occupied by the model graphics	
+	//// volume occupied by the model graphics
 	//Vector				mins, maxs;
 	//float				radius;
 
@@ -47,7 +47,7 @@ class IClientRenderable
 {
 public:
 	// Gets at the containing class...
-	virtual IClientUnknown * GetIClientUnknown() = 0;
+	virtual IClientUnknown* GetIClientUnknown() = 0;
 
 	// Data accessors
 	virtual Vector const& GetRenderOrigin(void) = 0;
@@ -76,7 +76,7 @@ public:
 	// Determine the color modulation amount
 	virtual void	GetColorModulation(float* color) = 0;
 
-	// Returns false if the entity shouldn't be drawn due to LOD. 
+	// Returns false if the entity shouldn't be drawn due to LOD.
 	// (NOTE: This is no longer used/supported, but kept in the vtable for backwards compat)
 	virtual bool	LODTest() = 0;
 
@@ -89,7 +89,7 @@ public:
 	virtual void	SetupWeights(const matrix3x4_t* pBoneToWorld, int nFlexWeightCount, float* pFlexWeights, float* pFlexDelayedWeights) = 0;
 	virtual void	DoAnimationEvents(void) = 0;
 
-	// Return this if you want PVS notifications. See IPVSNotify for more info.	
+	// Return this if you want PVS notifications. See IPVSNotify for more info.
 	// Note: you must always return the same value from this function. If you don't,
 	// undefined things will occur, and they won't be good.
 	virtual void* GetPVSNotifyInterface() = 0; // TODO: IPVSNotify
@@ -152,5 +152,5 @@ public:
 	virtual bool	IgnoresZBuffer(void) const = 0;
 
 public:
-	CLPROXY(SetupBonesReal, IClientRenderable_SetupBones, bool,(matrix3x4_t* Out, int MaxBones, int Mask, float Time), Out, MaxBones, Mask, Time)
+	CLPROXY(SetupBonesReal, IClientRenderable_SetupBones, bool, (matrix3x4_t* Out, int MaxBones, int Mask, float Time), Out, MaxBones, Mask, Time)
 };

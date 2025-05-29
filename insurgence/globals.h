@@ -15,7 +15,6 @@ public:
 		this->HooksManager = new Hooks();
 		this->PointersManager = new Pointers();
 		this->FeaturesManager = new Features();
-		
 	}
 
 	~Insurgence()

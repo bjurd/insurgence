@@ -9,7 +9,7 @@ class IClientThinkable
 {
 public:
 	// Gets at the containing class...
-	virtual IClientUnknown * GetIClientUnknown() = 0;
+	virtual IClientUnknown* GetIClientUnknown() = 0;
 
 	virtual void				ClientThink() = 0;
 
