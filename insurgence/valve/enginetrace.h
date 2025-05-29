@@ -54,7 +54,16 @@ public:
 		this->m_pExtraShouldHitCheckFunction = pExtraShouldHitCheckFn;
 	}
 
-	virtual bool ShouldHitEntity(IHandleEntity* pHandleEntity, int contentsMask) { return true; }; // TODO: Actual trace logic
+	virtual bool ShouldHitEntity(IHandleEntity* pHandleEntity, int contentsMask)
+	{
+		// TODO: Actual trace logic
+
+		if (pHandleEntity == this->m_pPassEnt)
+			return false;
+
+		return true;
+	};
+
 	virtual void SetPassEntity(const IHandleEntity* pPassEntity) { m_pPassEnt = pPassEntity; }
 	virtual void SetCollisionGroup(int iCollisionGroup) { m_collisionGroup = iCollisionGroup; }
 

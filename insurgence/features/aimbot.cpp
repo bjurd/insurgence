@@ -82,10 +82,10 @@ Vector GetTargetAimPosition(C_INSPlayer* Target)
 			Ray_t Ray;
 			Ray.Init(ViewOrigin, Origin);
 
-			CTraceFilterSimple traceFilter(LocalPlayer, COLLISION_GROUP_NONE);
+			CTraceFilterSimple TraceFilter(LocalPlayer, COLLISION_GROUP_NONE);
 
 			CGameTrace Result;
-			Globals->PointersManager->EngineTrace->TraceRay(Ray, MASK_SHOT, nullptr, &Result);
+			Globals->PointersManager->EngineTrace->TraceRay(Ray, MASK_SHOT, &TraceFilter, &Result);
 
 			if (Result.DidHit() && Result.m_pEnt == Target)
 				return Origin;
