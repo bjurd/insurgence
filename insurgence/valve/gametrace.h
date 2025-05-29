@@ -15,4 +15,10 @@ public:
 	C_BaseEntity* m_pEnt;
 
 	int			hitbox;
+
+public: // If there's too many of these I'll make a .cpp
+	bool DidHit()
+	{
+		return this->fraction < 1 || this->allsolid || this->startsolid;
+	}
 };

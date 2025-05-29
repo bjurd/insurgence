@@ -21,6 +21,51 @@ public:
 	virtual TraceType_t	GetTraceType() const = 0;
 };
 
+class CTraceFilter : public ITraceFilter
+{
+public:
+	virtual TraceType_t	GetTraceType() const
+	{
+		return TRACE_EVERYTHING;
+	}
+};
+
+class CTraceFilterEntitiesOnly : public ITraceFilter
+{
+public:
+	virtual TraceType_t	GetTraceType() const
+	{
+		return TRACE_ENTITIES_ONLY;
+	}
+};
+
+typedef bool (*ShouldHitFunc_t)(IHandleEntity* pHandleEntity, int contentsMask);
+
+class CTraceFilterSimple : public CTraceFilter
+{
+public:
+	// It does have a base, but we'll never network anything below here..
+	// DECLARE_CLASS_NOBASE(CTraceFilterSimple);
+
+	CTraceFilterSimple(const IHandleEntity* passentity, int collisionGroup, ShouldHitFunc_t pExtraShouldHitCheckFn = NULL)
+	{
+		this->m_pPassEnt = passentity;
+		this->m_collisionGroup = collisionGroup;
+		this->m_pExtraShouldHitCheckFunction = pExtraShouldHitCheckFn;
+	}
+
+	virtual bool ShouldHitEntity(IHandleEntity* pHandleEntity, int contentsMask) { return true; }; // TODO: Actual trace logic
+	virtual void SetPassEntity(const IHandleEntity* pPassEntity) { m_pPassEnt = pPassEntity; }
+	virtual void SetCollisionGroup(int iCollisionGroup) { m_collisionGroup = iCollisionGroup; }
+
+	const IHandleEntity* GetPassEntity(void) { return m_pPassEnt; }
+
+public:
+	const IHandleEntity* m_pPassEnt;
+	int m_collisionGroup;
+	ShouldHitFunc_t m_pExtraShouldHitCheckFunction;
+};
+
 class IEngineTrace
 {
 public:
