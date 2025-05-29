@@ -12,17 +12,17 @@ class C_BaseEntity : public IClientEntity
 {
 public:
 	// 0x48, 0x50, 0x8C
-	PROXYVAR(EntIndex, int, 0x008C)
+	PROXYVAR(EntIndex, int, 0x008C);
 
 public:
-	CLPROXY(GetAbsOrigin, C_BaseEntity_GetAbsOrigin, Vector&, (void))
-		CLPROXY(GetAbsAngles, C_BaseEntity_GetAbsAngles, Angle&, (void))
-		VPROXY(GetPredDescMap, 17, datamap_t*, (void))
+	CLPROXY(GetAbsOrigin, C_BaseEntity_GetAbsOrigin, Vector&, (void));
+	CLPROXY(GetAbsAngles, C_BaseEntity_GetAbsAngles, Angle&, (void));
+	VPROXY(GetPredDescMap, 17, datamap_t*, (void));
 
-		const char* GetClassName()
+	const char* GetClassName()
 	{
 		return this->GetPredDescMap()->dataClassName;
 	}
 
-	CLPROXY(GetCollideable, C_BaseEntity_GetCollideable, ICollideable*, (void))
+	CLPROXY(GetCollideable, C_BaseEntity_GetCollideable, ICollideable*, (void));
 };

@@ -152,5 +152,5 @@ public:
 	virtual bool	IgnoresZBuffer(void) const = 0;
 
 public:
-	CLPROXY(SetupBonesReal, IClientRenderable_SetupBones, bool, (matrix3x4_t* Out, int MaxBones, int Mask, float Time), Out, MaxBones, Mask, Time)
+	CLPROXY(SetupBonesReal, IClientRenderable_SetupBones, bool, (matrix3x4_t* Out, int MaxBones, int Mask, float Time), Out, MaxBones, Mask, Time);
 };
