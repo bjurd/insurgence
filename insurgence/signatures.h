@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef INSURGENCE_SIGNATURES
+#define INSURGENCE_SIGNATURES
+
 // client.dll
 #define CL_CreateMove "40 53 48 83 EC ? 83 C9 ? 0F 29 74 24"
 
@@ -21,3 +24,5 @@
 
 #define CL_Move "48 89 5C 24 ? 57 48 83 EC ? 0F 29 74 24 ? 0F B6 DA"
 #define CL_SendMove "48 89 5C 24 ? 57 B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? E8"
+
+#endif
