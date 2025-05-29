@@ -101,6 +101,37 @@ public:
 	}
 };
 
+class __declspec(align(16)) VectorAligned : public Vector
+{
+public:
+	float w;
+
+public:
+	VectorAligned()
+	{
+		this->x = 0.f;
+		this->y = 0.f;
+		this->z = 0.f;
+		this->w = 0.f;
+	}
+
+	VectorAligned(float x, float y, float z)
+	{
+		this->x = x;
+		this->y = y;
+		this->z = z;
+		this->w = 0.f;
+	}
+
+	VectorAligned(float x, float y, float z, float w)
+	{
+		this->x = x;
+		this->y = y;
+		this->z = z;
+		this->w = w;
+	}
+};
+
 class Quaternion
 {
 public:
@@ -192,6 +223,31 @@ inline Vector& Vector::operator/=(const Vector& v)
 inline Vector Vector::operator-(void) const
 {
 	return Vector(-x, -y, -z);
+}
+
+inline void VectorClear(Vector& a)
+{
+	a.x = a.y = a.z = 0.f;
+}
+
+inline void VectorClear(VectorAligned& a)
+{
+	a.x = a.y = a.z = a.w = 0.f;
+}
+
+inline void VectorCopy(const Vector& Source, Vector& Destination)
+{
+	Destination.x = Source.x;
+	Destination.y = Source.y;
+	Destination.z = Source.z;
+}
+
+inline void VectorCopy(const Vector& Source, VectorAligned& Destination)
+{
+	Destination.x = Source.x;
+	Destination.y = Source.y;
+	Destination.z = Source.z;
+	Destination.w = 0.f;
 }
 
 inline void VectorAdd(const Vector& a, const Vector& b, Vector& c)
