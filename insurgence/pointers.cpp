@@ -28,5 +28,8 @@ bool Pointers::Create()
 
 void Pointers::Destroy()
 {
-	// TODO: Destructors
+	this->EntityList = nullptr;
+	this->Client = nullptr;
+	this->ModelInfo = nullptr;
+	this->EngineTrace = nullptr;
 }
