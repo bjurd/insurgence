@@ -37,10 +37,7 @@ Vector GetTargetAimPosition(C_INSPlayer* Target)
 	matrix3x4_t BoneMatrices[MAXSTUDIOBONES];
 
 	if (!Target->SetupBonesReal(BoneMatrices, MAXSTUDIOBONES, BONE_USED_BY_ANYTHING, 0.f))
-	{
-		printf("Failed to setup bones\n");
 		return AimPos;
-	}
 
 	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
 	Vector ViewOrigin = GetMainViewOrigin();
