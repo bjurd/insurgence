@@ -25,4 +25,12 @@ public:
 	}
 
 	CLPROXY(GetCollideable, C_BaseEntity_GetCollideable, ICollideable*, (void));
+
+	// these crash the game for some reason
+	// VPROXY(IsDormant, 78, bool, (void));
+	// VPROXY(IsPlayer, 207, bool, (void));
+
+	// get health 169
+	// get max health 170
+	// start touch 200
 };
