@@ -24,7 +24,8 @@ namespace NetVars
 	}
 
 	void StoreRecvTable(RecvTable* Table);
-	void Load();
+	void Create();
+	void Destroy();
 }
 
 #define NVPROXY(Type, MethodName, VarName)					\

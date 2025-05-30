@@ -24,10 +24,15 @@ void NetVars::StoreRecvTable(RecvTable* Table)
 	}
 }
 
-void NetVars::Load()
+void NetVars::Create()
 {
 	ClientClass* Classes = Globals->PointersManager->Client->GetAllClasses();
 
 	for (ClientClass* Class = Classes; Class != nullptr; Class = Class->m_pNext)
 		NetVars::StoreRecvTable(Class->m_pRecvTable);
+}
+
+void NetVars::Destroy()
+{
+	NetVars::List.clear();
 }

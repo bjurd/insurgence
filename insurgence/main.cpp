@@ -13,6 +13,8 @@ void UnMain(HINSTANCE Instance)
 		Globals->PointersManager->Destroy();
 		Globals->ExternalConsole->Destroy();
 
+		NetVars::Destroy();
+
 		delete Globals;
 	}
 
@@ -28,13 +30,13 @@ void Main(HINSTANCE Instance)
 	if (!Globals->PointersManager->Create())
 		return UnMain(Instance);
 
+	NetVars::Create();
+
 	if (!Globals->FeaturesManager->Create())
 		return UnMain(Instance);
 
 	if (!Globals->HooksManager->Create())
 		return UnMain(Instance);
-
-	NetVars::Load();
 
 	while (true)
 	{
