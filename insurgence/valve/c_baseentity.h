@@ -16,6 +16,8 @@ class C_BaseEntity : public IClientEntity
 public:
 	// 0x48, 0x50, 0x8C
 	PROXYVAR(EntIndex, int, 0x008C);
+	PROXYVAR(EntClientFlags, int, 0x0088);
+	PROXYVAR(IsDormant, bool, 0x0109);
 
 public:
 	CLPROXY(GetAbsOrigin, C_BaseEntity_GetAbsOrigin, Vector&, (void));

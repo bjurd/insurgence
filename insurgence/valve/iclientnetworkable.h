@@ -62,7 +62,7 @@ public:
 	virtual void			PostDataUpdate(DataUpdateType_t updateType) = 0;
 
 	// Objects become dormant on the client if they leave the PVS on the server.
-	virtual bool			IsDormant(void) = 0;
+	virtual bool			IsDormantButBad(void) = 0;
 
 	// Ent Index is the server handle used to reference this entity.
 	// If the index is < 0, that indicates the entity is not known to the server
