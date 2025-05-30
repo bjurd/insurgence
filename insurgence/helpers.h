@@ -8,27 +8,46 @@
 class C_BaseEntity;
 class C_INSPlayer;
 
-class PlayerIterator
+class BasePlayerIterator
 {
 public:
 	int Index;
 
 public:
-	PlayerIterator(int Index);
+	BasePlayerIterator(int Index);
 
 	C_INSPlayer* operator*() const;
-	PlayerIterator& operator++();
-	bool operator!=(const PlayerIterator& Other) const;
+	BasePlayerIterator& operator++();
+	bool operator!=(const BasePlayerIterator& Other) const;
 
 private:
+	virtual bool IsValid(C_INSPlayer* Player);
 	void Advance();
 };
 
+class TargetPlayerIterator : public BasePlayerIterator
+{
+public:
+	using BasePlayerIterator::BasePlayerIterator;
+
+private:
+	virtual bool IsValid(C_INSPlayer* Player);
+};
+
+template <typename T>
+	requires std::is_base_of_v<BasePlayerIterator, T>
 class PlayerRange
 {
 public:
-	PlayerIterator begin();
-	PlayerIterator end();
+	T begin()
+	{
+		return T(1);
+	}
+
+	T end()
+	{
+		return T(Globals->PointersManager->EntityList->GetHighestEntityIndex());
+	}
 };
 
 namespace Helpers
@@ -36,8 +55,13 @@ namespace Helpers
 	C_BaseEntity* GetLocalPlayerEntity();
 	C_INSPlayer* GetLocalPlayer();
 
-	inline PlayerRange PlayerIterator()
+	inline PlayerRange<BasePlayerIterator> PlayerIterator()
 	{
-		return PlayerRange();
+		return PlayerRange<BasePlayerIterator>();
+	}
+
+	inline PlayerRange<TargetPlayerIterator> TargetsPlayerIterator()
+	{
+		return PlayerRange<TargetPlayerIterator>();
 	}
 };

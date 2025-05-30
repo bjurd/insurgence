@@ -2,21 +2,22 @@
 
 #include "globals.h"
 #include "valve/c_baseentity.h"
+#include "nwi/c_insplayer.h"
 #include <string>
 
-PlayerIterator::PlayerIterator(int Index)
+BasePlayerIterator::BasePlayerIterator(int Index)
 {
 	this->Index = Index;
 	this->Advance();
 }
 
-C_INSPlayer* PlayerIterator::operator*() const
+C_INSPlayer* BasePlayerIterator::operator*() const
 {
 	C_INSPlayer* Player = (C_INSPlayer*)Globals->PointersManager->EntityList->GetClientEntity(Index);
 	return Player;
 }
 
-PlayerIterator& PlayerIterator::operator++()
+BasePlayerIterator& BasePlayerIterator::operator++()
 {
 	Index++;
 	this->Advance();
@@ -24,7 +25,17 @@ PlayerIterator& PlayerIterator::operator++()
 	return *this;
 }
 
-void PlayerIterator::Advance()
+bool BasePlayerIterator::operator!=(const BasePlayerIterator& Other) const
+{
+	return this->Index != Other.Index;
+}
+
+bool BasePlayerIterator::IsValid(C_INSPlayer* Player)
+{
+	return true;
+}
+
+void BasePlayerIterator::Advance()
 {
 	int Entities = Globals->PointersManager->EntityList->GetHighestEntityIndex();
 
@@ -38,23 +49,29 @@ void PlayerIterator::Advance()
 			continue;
 		}
 
+		if (!this->IsValid((C_INSPlayer*)Entity))
+		{
+			Index++;
+			continue;
+		}
+
 		break;
 	}
 }
 
-PlayerIterator PlayerRange::begin()
+bool TargetPlayerIterator::IsValid(C_INSPlayer* Player)
 {
-	return PlayerIterator(1);
-}
+	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
 
-PlayerIterator PlayerRange::end()
-{
-	return PlayerIterator(Globals->PointersManager->EntityList->GetHighestEntityIndex());
-}
+	// TODO: The LocalPlayer checks don't work for some reason :/
+	// Don't ESP yourself!
+	if (Player == LocalPlayer) return false;
+	if (*Player->EntIndex() == *LocalPlayer->EntIndex()) return false;
+	if (*Player->GetHealth() <= 0) return false;
+	if (*Player->IsDormant()) return false;
+	if (*Player->GetTeam() == *LocalPlayer->GetTeam()) return false;
 
-bool PlayerIterator::operator!=(const PlayerIterator& Other) const
-{
-	return Index != Other.Index;
+	return true;
 }
 
 C_BaseEntity* Helpers::GetLocalPlayerEntity()

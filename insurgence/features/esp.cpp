@@ -233,18 +233,11 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 	this->InScene = true;
 	Device->BeginScene();
 	{
-		C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
-		int LocalTeam = *LocalPlayer->GetTeam();
-
 		float Left, Right, Top, Bottom;
 
-		for (C_INSPlayer* Player : Helpers::PlayerIterator())
+		for (C_INSPlayer* Player : Helpers::TargetsPlayerIterator())
 		{
 			if (!Player) continue;
-
-			if (Player == LocalPlayer) continue;
-			if (*Player->GetHealth() <= 0) continue;
-			if (*Player->GetTeam() == LocalTeam) continue;
 
 			if (this->GetPlayerBounds(Player, Left, Right, Top, Bottom))
 			{
