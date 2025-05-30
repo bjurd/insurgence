@@ -1,6 +1,7 @@
 #include "math.h"
 
 #include "../globals.h"
+#include "../cache.h"
 #include <cmath>
 #include <cfloat>
 
@@ -212,5 +213,5 @@ int FrustumTransform(const VMatrix& WorldToSurface, const Vector& Point, Vector&
 
 int ScreenTransform(const Vector& Point, Vector& Screen)
 {
-	return FrustumTransform(Globals->PointersManager->Client->WorldToScreenMatrix(), Point, Screen);
+	return FrustumTransform(Cache::WorldToScreenMatrix, Point, Screen);
 }

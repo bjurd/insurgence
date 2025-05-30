@@ -1,14 +1,15 @@
 #pragma once
 
-#include "valve/icliententitylist.h"
-#include "valve/ivengineclient.h"
 #include "valve/client.h"
-#include "valve/ivmodelinfo.h"
 #include "valve/enginetrace.h"
+#include "valve/icliententitylist.h"
+#include "valve/ienginevgui.h"
+#include "valve/ivengineclient.h"
+#include "valve/ivmodelinfo.h"
 
-#include <iostream>
 #include <cinttypes>
 #include <cstdio>
+#include <iostream>
 
 class Pointers
 {
@@ -18,6 +19,7 @@ public:
 	CClientState* ClientState;
 	IVModelInfo* ModelInfo;
 	CEngineTrace* EngineTrace;
+	IEngineVGuiInternal* EngineVGui;
 
 public:
 	template <typename T>

@@ -18,6 +18,9 @@ bool Pointers::Create()
 	if (!this->PrintGrabInterface<CEngineTrace>("Engine Trace", "engine.dll", ENGINETRACE_CLIENT_INTERFACE_VERSION, this->EngineTrace))
 		return false;
 
+	if (!this->PrintGrabInterface<IEngineVGuiInternal>("Engine VGui", "engine.dll", VENGINE_VGUI_INTERFACE_VERSION, this->EngineVGui))
+		return false;
+
 	//uintptr_t GetClientStateAddr = Memory::FindSignature("engine.dll", Engine_GetClientState);
 
 	//if (GetClientStateAddr)
