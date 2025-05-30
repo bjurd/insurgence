@@ -1,8 +1,9 @@
 #pragma once
 
-#include "vector.h"
 #include "../memory.h"
 #include "../signatures.h"
 #include <cstdint>
+
+class Vector;
 
 const Vector& GetMainViewOrigin();

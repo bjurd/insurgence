@@ -1,7 +1,8 @@
 #pragma once
 
 #include "ihandleentity.h"
-#include "vector.h"
+
+class Vector;
 
 class ICollideable
 {

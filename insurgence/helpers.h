@@ -3,6 +3,9 @@
 #include "globals.h"
 #include "valve/dt_recv.h"
 #include <unordered_map>
+#include <string>
+
+#undef GetClassName
 
 class C_BaseEntity;
 class C_INSPlayer;
@@ -13,63 +16,21 @@ public:
 	int Index;
 
 public:
-	PlayerIterator(int Index)
-	{
-		this->Index = Index;
-		this->Advance();
-	}
+	PlayerIterator(int Index);
 
-	C_INSPlayer* operator*() const
-	{
-		C_INSPlayer* Player = (C_INSPlayer*)Globals->PointersManager->EntityList->GetClientEntity(Index);
-		return Player;
-	}
-
-	PlayerIterator& operator++()
-	{
-		Index++;
-		this->Advance();
-
-		return *this;
-	}
-
-	bool operator!=(const PlayerIterator& Other) const
-	{
-		return Index != Other.Index;
-	}
+	C_INSPlayer* operator*() const;
+	PlayerIterator& operator++();
+	bool operator!=(const PlayerIterator& Other) const;
 
 private:
-	void Advance()
-	{
-		int Entities = Globals->PointersManager->EntityList->GetHighestEntityIndex();
-
-		while (Index < Entities)
-		{
-			C_BaseEntity* Entity = (C_BaseEntity*)Globals->PointersManager->EntityList->GetClientEntity(Index);
-
-			if (!Entity || strcmp(Entity->GetClassName(), "C_INSPlayer") != 0)
-			{
-				Index++;
-				continue;
-			}
-
-			break;
-		}
-	}
+	void Advance();
 };
 
 class PlayerRange
 {
 public:
-	PlayerIterator begin()
-	{
-		return PlayerIterator(1);
-	}
-
-	PlayerIterator end()
-	{
-		return PlayerIterator(Globals->PointersManager->EntityList->GetHighestEntityIndex());
-	}
+	PlayerIterator begin();
+	PlayerIterator end();
 };
 
 namespace Helpers

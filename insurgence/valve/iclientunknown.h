@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ihandleentity.h"
-#include "icollideable.h"
 
+class ICollideable;
 class IClientRenderable;
 class C_BaseEntity;
 

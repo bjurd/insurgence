@@ -1,10 +1,12 @@
 #pragma once
 
-#include "iclientunknown.h"
-#include "vector.h"
 #include "matrix.h"
 #include "../signatures.h"
 #include "../vmt.h"
+
+class Vector;
+class Angle;
+class IClientUnknown;
 
 typedef unsigned short ClientRenderHandle_t; // TODO: client_render_handle.h
 typedef unsigned short ClientShadowHandle_t;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "iclientunknown.h"
+class IClientUnknown;
 
 enum ShouldTransmitState_t
 {

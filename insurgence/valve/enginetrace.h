@@ -1,10 +1,11 @@
 #pragma once
 
-#include "vector.h"
-#include "ihandleentity.h"
-#include "icollideable.h"
 #include "gametrace.h"
 #include "cmodel.h"
+
+class Vector;
+class IHandleEntity;
+class ICollideable;
 
 enum TraceType_t
 {

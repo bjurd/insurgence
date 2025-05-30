@@ -1,8 +1,11 @@
 #pragma once
 
-#include "iclientrenderable.h"
 #include "studio.h"
-#include "vector.h"
+
+class Vector;
+class Angle;
+class IClientRenderable;
+struct model_t;
 
 class IVModelInfo
 {

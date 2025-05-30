@@ -1,7 +1,8 @@
 #pragma once
 
-#include "vector.h"
 #include "math.h"
+
+class Vector;
 
 class CBaseTrace
 {

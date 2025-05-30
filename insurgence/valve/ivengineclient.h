@@ -1,10 +1,13 @@
 #pragma once
 
-#include "vector.h"
 #include "matrix.h"
 #include "buttoncode.h"
 #include "../vmt.h"
-#include "client_class.h"
+#include "../signatures.h"
+
+class Vector;
+class Angle;
+class ClientClass;
 
 class IVEngineClient
 {

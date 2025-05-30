@@ -7,6 +7,7 @@
 #include "../valve/math.h"
 #include "../valve/render.h"
 #include "../valve/studio.h"
+#include "../valve/icollideable.h"
 
 void ESP::Create()
 {

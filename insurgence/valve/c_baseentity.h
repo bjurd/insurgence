@@ -2,9 +2,12 @@
 
 #include "../signatures.h"
 #include "../vmt.h"
-#include "icliententity.h"
-#include "vector.h"
 #include "datamap.h"
+#include "icliententity.h"
+
+class ICollideable;
+class Vector;
+class Angle;
 
 #undef GetClassName
 
@@ -17,12 +20,9 @@ public:
 public:
 	CLPROXY(GetAbsOrigin, C_BaseEntity_GetAbsOrigin, Vector&, (void));
 	CLPROXY(GetAbsAngles, C_BaseEntity_GetAbsAngles, Angle&, (void));
-	VPROXY(GetPredDescMap, 17, datamap_t*, (void));
 
-	const char* GetClassName()
-	{
-		return this->GetPredDescMap()->dataClassName;
-	}
+	VPROXY(GetPredDescMap, 17, datamap_t*, (void));
+	const char* GetClassName();
 
 	CLPROXY(GetCollideable, C_BaseEntity_GetCollideable, ICollideable*, (void));
 

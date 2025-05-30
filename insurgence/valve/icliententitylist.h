@@ -1,9 +1,10 @@
 #pragma once
 
-#include "basehandle.h"
-#include "icliententity.h"
-#include "c_baseentity.h"
-#include "../memory.h"
+class CBaseHandle;
+class IClientEntity;
+class C_BaseEntity;
+class IClientNetworkable;
+class IClientUnknown;
 
 class IClientEntityList
 {
@@ -28,10 +29,5 @@ public:
 	virtual void				SetMaxEntities(int maxents) = 0;
 	virtual int					GetMaxEntities() = 0;
 
-	C_BaseEntity* GetBaseEntityFromHandle(CBaseHandle Handle)
-	{
-		IClientUnknown* Ent = GetClientUnknownFromHandle(Handle);
-
-		return Ent ? Ent->GetBaseEntity() : 0;
-	}
+	C_BaseEntity* GetBaseEntityFromHandle(CBaseHandle Handle);
 };

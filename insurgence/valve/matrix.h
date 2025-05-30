@@ -1,7 +1,9 @@
 #pragma once
 
-#include "vector.h"
 #include <d3d9.h>
+
+class Vector;
+class Angle;
 
 typedef float matrix3x4_t[3][4];
 

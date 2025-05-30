@@ -4,6 +4,7 @@
 #include "iclientrenderable.h"
 #include "iclientthinkable.h"
 #include "iclientunknown.h"
+#include "vector.h"
 
 enum soundlevel_t // TODO: soundflags.h
 {

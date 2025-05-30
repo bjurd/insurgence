@@ -2,7 +2,8 @@
 
 #include "trace.h"
 #include "cmodel.h"
-#include "c_baseentity.h"
+
+class C_BaseEntity;
 
 class CGameTrace : public CBaseTrace
 {

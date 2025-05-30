@@ -1,7 +1,8 @@
 #pragma once
 
-#include "iclientnetworkable.h"
 #include "dt_recv.h"
+
+class IClientNetworkable;
 
 typedef IClientNetworkable* (*CreateClientClassFn)(int entnum, int serialNum);
 typedef IClientNetworkable* (*CreateEventFn)();
