@@ -1,8 +1,11 @@
 #pragma once
 
-#include "valve/c_baseentity.h"
-#include "nwi/c_insplayer.h"
 #include "globals.h"
+#include "valve/dt_recv.h"
+#include <unordered_map>
+
+class C_BaseEntity;
+class C_INSPlayer;
 
 class PlayerIterator
 {
@@ -69,14 +72,38 @@ public:
 	}
 };
 
-class Helpers
+namespace Helpers
 {
-public:
-	static C_BaseEntity* GetLocalPlayerEntity();
-	static C_INSPlayer* GetLocalPlayer();
+	inline std::unordered_map<size_t, RecvProp*> NetVars;
 
-	static inline PlayerRange PlayerIterator()
+	C_BaseEntity* GetLocalPlayerEntity();
+	C_INSPlayer* GetLocalPlayer();
+
+	inline PlayerRange PlayerIterator()
 	{
 		return PlayerRange();
 	}
+
+	void StoreRecvTable(RecvTable* Table);
+	void LoadNetVars();
+
+	template <typename T>
+	T GetNetVar(uintptr_t Base, std::string VarName)
+	{
+		std::hash<std::string> Hash;
+		RecvProp* Prop = Helpers::NetVars[Hash(VarName)];
+
+		if (!Prop)
+			return (T)NULL;
+
+		int Offset = Prop->m_Offset;
+
+		return *(T*)(Base + Offset);
+	}
 };
+
+#define NVPROXY(Type, MethodName, VarName)							\
+	Type MethodName()												\
+	{																\
+		return Helpers::GetNetVar<Type>((uintptr_t)this, VarName);	\
+	}

@@ -2,6 +2,7 @@
 
 #include "globals.h"
 #include "memory.h"
+#include "helpers.h"
 
 void UnMain(HINSTANCE Instance)
 {
@@ -32,6 +33,8 @@ void Main(HINSTANCE Instance)
 
 	if (!Globals->HooksManager->Create())
 		return UnMain(Instance);
+
+	Helpers::LoadNetVars();
 
 	while (true)
 	{

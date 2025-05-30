@@ -25,4 +25,6 @@
 #define CL_Move "48 89 5C 24 ? 57 48 83 EC ? 0F 29 74 24 ? 0F B6 DA"
 #define CL_SendMove "48 89 5C 24 ? 57 B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? E8"
 
+#define ClientDLL_GetAllClasses "48 8B 0D ? ? ? ? 48 85 C9 74 ? 48 8B 01 48 FF 60 ? 48 8B 05"
+
 #endif
