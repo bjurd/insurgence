@@ -8,7 +8,6 @@
 class C_INSPlayer : public C_BaseEntity
 {
 public:
-	NVPROXY(int, GetTeam, "DT_BaseEntity->m_iTeamNum");
 	NVPROXY(int, GetHealth, "DT_BasePlayer->m_iHealth");
 	NVPROXY(int, GetFlags, "DT_BasePlayer->m_fFlags");
 	NVPROXY(int, GetFOV, "DT_BasePlayer->m_iFOV");

@@ -2,6 +2,7 @@
 
 #include "../signatures.h"
 #include "../vmt.h"
+#include "../netvars.h"
 #include "datamap.h"
 #include "icliententity.h"
 
@@ -14,7 +15,9 @@ class Angle;
 class C_BaseEntity : public IClientEntity
 {
 public:
-	// 0x48, 0x50, 0x8C
+	NVPROXY(int, GetTeam, "DT_BaseEntity->m_iTeamNum");
+
+public:
 	PROXYVAR(EntIndex, int, 0x008C);
 	PROXYVAR(EntClientFlags, int, 0x0088);
 	PROXYVAR(IsDormant, bool, 0x0109);
@@ -27,12 +30,4 @@ public:
 	const char* GetClassName();
 
 	CLPROXY(GetCollideable, C_BaseEntity_GetCollideable, ICollideable*, (void));
-
-	// these crash the game for some reason
-	// VPROXY(IsDormant, 78, bool, (void));
-	// VPROXY(IsPlayer, 207, bool, (void));
-
-	// get health 169
-	// get max health 170
-	// start touch 200
 };
