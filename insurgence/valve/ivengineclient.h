@@ -18,6 +18,7 @@ public:
 	VPROXY(SetViewAngles, 19, void, (Angle& Angles), VWRAP(Angles));
 	VPROXY(GetFreeaimAngles, 20, void, (Angle& Angles), VWRAP(Angles));
 	VPROXY(SetFreeaimAngles, 21, void, (Angle& Angles), VWRAP(Angles));
+	VPROXY(GetMaxClients, 22, int, (void));
 	VPROXY(IsInGame, 28, bool, (void));
 	VPROXY(IsConnected, 29, bool, (void));
 	VPROXY(IsBoxInViewCluster, 35, int, (const Vector& Mins, const Vector& Maxs), VWRAP(Mins), VWRAP(Maxs));

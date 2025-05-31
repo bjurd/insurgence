@@ -41,12 +41,12 @@ class PlayerRange
 public:
 	T begin()
 	{
-		return T(1);
+		return T(0);
 	}
 
 	T end()
 	{
-		return T(Globals->PointersManager->EntityList->GetHighestEntityIndex());
+		return T(Globals->PointersManager->Client->GetMaxClients() + 1);
 	}
 };
 
