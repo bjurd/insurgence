@@ -1,18 +1,25 @@
 #include "aimbot.h"
 
+#include "../binds.h"
 #include "../globals.h"
 #include "../helpers.h"
 #include "../nwi/c_insplayer.h"
 #include "../signatures.h"
-#include "../valve/math.h"
-#include "../valve/studio.h"
-#include "../valve/render.h"
-#include "../valve/gametrace.h"
-#include "../valve/const.h"
 #include "../valve/bspflags.h"
+#include "../valve/const.h"
+#include "../valve/gametrace.h"
+#include "../valve/math.h"
+#include "../valve/render.h"
+#include "../valve/studio.h"
+
+bool CanActivate = false;
 
 void Aimbot::Create()
 {
+	Binds::Create(VK_XBUTTON2, BindMode::Hold, std::function([](bool IsPressed, bool WasPressed)
+		{
+			CanActivate = IsPressed;
+		}));
 }
 
 void Aimbot::Destroy()
@@ -134,7 +141,7 @@ Vector GetAimbotTarget()
 
 void Aimbot::OnCreateMove(CUserCmd* Command)
 {
-	if (GetAsyncKeyState(VK_XBUTTON2) && Command->CommandNumber > 0 && Command->TickCount > 0)
+	if (CanActivate && Command->CommandNumber > 0 && Command->TickCount > 0)
 	{
 		Vector AimPos = GetAimbotTarget();
 

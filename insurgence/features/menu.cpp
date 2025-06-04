@@ -1,5 +1,6 @@
 #include "menu.h"
 
+#include "../binds.h"
 #include "../globals.h"
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
@@ -11,6 +12,14 @@ void Menu::Create()
 {
 	this->IsSetup = false;
 	this->IsOpen = false;
+
+	Binds::Create(VK_INSERT, BindMode::Toggle, std::function([](bool IsPressed, bool WasPressed)
+		{
+			static Menu* MenuFeature = (Menu*)Globals->FeaturesManager->Get("Menu");
+
+			if (MenuFeature)
+				MenuFeature->IsOpen = !MenuFeature->IsOpen;
+		}));
 }
 
 void Menu::Destroy()
@@ -43,9 +52,6 @@ void Menu::Setup(LPDIRECT3DDEVICE9 Device)
 
 void Menu::Render()
 {
-	if (GetAsyncKeyState(VK_INSERT) & 0x0001) // TODO: Use ImGui button system
-		this->IsOpen = !this->IsOpen;
-
 	if (!this->IsOpen)
 		return;
 

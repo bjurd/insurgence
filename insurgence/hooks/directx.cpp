@@ -8,6 +8,7 @@
 
 #include "../features/esp.h"
 #include "../features/menu.h"
+#include "../binds.h"
 
 typedef HRESULT(*fnReset)(LPDIRECT3DDEVICE9, D3DPRESENT_PARAMETERS*);
 fnReset oReset;
@@ -64,6 +65,8 @@ HRESULT __stdcall hkEndScene(LPDIRECT3DDEVICE9 Device)
 
 	if (ReturnAddr >= SteamOverlayStart && ReturnAddr < SteamOverlayEnd)
 		return oEndScene(Device); // Don't render in overlay
+
+	Binds::Process();
 
 	static Menu* MenuFeature = (Menu*)Globals->FeaturesManager->Get("Menu");
 

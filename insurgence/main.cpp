@@ -1,5 +1,6 @@
 #include <Windows.h>
 
+#include "binds.h"
 #include "globals.h"
 #include "memory.h"
 #include "netvars.h"
@@ -8,6 +9,8 @@ void UnMain(HINSTANCE Instance)
 {
 	if (Globals)
 	{
+		Binds::Destroy();
+
 		Globals->HooksManager->Destroy();
 		Globals->FeaturesManager->Destroy();
 		Globals->PointersManager->Destroy();
