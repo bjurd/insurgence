@@ -5,8 +5,6 @@
 #include <unordered_map>
 #include <string>
 
-class RecvProp;
-
 namespace NetVars
 {
 	inline std::unordered_map<size_t, RecvProp*> List;
