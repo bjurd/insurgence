@@ -46,12 +46,12 @@ void Binds::Process()
 		{
 		default:
 		case BindMode::None:
-			if (Current->WasPressed)
-				goto RunBind;
+			if (!Current->WasPressed)
+				continue;
 			break;
 
 		case BindMode::Always:
-			goto RunBind;
+			break;
 
 		case BindMode::Hold:
 			if (!IsPressed && !Current->WasPressed)
@@ -64,7 +64,6 @@ void Binds::Process()
 			break;
 		}
 
-	RunBind:
 		Current->Callback(IsPressed, Current->WasPressed);
 		Current->WasPressed = IsPressed;
 	}
