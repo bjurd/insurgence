@@ -5,7 +5,7 @@
 
 typedef std::function<void(bool, bool)> BindCallback; // IsPressed, WasPressed
 
-enum BindMode
+enum BindMode : unsigned char
 {
 	None, // Disabled, runs once when pressed->unpressed
 	Always, // Runs all the time
