@@ -30,5 +30,10 @@ void Features::Destroy()
 
 Feature* Features::Get(std::string Name)
 {
-	return this->List[Name];
+	auto Found = this->List.find(Name);
+
+	if (Found != this->List.end())
+		return Found->second;
+
+	return nullptr;
 }
