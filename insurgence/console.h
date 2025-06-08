@@ -8,6 +8,8 @@ private:
 	FILE* Stream;
 
 public:
+	void Style();
+
 	void Create();
 	void Destroy();
 };
