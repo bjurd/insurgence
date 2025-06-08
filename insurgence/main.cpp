@@ -52,7 +52,7 @@ BOOL WINAPI DllMain(HINSTANCE Instance, DWORD Reason, LPVOID Reserved)
 	{
 	case DLL_PROCESS_ATTACH:
 	{
-		HANDLE Thread = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Main, Instance, NULL, NULL);
+		HANDLE Thread = CreateThread(NULL, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(Main), Instance, NULL, NULL);
 
 		if (!Thread)
 			return FALSE;

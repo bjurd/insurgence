@@ -16,7 +16,7 @@ void Menu::Create()
 
 	Binds::Create(VK_INSERT, BindMode::Toggle, std::function([](bool IsPressed, bool WasPressed)
 		{
-			static Menu* MenuFeature = (Menu*)g_Features->Get("Menu");
+			static Menu* MenuFeature = g_Features->Get<Menu>("Menu");
 
 			if (MenuFeature)
 				MenuFeature->IsOpen = !MenuFeature->IsOpen;
@@ -62,9 +62,9 @@ void Menu::Render()
 
 	if (ImGui::Begin("Assistance Software", nullptr, ImGuiWindowFlags_NoCollapse))
 	{
-		static Aimbot* AimbotFeature = (Aimbot*)g_Features->Get("Aimbot");
+		static Aimbot* AimbotFeature = g_Features->Get<Aimbot>("Aimbot");
 
-		static ESP* ESPFeature = (ESP*)g_Features->Get("ESP");
+		static ESP* ESPFeature = g_Features->Get<ESP>("ESP");
 
 		if (ESPFeature)
 		{

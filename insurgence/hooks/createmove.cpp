@@ -13,7 +13,7 @@ fnCreateMove oCreateMove;
 
 bool __fastcall hkCreateMove(void* _this, float SampleTime, CUserCmd* Command)
 {
-	static Aimbot* AimbotFeature = (Aimbot*)g_Features->Get("Aimbot");
+	static Aimbot* AimbotFeature = g_Features->Get<Aimbot>("Aimbot");
 
 	if (AimbotFeature)
 		AimbotFeature->OnCreateMove(Command);

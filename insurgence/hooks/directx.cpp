@@ -18,7 +18,7 @@ fnPresent oPresent;
 
 HRESULT __stdcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* PresentationParameters)
 {
-	static ESP* ESPFeature = (ESP*)g_Features->Get("ESP");
+	static ESP* ESPFeature = g_Features->Get<ESP>("ESP");
 
 	if (ESPFeature)
 		ESPFeature->DestroyStateBlocks();
@@ -42,12 +42,12 @@ HRESULT __stdcall hkPresent(LPDIRECT3DDEVICE9 Device, const RECT* Source, const 
 {
 	Binds::Process();
 
-	static ESP* ESPFeature = (ESP*)g_Features->Get("ESP");
+	static ESP* ESPFeature = g_Features->Get<ESP>("ESP");
 
 	if (ESPFeature)
 		ESPFeature->Render(Device);
 
-	static Menu* MenuFeature = (Menu*)g_Features->Get("Menu");
+	static Menu* MenuFeature = g_Features->Get<Menu>("Menu");
 
 	if (MenuFeature)
 	{

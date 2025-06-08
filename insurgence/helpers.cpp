@@ -12,7 +12,7 @@ BasePlayerIterator::BasePlayerIterator(int Index)
 
 C_INSPlayer* BasePlayerIterator::operator*() const
 {
-	C_INSPlayer* Player = (C_INSPlayer*)g_Pointers->EntityList->GetClientEntity(Index);
+	C_INSPlayer* Player = static_cast<C_INSPlayer*>(g_Pointers->EntityList->GetClientEntity(Index));
 	return Player;
 }
 
@@ -40,7 +40,7 @@ void BasePlayerIterator::Advance()
 
 	while (Index < Entities)
 	{
-		C_BaseEntity* Entity = (C_BaseEntity*)g_Pointers->EntityList->GetClientEntity(Index);
+		C_BaseEntity* Entity = static_cast<C_BaseEntity*>(g_Pointers->EntityList->GetClientEntity(Index));
 
 		if (!Entity || strcmp(Entity->GetClassName(), "C_INSPlayer") != 0)
 		{
@@ -48,7 +48,7 @@ void BasePlayerIterator::Advance()
 			continue;
 		}
 
-		if (!this->IsValid((C_INSPlayer*)Entity))
+		if (!this->IsValid(static_cast<C_INSPlayer*>(Entity)))
 		{
 			Index++;
 			continue;
@@ -75,10 +75,10 @@ bool TargetPlayerIterator::IsValid(C_INSPlayer* Player)
 
 C_BaseEntity* Helpers::GetLocalPlayerEntity()
 {
-	return (C_BaseEntity*)g_Pointers->EntityList->GetClientEntity(g_Pointers->Client->GetLocalPlayerIndex());
+	return static_cast<C_BaseEntity*>(g_Pointers->EntityList->GetClientEntity(g_Pointers->Client->GetLocalPlayerIndex()));
 }
 
 C_INSPlayer* Helpers::GetLocalPlayer()
 {
-	return (C_INSPlayer*)g_Pointers->EntityList->GetClientEntity(g_Pointers->Client->GetLocalPlayerIndex());
+	return static_cast<C_INSPlayer*>(g_Pointers->EntityList->GetClientEntity(g_Pointers->Client->GetLocalPlayerIndex()));
 }

@@ -15,7 +15,7 @@ LRESULT __stdcall hkWndProc(HWND Window, UINT Message, WPARAM Wide, LPARAM Long)
 
 	ImGui_ImplWin32_WndProcHandler(Window, Message, Wide, Long);
 
-	static Menu* MenuFeature = (Menu*)g_Features->Get("Menu");
+	static Menu* MenuFeature = g_Features->Get<Menu>("Menu");
 
 	if (MenuFeature && MenuFeature->IsOpen)
 	{
@@ -47,7 +47,7 @@ void WndProc::Create()
 		return;
 	}
 
-	oWndProc = (WNDPROC)SetWindowLongPtr(MainWindow, GWLP_WNDPROC, (__int64)(LONG_PTR)hkWndProc);
+	oWndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(MainWindow, GWLP_WNDPROC, reinterpret_cast<__int64>(hkWndProc)));
 
 	if (!oWndProc)
 		printf("Failed to hook WndProc\n");
@@ -56,5 +56,5 @@ void WndProc::Create()
 void WndProc::Destroy()
 {
 	if (MainWindow && oWndProc)
-		SetWindowLongPtr(MainWindow, GWLP_WNDPROC, (__int64)(LONG_PTR)oWndProc);
+		SetWindowLongPtr(MainWindow, GWLP_WNDPROC, reinterpret_cast<__int64>(oWndProc));
 }
