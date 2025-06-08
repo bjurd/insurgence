@@ -1,9 +1,9 @@
 #include "aimbot.h"
 
 #include "../binds.h"
-#include "../globals.h"
 #include "../helpers.h"
 #include "../nwi/c_insplayer.h"
+#include "../pointers.h"
 #include "../signatures.h"
 #include "../valve/bspflags.h"
 #include "../valve/const.h"
@@ -12,6 +12,7 @@
 #include "../valve/render.h"
 #include "../valve/studio.h"
 #include <atomic>
+#include <format>
 
 std::atomic<bool> CanActivate = false;
 
@@ -38,7 +39,7 @@ Vector Aimbot::GetTargetAimPosition(C_INSPlayer* Target)
 	const model_t* Model = Renderable->GetModel();
 	if (!Model) return AimPos;
 
-	studiohdr_t* Studio = Globals->PointersManager->ModelInfo->GetStudiomodel(Model);
+	studiohdr_t* Studio = g_Pointers->ModelInfo->GetStudiomodel(Model);
 	if (!Studio) return AimPos;
 	if (Studio->numhitboxsets < 1) return AimPos;
 
@@ -90,7 +91,7 @@ Vector Aimbot::GetTargetAimPosition(C_INSPlayer* Target)
 			CTraceFilterSimple TraceFilter(LocalPlayer, COLLISION_GROUP_NONE);
 
 			CGameTrace Result;
-			Globals->PointersManager->EngineTrace->TraceRay(Ray, MASK_SHOT, &TraceFilter, &Result);
+			g_Pointers->EngineTrace->TraceRay(Ray, MASK_SHOT, &TraceFilter, &Result);
 
 			if (Result.DidHit() && Result.m_pEnt == Target)
 				return Origin;
@@ -120,7 +121,7 @@ Vector Aimbot::GetAimbotTarget()
 		const model_t* Model = Renderable->GetModel();
 		if (!Model) continue;
 
-		studiohdr_t* Studio = Globals->PointersManager->ModelInfo->GetStudiomodel(Model);
+		studiohdr_t* Studio = g_Pointers->ModelInfo->GetStudiomodel(Model);
 		if (!Studio) continue;
 
 		float CurrentDistance = Player->GetAbsOrigin().DistToSqr(LocalPlayerOrigin);

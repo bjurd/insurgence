@@ -1,6 +1,7 @@
 #include "directx.h"
 
-#include "../globals.h"
+#include "../binds.h"
+#include "../features.h"
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
 #include "../kiero.h"
@@ -8,7 +9,6 @@
 
 #include "../features/esp.h"
 #include "../features/menu.h"
-#include "../binds.h"
 
 typedef HRESULT(*fnReset)(LPDIRECT3DDEVICE9, D3DPRESENT_PARAMETERS*);
 fnReset oReset;
@@ -18,7 +18,7 @@ fnPresent oPresent;
 
 HRESULT __stdcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* PresentationParameters)
 {
-	static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
+	static ESP* ESPFeature = (ESP*)g_Features->Get("ESP");
 
 	if (ESPFeature)
 		ESPFeature->DestroyStateBlocks();
@@ -42,12 +42,12 @@ HRESULT __stdcall hkPresent(LPDIRECT3DDEVICE9 Device, const RECT* Source, const 
 {
 	Binds::Process();
 
-	static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
+	static ESP* ESPFeature = (ESP*)g_Features->Get("ESP");
 
 	if (ESPFeature)
 		ESPFeature->Render(Device);
 
-	static Menu* MenuFeature = (Menu*)Globals->FeaturesManager->Get("Menu");
+	static Menu* MenuFeature = (Menu*)g_Features->Get("Menu");
 
 	if (MenuFeature)
 	{

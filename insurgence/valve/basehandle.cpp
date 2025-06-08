@@ -1,6 +1,6 @@
 #include "basehandle.h"
 
-#include "../globals.h"
+#include "../pointers.h"
 
 bool CBaseHandle::IsInitialized()
 {
@@ -19,5 +19,5 @@ int CBaseHandle::GetSerialNumber()
 
 bool CBaseHandle::IsValid()
 {
-	return this->IsInitialized() && Globals->PointersManager->EntityList->GetClientEntity(this->GetEntryIndex()) != nullptr;
+	return this->IsInitialized() && g_Pointers->EntityList->GetClientEntity(this->GetEntryIndex()) != nullptr;
 }

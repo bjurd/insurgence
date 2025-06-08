@@ -32,14 +32,15 @@ void Console::Style()
 	DrawMenuBar(Console);
 }
 
-void Console::Create()
+bool Console::Create()
 {
-	if (AllocConsole())
-	{
-		freopen_s(&this->Stream, "CONOUT$", "w", stdout);
+	if (!AllocConsole())
+		return false;
 
-		this->Style();
-	}
+	freopen_s(&this->Stream, "CONOUT$", "w", stdout);
+	this->Style();
+
+	return true;
 }
 
 void Console::Destroy()

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "globals.h"
+#include "pointers.h"
+#include "valve/client.h"
 #include <string>
 
 #undef GetClassName
@@ -46,7 +47,7 @@ public:
 
 	T end()
 	{
-		return T(Globals->PointersManager->Client->GetMaxClients() + 1);
+		return T(g_Pointers->Client->GetMaxClients() + 1);
 	}
 };
 

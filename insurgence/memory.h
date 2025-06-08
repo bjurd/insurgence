@@ -6,6 +6,8 @@
 #include <cstdint>
 #include <Windows.h>
 
+#define FreePtr(Pointer) if (Pointer) { delete Pointer; Pointer = nullptr; }
+
 typedef void* (*CreateInterfaceFn)(const char*, int*);
 
 namespace Memory

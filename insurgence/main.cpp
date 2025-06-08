@@ -1,45 +1,39 @@
 #include <Windows.h>
 
 #include "binds.h"
-#include "globals.h"
+#include "console.h"
+#include "features.h"
+#include "hooks.h"
 #include "memory.h"
 #include "netvars.h"
+#include "pointers.h"
+
+#define CreateLib(Name) g_##Name = new Name(); if (!g_##Name || !g_##Name->Create()) return UnMain(Instance);
+#define FreeLibPtr(Lib) if (Lib) { Lib->Destroy(); } FreePtr(Lib);
 
 void UnMain(HINSTANCE Instance)
 {
-	if (Globals)
-	{
-		Binds::Destroy();
+	Binds::Destroy();
 
-		Globals->HooksManager->Destroy();
-		Globals->FeaturesManager->Destroy();
-		Globals->PointersManager->Destroy();
-		Globals->ExternalConsole->Destroy();
+	FreeLibPtr(g_Hooks);
+	FreeLibPtr(g_Features);
+	FreeLibPtr(g_Pointers);
+	FreeLibPtr(g_Console);
 
-		NetVars::Destroy();
-
-		delete Globals;
-	}
+	NetVars::Destroy();
 
 	FreeLibraryAndExitThread(Instance, 0);
 }
 
 void Main(HINSTANCE Instance)
 {
-	Globals = new Insurgence();
-
-	Globals->ExternalConsole->Create();
-
-	if (!Globals->PointersManager->Create())
-		return UnMain(Instance);
+	CreateLib(Console);
+	CreateLib(Pointers);
 
 	NetVars::Create();
 
-	if (!Globals->FeaturesManager->Create())
-		return UnMain(Instance);
-
-	if (!Globals->HooksManager->Create())
-		return UnMain(Instance);
+	CreateLib(Features);
+	CreateLib(Hooks);
 
 	while (true)
 	{

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../valve/c_baseentity.h"
-#include "../signatures.h"
 #include "../netvars.h"
+#include "../signatures.h"
+#include "../valve/c_baseentity.h"
 
 // C_BasePlayer too
 class C_INSPlayer : public C_BaseEntity

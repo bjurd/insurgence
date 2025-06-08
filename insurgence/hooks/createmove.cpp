@@ -1,8 +1,10 @@
 #include "createmove.h"
 
-#include "../globals.h"
-#include "../valve/cusercmd.h"
+#include "../features.h"
+#include "../memory.h"
 #include "../minhook/MinHook.h"
+#include "../signatures.h"
+#include "../valve/cusercmd.h"
 
 #include "../features/aimbot.h"
 
@@ -11,7 +13,7 @@ fnCreateMove oCreateMove;
 
 bool __fastcall hkCreateMove(void* _this, float SampleTime, CUserCmd* Command)
 {
-	static Aimbot* AimbotFeature = (Aimbot*)Globals->FeaturesManager->Get("Aimbot");
+	static Aimbot* AimbotFeature = (Aimbot*)g_Features->Get("Aimbot");
 
 	if (AimbotFeature)
 		AimbotFeature->OnCreateMove(Command);

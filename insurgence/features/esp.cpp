@@ -1,13 +1,14 @@
 #include "esp.h"
 
-#include "../globals.h"
+#include "../cache.h"
 #include "../helpers.h"
 #include "../nwi/c_insplayer.h"
+#include "../pointers.h"
 #include "../signatures.h"
+#include "../valve/icollideable.h"
 #include "../valve/math.h"
 #include "../valve/render.h"
 #include "../valve/studio.h"
-#include "../valve/icollideable.h"
 
 void ESP::Create()
 {
@@ -87,8 +88,8 @@ bool ESP::GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Right, float&
 	const Vector Mins = Collideable->OBBMins() + Player->GetAbsOrigin();
 	const Vector Maxs = Collideable->OBBMaxs() + Player->GetAbsOrigin();
 
-	if (!Globals->PointersManager->Client->IsBoxInViewCluster(Mins, Maxs)) return false;
-	if (Globals->PointersManager->Client->CullBox(Mins, Maxs)) return false; // Redundant I think?
+	if (!g_Pointers->Client->IsBoxInViewCluster(Mins, Maxs)) return false;
+	if (g_Pointers->Client->CullBox(Mins, Maxs)) return false; // Redundant I think?
 
 	const Vector Corners[8] = {
 		Mins,
@@ -152,7 +153,7 @@ void ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
 	ViewPort.MaxZ = 1.0f;
 
 	int ScreenWidth, ScreenHeight;
-	Globals->PointersManager->Client->GetScreenSize(ScreenWidth, ScreenHeight);
+	g_Pointers->Client->GetScreenSize(ScreenWidth, ScreenHeight);
 
 	ViewPort.Width = (DWORD)ScreenWidth;
 	ViewPort.Height = (DWORD)ScreenHeight;
@@ -202,7 +203,6 @@ void ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
 
 	Device->SetTransform(D3DTS_WORLD, &Identity);
 	Device->SetTransform(D3DTS_VIEW, &Identity);
-	/* Device->SetTransform(D3DTS_PROJECTION, &Globals->PointersManager->Client->WorldToViewMatrix().ToDirectX()); */
 
 	D3DXMATRIX Ortho;
 	D3DXMatrixOrthoOffCenterLH(&Ortho, 0.f, (float)ScreenWidth, (float)ScreenHeight, 0.f, 0.f, 1.f);
@@ -212,7 +212,7 @@ void ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
 
 void ESP::Render(LPDIRECT3DDEVICE9 Device)
 {
-	if (!this->Enabled || !Globals->PointersManager->Client->IsInGame())
+	if (!this->Enabled || !g_Pointers->Client->IsInGame())
 		return;
 
 	if (!this->GameStateBlock)

@@ -21,3 +21,5 @@ public:
 
 	Feature* Get(std::string Name);
 };
+
+inline Features* g_Features;

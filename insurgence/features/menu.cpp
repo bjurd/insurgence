@@ -1,12 +1,13 @@
 #include "menu.h"
 
 #include "../binds.h"
-#include "../globals.h"
+#include "../features.h"
+#include "../imgui/imgui.h"
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
 
-#include "esp.h"
 #include "aimbot.h"
+#include "esp.h"
 
 void Menu::Create()
 {
@@ -15,7 +16,7 @@ void Menu::Create()
 
 	Binds::Create(VK_INSERT, BindMode::Toggle, std::function([](bool IsPressed, bool WasPressed)
 		{
-			static Menu* MenuFeature = (Menu*)Globals->FeaturesManager->Get("Menu");
+			static Menu* MenuFeature = (Menu*)g_Features->Get("Menu");
 
 			if (MenuFeature)
 				MenuFeature->IsOpen = !MenuFeature->IsOpen;
@@ -61,9 +62,9 @@ void Menu::Render()
 
 	if (ImGui::Begin("Assistance Software", nullptr, ImGuiWindowFlags_NoCollapse))
 	{
-		static Aimbot* AimbotFeature = (Aimbot*)Globals->FeaturesManager->Get("Aimbot");
+		static Aimbot* AimbotFeature = (Aimbot*)g_Features->Get("Aimbot");
 
-		static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
+		static ESP* ESPFeature = (ESP*)g_Features->Get("ESP");
 
 		if (ESPFeature)
 		{

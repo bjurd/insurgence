@@ -1,9 +1,9 @@
 #include "math.h"
 
-#include "../globals.h"
 #include "../cache.h"
-#include <cmath>
+#include "../pointers.h"
 #include <cfloat>
+#include <cmath>
 
 void CrossProduct(const Vector& A, const Vector& B, Vector& Cross)
 {
@@ -203,7 +203,7 @@ int FrustumTransform(const VMatrix& WorldToSurface, const Vector& Point, Vector&
 	}
 
 	int ScreenWidth, ScreenHeight;
-	Globals->PointersManager->Client->GetScreenSize(ScreenWidth, ScreenHeight);
+	g_Pointers->Client->GetScreenSize(ScreenWidth, ScreenHeight);
 
 	Screen.x = (ScreenWidth * 0.5f) + (Screen.x * 0.5f * ScreenWidth);
 	Screen.y = (ScreenHeight * 0.5f) - (Screen.y * 0.5f * ScreenHeight);

@@ -1,8 +1,8 @@
 #include "cache.h"
 
-#include "globals.h"
+#include "pointers.h"
 
 void Cache::FrameUpdate()
 {
-	Cache::WorldToScreenMatrix = Globals->PointersManager->Client->WorldToScreenMatrix();
+	Cache::WorldToScreenMatrix = g_Pointers->Client->WorldToScreenMatrix();
 }

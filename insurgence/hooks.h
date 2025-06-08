@@ -18,3 +18,5 @@ public:
 	bool Create();
 	void Destroy();
 };
+
+inline Hooks* g_Hooks;

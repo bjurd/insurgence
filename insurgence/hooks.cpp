@@ -1,12 +1,11 @@
+#include <algorithm>
+
 #include "hooks.h"
-
-#include "globals.h"
-#include "minhook/MinHook.h"
-
 #include "hooks/createmove.h"
 #include "hooks/directx.h"
 #include "hooks/paint.h"
 #include "hooks/wndproc.h"
+#include "minhook/MinHook.h"
 
 bool Hooks::Create()
 {

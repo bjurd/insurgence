@@ -1,8 +1,7 @@
 #include "helpers.h"
 
-#include "globals.h"
-#include "valve/c_baseentity.h"
 #include "nwi/c_insplayer.h"
+#include "pointers.h"
 #include <string>
 
 BasePlayerIterator::BasePlayerIterator(int Index)
@@ -13,7 +12,7 @@ BasePlayerIterator::BasePlayerIterator(int Index)
 
 C_INSPlayer* BasePlayerIterator::operator*() const
 {
-	C_INSPlayer* Player = (C_INSPlayer*)Globals->PointersManager->EntityList->GetClientEntity(Index);
+	C_INSPlayer* Player = (C_INSPlayer*)g_Pointers->EntityList->GetClientEntity(Index);
 	return Player;
 }
 
@@ -37,11 +36,11 @@ bool BasePlayerIterator::IsValid(C_INSPlayer* Player)
 
 void BasePlayerIterator::Advance()
 {
-	int Entities = Globals->PointersManager->EntityList->GetHighestEntityIndex();
+	int Entities = g_Pointers->EntityList->GetHighestEntityIndex();
 
 	while (Index < Entities)
 	{
-		C_BaseEntity* Entity = (C_BaseEntity*)Globals->PointersManager->EntityList->GetClientEntity(Index);
+		C_BaseEntity* Entity = (C_BaseEntity*)g_Pointers->EntityList->GetClientEntity(Index);
 
 		if (!Entity || strcmp(Entity->GetClassName(), "C_INSPlayer") != 0)
 		{
@@ -76,10 +75,10 @@ bool TargetPlayerIterator::IsValid(C_INSPlayer* Player)
 
 C_BaseEntity* Helpers::GetLocalPlayerEntity()
 {
-	return (C_BaseEntity*)Globals->PointersManager->EntityList->GetClientEntity(Globals->PointersManager->Client->GetLocalPlayerIndex());
+	return (C_BaseEntity*)g_Pointers->EntityList->GetClientEntity(g_Pointers->Client->GetLocalPlayerIndex());
 }
 
 C_INSPlayer* Helpers::GetLocalPlayer()
 {
-	return (C_INSPlayer*)Globals->PointersManager->EntityList->GetClientEntity(Globals->PointersManager->Client->GetLocalPlayerIndex());
+	return (C_INSPlayer*)g_Pointers->EntityList->GetClientEntity(g_Pointers->Client->GetLocalPlayerIndex());
 }

@@ -10,6 +10,8 @@ private:
 public:
 	void Style();
 
-	void Create();
+	bool Create();
 	void Destroy();
 };
+
+inline Console* g_Console;

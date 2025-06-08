@@ -1,7 +1,5 @@
 #include "features.h"
 
-#include "globals.h"
-
 #include "features/aimbot.h"
 #include "features/esp.h"
 #include "features/menu.h"

@@ -1,9 +1,9 @@
 #include "wndproc.h"
 
-#include "../globals.h"
-#include <Windows.h>
-
+#include "../features.h"
 #include "../features/menu.h"
+#include "../imgui/imgui_impl_win32.h"
+#include <Windows.h>
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND Window, UINT Message, WPARAM Wide, LPARAM Long);
 HWND MainWindow;
@@ -15,7 +15,7 @@ LRESULT __stdcall hkWndProc(HWND Window, UINT Message, WPARAM Wide, LPARAM Long)
 
 	ImGui_ImplWin32_WndProcHandler(Window, Message, Wide, Long);
 
-	static Menu* MenuFeature = (Menu*)Globals->FeaturesManager->Get("Menu");
+	static Menu* MenuFeature = (Menu*)g_Features->Get("Menu");
 
 	if (MenuFeature && MenuFeature->IsOpen)
 	{

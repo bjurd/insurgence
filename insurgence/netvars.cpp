@@ -1,6 +1,7 @@
 #include "netvars.h"
 
-#include "globals.h"
+#include "pointers.h"
+#include "valve/client.h"
 #include "valve/client_class.h"
 #include <format>
 
@@ -26,7 +27,7 @@ void NetVars::StoreRecvTable(RecvTable* Table)
 
 void NetVars::Create()
 {
-	ClientClass* Classes = Globals->PointersManager->Client->GetAllClasses();
+	ClientClass* Classes = g_Pointers->Client->GetAllClasses();
 
 	for (ClientClass* Class = Classes; Class != nullptr; Class = Class->m_pNext)
 		NetVars::StoreRecvTable(Class->m_pRecvTable);

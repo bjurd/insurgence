@@ -51,3 +51,5 @@ public:
 	bool Create();
 	void Destroy();
 };
+
+inline Pointers* g_Pointers;

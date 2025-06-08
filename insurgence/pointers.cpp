@@ -1,6 +1,6 @@
 #include "pointers.h"
 
-#include "globals.h"
+#include "memory.h"
 #include "signatures.h"
 #include "valve/interfaces.h"
 
