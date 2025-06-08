@@ -13,6 +13,7 @@
 #include "../valve/studio.h"
 #include <atomic>
 #include <format>
+#include <array>
 
 std::atomic<bool> CanActivate = false;
 
@@ -28,28 +29,46 @@ void Aimbot::Destroy()
 {
 }
 
-Vector Aimbot::GetTargetAimPosition(C_INSPlayer* Target)
+bool Aimbot::ShouldAimAtGroup(int Hitgroup)
 {
-	Vector AimPos;
-	AimPos.Invalidate();
+	switch (Hitgroup)
+	{
+	case HITGROUP_HEAD:
+		return this->TargetHead;
+
+	case HITGROUP_CHEST:
+	case HITGROUP_STOMACH:
+		return this->TargetTorso;
+
+	case HITGROUP_LEFTARM:
+	case HITGROUP_RIGHTARM:
+	case HITGROUP_LEFTLEG:
+	case HITGROUP_RIGHTLEG:
+		return this->TargetLimbs;
+
+	default:
+		return false;
+	}
+}
+
+std::unordered_map<int, std::vector<Vector>> Aimbot::GetHitgroupPositions(C_INSPlayer* Target)
+{
+	std::unordered_map<int, std::vector<Vector>> Positions; // Slightly sketch variable naming
 
 	IClientRenderable* Renderable = Target->GetClientRenderable();
-	if (!Renderable) return AimPos;
+	if (!Renderable) return Positions;
 
 	const model_t* Model = Renderable->GetModel();
-	if (!Model) return AimPos;
+	if (!Model) return Positions;
 
 	studiohdr_t* Studio = g_Pointers->ModelInfo->GetStudiomodel(Model);
-	if (!Studio) return AimPos;
-	if (Studio->numhitboxsets < 1) return AimPos;
+	if (!Studio) return Positions;
+	if (Studio->numhitboxsets < 1) return Positions;
 
 	matrix3x4_t BoneMatrices[MAXSTUDIOBONES];
 
 	if (!Target->SetupBonesReal(BoneMatrices, MAXSTUDIOBONES, BONE_USED_BY_ANYTHING, 0.f))
-		return AimPos;
-
-	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
-	Vector ViewOrigin = GetMainViewOrigin();
+		return Positions;
 
 	for (int s = 0; s < Studio->numhitboxsets; ++s)
 	{
@@ -62,7 +81,7 @@ Vector Aimbot::GetTargetAimPosition(C_INSPlayer* Target)
 		{
 			mstudiobbox_t* Hitbox = HitboxSet->GetHitbox(h);
 
-			if (!Hitbox || Hitbox->group != HITGROUP_HEAD)
+			if (!Hitbox || !this->ShouldAimAtGroup(Hitbox->group))
 				continue;
 
 			mstudiobone_t* Bone = Studio->GetBone(Hitbox->bone);
@@ -70,6 +89,7 @@ Vector Aimbot::GetTargetAimPosition(C_INSPlayer* Target)
 			if (!Bone || !(Bone->flags & BONE_USED_BY_HITBOX)) // Should never happen
 				continue;
 
+			// Move position to center of hitbox
 			VMatrix BoneMatrix = BoneMatrices[Hitbox->bone];
 
 			Vector Origin;
@@ -85,44 +105,81 @@ Vector Aimbot::GetTargetAimPosition(C_INSPlayer* Target)
 
 			Origin += ((Mins + Maxs) / 2.f);
 
-			Ray_t Ray;
-			Ray.Init(ViewOrigin, Origin);
+			// Save
+			auto Found = Positions.find(Hitbox->group);
 
-			CTraceFilterSimple TraceFilter(LocalPlayer, COLLISION_GROUP_NONE);
+			if (Found == Positions.end())
+			{
+				Positions[Hitbox->group] = std::vector<Vector>();
+				Found = Positions.find(Hitbox->group);
+			}
 
-			CGameTrace Result;
-			g_Pointers->EngineTrace->TraceRay(Ray, MASK_SHOT, &TraceFilter, &Result);
+			std::vector<Vector>& HitgroupPositions = Found->second;
+			HitgroupPositions.push_back(Origin);
+		}
+	}
 
-			if (Result.DidHit() && Result.m_pEnt == Target)
-				return Origin;
+	return Positions;
+}
+
+Vector Aimbot::GetIdealAimPosition(C_INSPlayer* Target, const std::unordered_map<int, std::vector<Vector>>& HitgroupPositions)
+{
+	Vector AimPos;
+	AimPos.Invalidate();
+
+	if (HitgroupPositions.empty())
+		return AimPos;
+
+	const static std::array<int, 7> HitgroupOrder = { HITGROUP_HEAD, HITGROUP_CHEST, HITGROUP_STOMACH, HITGROUP_LEFTARM, HITGROUP_RIGHTARM, HITGROUP_LEFTLEG, HITGROUP_RIGHTLEG };
+
+	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
+	Vector ViewOrigin = GetMainViewOrigin();
+
+	Ray_t Ray;
+	CTraceFilterSimple TraceFilter(LocalPlayer, COLLISION_GROUP_NONE);
+
+	for (int Hitgroup : HitgroupOrder)
+	{
+		auto Found = HitgroupPositions.find(Hitgroup);
+
+		if (Found != HitgroupPositions.end())
+		{
+			for (const Vector& Position : Found->second)
+			{
+				Ray.Init(ViewOrigin, Position);
+
+				CGameTrace Result;
+				g_Pointers->EngineTrace->TraceRay(Ray, MASK_SHOT, &TraceFilter, &Result);
+
+				if (Result.DidHit() && Result.m_pEnt == Target)
+				{
+					VectorCopy(Position, AimPos);
+					return AimPos;
+				}
+			}
 		}
 	}
 
 	return AimPos;
 }
 
-Vector Aimbot::GetAimbotTarget()
+Vector Aimbot::GetTargetAimPosition(C_INSPlayer* Target)
 {
-	Vector AimPos;
-	AimPos.Invalidate();
+	std::unordered_map<int, std::vector<Vector>> HitgroupPositions = this->GetHitgroupPositions(Target);
 
+	return this->GetIdealAimPosition(Target, HitgroupPositions);
+}
+
+C_INSPlayer* Aimbot::GetTarget()
+{
+	C_INSPlayer* Target = nullptr;
 	float Distance = FLT_MAX;
 
-	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
-	Vector LocalPlayerOrigin = LocalPlayer->GetAbsOrigin();
+	Vector LocalPlayerOrigin = Helpers::GetLocalPlayer()->GetAbsOrigin();
 
 	for (C_INSPlayer* Player : Helpers::Iterators::TargetPlayers())
 	{
 		if (!Player) continue;
-
-		IClientRenderable* Renderable = Player->GetClientRenderable();
-		if (!Renderable) continue;
-
-		const model_t* Model = Renderable->GetModel();
-		if (!Model) continue;
-
-		studiohdr_t* Studio = g_Pointers->ModelInfo->GetStudiomodel(Model);
-		if (!Studio) continue;
 
 		float CurrentDistance = Player->GetAbsOrigin().DistToSqr(LocalPlayerOrigin);
 
@@ -132,26 +189,42 @@ Vector Aimbot::GetAimbotTarget()
 
 			if (CurrentAimPos.IsValid())
 			{
-				AimPos = CurrentAimPos;
+				Target = Player;
 				Distance = CurrentDistance;
 			}
 		}
 	}
 
-	return AimPos;
+	return Target;
+}
+
+Vector Aimbot::GetAimPosition()
+{
+	C_INSPlayer* Target = this->GetTarget();
+
+	if (!Target)
+	{
+		Vector AimPos;
+		AimPos.Invalidate();
+
+		return AimPos;
+	}
+
+	return this->GetTargetAimPosition(Target);
 }
 
 void Aimbot::OnCreateMove(CUserCmd* Command)
 {
+	if (!this->Enabled)
+		return;
+
 	if (CanActivate.load() && Command->CommandNumber > 0 && Command->TickCount > 0)
 	{
-		Vector AimPos = this->GetAimbotTarget();
+		Vector AimPos = this->GetAimPosition();
 
 		if (AimPos.IsValid())
 		{
-			// C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
-
-			Vector AimDir = AimPos - GetMainViewOrigin(); // LocalPlayer->GetAbsOrigin();
+			Vector AimDir = AimPos - GetMainViewOrigin();
 
 			Angle AimAng;
 			VectorAngles(AimDir, AimAng);
