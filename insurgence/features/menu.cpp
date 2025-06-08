@@ -89,6 +89,7 @@ void Menu::Render()
 			{
 				ImGui::SeparatorText("Visuals");
 
+				ImGui::Indent(10.f);
 				if (ImGui::BeginChild("##MainMenu_Visuals_Player", ImVec2(), ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY))
 				{
 					ImGui::SeparatorText("Players");
@@ -98,6 +99,7 @@ void Menu::Render()
 					ImGui::Checkbox("Names", &ESPFeature->Names);
 				}
 				ImGui::EndChild();
+				ImGui::Unindent(10.f);
 			}
 			ImGui::EndChild();
 		}
