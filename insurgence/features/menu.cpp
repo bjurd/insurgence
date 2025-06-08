@@ -5,6 +5,7 @@
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
+#include "../pointers.h"
 
 #include "aimbot.h"
 #include "esp.h"
@@ -19,7 +20,19 @@ void Menu::Create()
 			static Menu* MenuFeature = g_Features->Get<Menu>("Menu");
 
 			if (MenuFeature)
+			{
 				MenuFeature->IsOpen = !MenuFeature->IsOpen;
+
+				if (MenuFeature->IsOpen)
+				{
+					g_Pointers->Surface->UnlockCursor();
+					g_Pointers->Surface->SetCursor(CursorCode::dc_alwaysvisible_push);
+				}
+				else
+				{
+					g_Pointers->Surface->SetCursor(CursorCode::dc_alwaysvisible_pop);
+				}
+			}
 		}));
 }
 
@@ -37,6 +50,7 @@ void Menu::Setup(LPDIRECT3DDEVICE9 Device)
 	ImGui::CreateContext();
 
 	ImGuiIO& IO = ImGui::GetIO();
+	IO.MouseDrawCursor = false;
 	IO.WantCaptureMouse = true;
 	IO.WantCaptureKeyboard = true;
 	IO.IniFilename = NULL;

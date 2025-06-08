@@ -21,7 +21,10 @@ void __fastcall hkSetCursor(ISurface* _this, CursorCode Cursor)
 	static Menu* MenuFeature = g_Features->Get<Menu>("Menu");
 
 	if (MenuFeature && MenuFeature->IsOpen)
-		Cursor = CursorCode::dc_blank; // ImGui control
+	{
+		if (Cursor != CursorCode::dc_alwaysvisible_push && Cursor != CursorCode::dc_alwaysvisible_pop)
+			Cursor = CursorCode::dc_arrow;
+	}
 
 	oSetCursor(_this, Cursor);
 }
