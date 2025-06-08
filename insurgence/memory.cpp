@@ -1,10 +1,14 @@
 #include "memory.h"
 
-#include <Windows.h>
 #include <Psapi.h>
+#include <unordered_map>
+#include <Windows.h>
 
 void Memory::ParseSignature(const std::string& Signature, std::vector<uint8_t>& Pattern, std::vector<bool>& Mask)
 {
+	Pattern.reserve(Signature.length() / 3 + 1);
+	Mask.reserve(Signature.length() / 3 + 1);
+
 	std::istringstream Stream(Signature);
 	std::string Token;
 
@@ -32,21 +36,29 @@ uintptr_t Memory::ScanMemory(uintptr_t Base, size_t Size, std::vector<uint8_t>& 
 	if (Length == 0 || Size < Length)
 		return 0;
 
-	for (size_t i = 0; i <= Size - Length; ++i)
-	{
-		bool Match = true;
+	uint8_t FirstByte = Pattern[0];
+	bool FirstWildcard = Mask[0];
 
-		for (size_t j = 0; j < Length; ++j)
+	for (size_t i = 0; i <= Size - Length;)
+	{
+		if (FirstWildcard || FirstByte == *reinterpret_cast<uint8_t*>(Base + i))
 		{
-			if (!Mask[j] && Pattern[j] != *reinterpret_cast<uint8_t*>(Base + i + j))
+			bool Match = true;
+
+			for (size_t j = 1; j < Length; ++j)
 			{
-				Match = false;
-				break;
+				if (!Mask[j] && Pattern[j] != *reinterpret_cast<uint8_t*>(Base + i + j))
+				{
+					Match = false;
+					break;
+				}
 			}
+
+			if (Match)
+				return Base + i;
 		}
 
-		if (Match)
-			return Base + i;
+		i++;
 	}
 
 	return 0;
