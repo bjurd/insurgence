@@ -110,7 +110,7 @@ Vector Aimbot::GetAimbotTarget()
 	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
 	Vector LocalPlayerOrigin = LocalPlayer->GetAbsOrigin();
 
-	for (C_INSPlayer* Player : Helpers::TargetsPlayerIterator())
+	for (C_INSPlayer* Player : Helpers::Iterators::TargetPlayers())
 	{
 		if (!Player) continue;
 

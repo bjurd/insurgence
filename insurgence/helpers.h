@@ -55,13 +55,16 @@ namespace Helpers
 	C_BaseEntity* GetLocalPlayerEntity();
 	C_INSPlayer* GetLocalPlayer();
 
-	inline PlayerRange<BasePlayerIterator> PlayerIterator()
+	namespace Iterators
 	{
-		return PlayerRange<BasePlayerIterator>();
-	}
+		inline PlayerRange<BasePlayerIterator> AllPlayers()
+		{
+			return PlayerRange<BasePlayerIterator>();
+		}
 
-	inline PlayerRange<TargetPlayerIterator> TargetsPlayerIterator()
-	{
-		return PlayerRange<TargetPlayerIterator>();
+		inline PlayerRange<TargetPlayerIterator> TargetPlayers()
+		{
+			return PlayerRange<TargetPlayerIterator>();
+		}
 	}
 };

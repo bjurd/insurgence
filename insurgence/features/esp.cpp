@@ -235,7 +235,7 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 	{
 		float Left, Right, Top, Bottom;
 
-		for (C_INSPlayer* Player : Helpers::TargetsPlayerIterator())
+		for (C_INSPlayer* Player : Helpers::Iterators::TargetPlayers())
 		{
 			if (!Player) continue;
 
