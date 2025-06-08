@@ -11,9 +11,12 @@
 #include "../valve/math.h"
 #include "../valve/render.h"
 #include "../valve/studio.h"
+#include <algorithm>
+#include <array>
 #include <atomic>
 #include <format>
-#include <array>
+
+const static std::array<int, 7> HitgroupOrder = { HITGROUP_HEAD, HITGROUP_CHEST, HITGROUP_STOMACH, HITGROUP_LEFTARM, HITGROUP_RIGHTARM, HITGROUP_LEFTLEG, HITGROUP_RIGHTLEG };
 
 std::atomic<bool> CanActivate = false;
 
@@ -27,6 +30,58 @@ void Aimbot::Create()
 
 void Aimbot::Destroy()
 {
+}
+
+std::pair<bool, float> Aimbot::PositionInFOV(const Vector& Position)
+{
+	float FOV = this->FOV;
+
+	if (FOV <= 0.f)
+		FOV = 360.f;
+
+	Vector ViewDirection;
+	AngleVectors(GetMainViewAngles(), ViewDirection);
+
+	Vector Direction = Position - GetMainViewOrigin();
+	VectorNormalize(Direction);
+
+	float Dot = DotProduct(ViewDirection, Direction);
+	float Adjusted = cosf(DEG2RAD(FOV) / 2.f);
+
+	return std::make_pair<bool, float>(Dot >= Adjusted, Dot / Direction.Length());
+}
+
+float Aimbot::DistanceFromCrosshair(const Vector& Position)
+{
+	std::pair<bool, float> Result = this->PositionInFOV(Position);
+
+	if (Result.first)
+		return Result.second;
+
+	return -1.f;
+}
+
+float Aimbot::DistanceFromCrosshair(C_INSPlayer* Target) // TODO: Pass HitgroupPositions in
+{
+	std::unordered_map<int, std::vector<Vector>> HitgroupPositions = this->GetHitgroupPositions(Target);
+
+	for (int Hitgroup : HitgroupOrder)
+	{
+		auto Found = HitgroupPositions.find(Hitgroup);
+
+		if (Found != HitgroupPositions.end())
+		{
+			for (const Vector& Position : Found->second)
+			{
+				float Distance = this->DistanceFromCrosshair(Position);
+
+				if (Distance >= 0.f)
+					return Distance;
+			}
+		}
+	}
+
+	return -1.f;
 }
 
 bool Aimbot::ShouldAimAtGroup(int Hitgroup)
@@ -106,16 +161,19 @@ std::unordered_map<int, std::vector<Vector>> Aimbot::GetHitgroupPositions(C_INSP
 			Origin += ((Mins + Maxs) / 2.f);
 
 			// Save
-			auto Found = Positions.find(Hitbox->group);
-
-			if (Found == Positions.end())
+			if (Origin.IsValid())
 			{
-				Positions[Hitbox->group] = std::vector<Vector>();
-				Found = Positions.find(Hitbox->group);
-			}
+				auto Found = Positions.find(Hitbox->group);
 
-			std::vector<Vector>& HitgroupPositions = Found->second;
-			HitgroupPositions.push_back(Origin);
+				if (Found == Positions.end())
+				{
+					Positions[Hitbox->group] = std::vector<Vector>();
+					Found = Positions.find(Hitbox->group);
+				}
+
+				std::vector<Vector>& HitgroupPositions = Found->second;
+				HitgroupPositions.push_back(Origin);
+			}
 		}
 	}
 
@@ -129,8 +187,6 @@ Vector Aimbot::GetIdealAimPosition(C_INSPlayer* Target, const std::unordered_map
 
 	if (HitgroupPositions.empty())
 		return AimPos;
-
-	const static std::array<int, 7> HitgroupOrder = { HITGROUP_HEAD, HITGROUP_CHEST, HITGROUP_STOMACH, HITGROUP_LEFTARM, HITGROUP_RIGHTARM, HITGROUP_LEFTLEG, HITGROUP_RIGHTLEG };
 
 	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
 	Vector ViewOrigin = GetMainViewOrigin();
@@ -170,47 +226,54 @@ Vector Aimbot::GetTargetAimPosition(C_INSPlayer* Target)
 	return this->GetIdealAimPosition(Target, HitgroupPositions);
 }
 
-C_INSPlayer* Aimbot::GetTarget()
+std::pair<C_INSPlayer*, Vector> Aimbot::GetTarget()
 {
-	C_INSPlayer* Target = nullptr;
-	float Distance = FLT_MAX;
+	struct TargetEntry // Avoid "this" in lambda
+	{
+		C_INSPlayer* Player;
+		float Distance;
+	};
 
-	Vector LocalPlayerOrigin = Helpers::GetLocalPlayer()->GetAbsOrigin();
+	std::vector<TargetEntry> Targets;
+	Targets.reserve(g_Pointers->Client->GetMaxClients() + 1);
 
 	for (C_INSPlayer* Player : Helpers::Iterators::TargetPlayers())
 	{
 		if (!Player) continue;
 
-		float CurrentDistance = Player->GetAbsOrigin().DistToSqr(LocalPlayerOrigin);
+		float Distance = this->DistanceFromCrosshair(Player);
 
-		if (CurrentDistance < Distance)
-		{
-			Vector CurrentAimPos = this->GetTargetAimPosition(Player);
+		if (Distance < 0.f)
+			continue;
 
-			if (CurrentAimPos.IsValid())
-			{
-				Target = Player;
-				Distance = CurrentDistance;
-			}
-		}
+		Targets.push_back(TargetEntry{ Player, Distance });
 	}
 
-	return Target;
+	std::sort(Targets.begin(), Targets.end(),
+		[](const TargetEntry& A, const TargetEntry& B)
+		{
+			return A.Distance < B.Distance;
+		});
+
+	for (const auto& Entry : Targets)
+	{
+		Vector AimPos = this->GetTargetAimPosition(Entry.Player);
+
+		if (AimPos.IsValid())
+			return { Entry.Player, AimPos }; // make_pair shits bricks when used here
+	}
+
+	Vector AimPos;
+	AimPos.Invalidate();
+
+	return { nullptr, AimPos }; // Here too
 }
 
 Vector Aimbot::GetAimPosition()
 {
-	C_INSPlayer* Target = this->GetTarget();
+	auto [Target, AimPos] = this->GetTarget();
 
-	if (!Target)
-	{
-		Vector AimPos;
-		AimPos.Invalidate();
-
-		return AimPos;
-	}
-
-	return this->GetTargetAimPosition(Target);
+	return AimPos;
 }
 
 void Aimbot::OnCreateMove(CUserCmd* Command)

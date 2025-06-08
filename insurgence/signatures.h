@@ -19,6 +19,8 @@
 #define Render_GetMainViewOrigin "48 63 C1 48 8D 0C 40 48 8D 05 ? ? ? ? 48 8D 04 88 C3 CC CC CC CC CC CC CC CC CC CC CC CC CC 48 63 C1 48 8D 0C 40 48 8D 05 ? ? ? ? 48 8D 04 88 C3 CC CC CC CC CC CC CC CC CC CC CC CC CC 48 63 C1 48 8D 0C 40 48 8D 05 ? ? ? ? 48 8D 04 88 C3 CC CC CC CC CC CC CC CC CC CC CC CC CC 40 53"
 #define Render_GetMainViewOrigin_Call "E8 ? ? ? ? 33 C9 F3 0F 10 38"
 
+#define Render_GetMainViewAngles_Call "E8 ? ? ? ? 33 C9 F3 44 0F 10 10"
+
 // engine.dll
 #define Engine_GetClientState "48 8B 05 ? ? ? ? 48 83 C0" // TODO: This is weird
 
