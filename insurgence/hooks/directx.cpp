@@ -16,12 +16,6 @@ fnReset oReset;
 typedef HRESULT(*fnPresent)(LPDIRECT3DDEVICE9, const RECT*, const RECT*, HWND, const RGNDATA*);
 fnPresent oPresent;
 
-typedef HRESULT(*fnEndScene)(LPDIRECT3DDEVICE9);
-fnEndScene oEndScene;
-
-static uintptr_t SteamOverlayStart = 0;
-static uintptr_t SteamOverlayEnd = 0;
-
 HRESULT __stdcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* PresentationParameters)
 {
 	static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
@@ -46,27 +40,12 @@ HRESULT __stdcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* Prese
 
 HRESULT __stdcall hkPresent(LPDIRECT3DDEVICE9 Device, const RECT* Source, const RECT* Destination, HWND Window, const RGNDATA* Dirty)
 {
+	Binds::Process();
+
 	static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
 
 	if (ESPFeature)
 		ESPFeature->Render(Device);
-
-	return oPresent(Device, Source, Destination, Window, Dirty);
-}
-
-HRESULT __stdcall hkEndScene(LPDIRECT3DDEVICE9 Device)
-{
-	static ESP* ESPFeature = (ESP*)Globals->FeaturesManager->Get("ESP");
-
-	if (ESPFeature && ESPFeature->InScene)
-		return oEndScene(Device);
-
-	uintptr_t ReturnAddr = reinterpret_cast<uintptr_t>(_ReturnAddress());
-
-	if (ReturnAddr >= SteamOverlayStart && ReturnAddr < SteamOverlayEnd)
-		return oEndScene(Device); // Don't render in overlay
-
-	Binds::Process();
 
 	static Menu* MenuFeature = (Menu*)Globals->FeaturesManager->Get("Menu");
 
@@ -76,50 +55,28 @@ HRESULT __stdcall hkEndScene(LPDIRECT3DDEVICE9 Device)
 		MenuFeature->Render();
 	}
 
-	return oEndScene(Device);
+	return oPresent(Device, Source, Destination, Window, Dirty);
 }
 
 void DirectX::Create()
 {
+	// TODO: Failure notifications and maybe retries or something
+	// Really all these ::Create methods should be bools to signal failure
+
 	if (kiero::init(kiero::RenderType::D3D9) != kiero::Status::Success)
-	{
-		printf("No init\n");
 		return;
-	}
 
 	if (kiero::bind(16, (void**)&oReset, hkReset) != kiero::Status::Success)
-	{
-		printf("No reset\n");
 		return;
-	}
 
 	if (kiero::bind(17, (void**)&oPresent, hkPresent) != kiero::Status::Success)
-	{
-		printf("No present\n");
 		return;
-	}
-
-	if (kiero::bind(42, (void**)&oEndScene, hkEndScene) != kiero::Status::Success)
-	{
-		printf("No endscene\n");
-		return;
-	}
-
-	uintptr_t Base = 0;
-	size_t Size = 0;
-
-	if (Memory::GetModuleInfo(L"gameoverlayrenderer64.dll", Base, Size))
-	{
-		SteamOverlayStart = Base;
-		SteamOverlayEnd = Base + Size;
-	}
 }
 
 void DirectX::Destroy()
 {
 	kiero::unbind(16);
 	kiero::unbind(17);
-	kiero::unbind(42);
 
 	kiero::shutdown();
 	ImGui_ImplDX9_Shutdown();
