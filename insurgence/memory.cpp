@@ -39,7 +39,7 @@ uintptr_t Memory::ScanMemory(uintptr_t Base, size_t Size, std::vector<uint8_t>& 
 	uint8_t FirstByte = Pattern[0];
 	bool FirstWildcard = Mask[0];
 
-	for (size_t i = 0; i <= Size - Length;)
+	for (size_t i = 0; i <= Size - Length; ++i)
 	{
 		if (FirstWildcard || FirstByte == *reinterpret_cast<uint8_t*>(Base + i))
 		{
@@ -57,8 +57,6 @@ uintptr_t Memory::ScanMemory(uintptr_t Base, size_t Size, std::vector<uint8_t>& 
 			if (Match)
 				return Base + i;
 		}
-
-		i++;
 	}
 
 	return 0;
