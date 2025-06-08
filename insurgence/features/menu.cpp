@@ -64,13 +64,42 @@ void Menu::Render()
 	{
 		static Aimbot* AimbotFeature = g_Features->Get<Aimbot>("Aimbot");
 
+		if (AimbotFeature)
+		{
+			if (ImGui::BeginChild("##MainMenu_Aimbot", ImVec2(), ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY))
+			{
+				ImGui::SeparatorText("Aimbot");
+
+				ImGui::Checkbox("Enabled", &AimbotFeature->Enabled);
+
+				// TODO: Aim key
+
+				ImGui::Checkbox("Target Head", &AimbotFeature->TargetHead); // TODO: Multi-select dropdown
+				ImGui::Checkbox("Target Body", &AimbotFeature->TargetTorso);
+				ImGui::Checkbox("Target Limbs", &AimbotFeature->TargetLimbs);
+			}
+			ImGui::EndChild();
+		}
+
 		static ESP* ESPFeature = g_Features->Get<ESP>("ESP");
 
 		if (ESPFeature)
 		{
-			ImGui::Checkbox("ESP", &ESPFeature->Enabled);
-			ImGui::Checkbox("Player Boxes", &ESPFeature->Boxes);
-			ImGui::Checkbox("Player Names", &ESPFeature->Names);
+			if (ImGui::BeginChild("##MainMenu_Visuals", ImVec2(), ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY))
+			{
+				ImGui::SeparatorText("Visuals");
+
+				if (ImGui::BeginChild("##MainMenu_Visuals_Player", ImVec2(), ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY))
+				{
+					ImGui::SeparatorText("Players");
+
+					ImGui::Checkbox("ESP", &ESPFeature->Enabled);
+					ImGui::Checkbox("Boxes", &ESPFeature->Boxes);
+					ImGui::Checkbox("Names", &ESPFeature->Names);
+				}
+				ImGui::EndChild();
+			}
+			ImGui::EndChild();
 		}
 	}
 	ImGui::End();
