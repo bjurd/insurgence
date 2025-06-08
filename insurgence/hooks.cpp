@@ -1,11 +1,13 @@
 #include <algorithm>
 
 #include "hooks.h"
+#include "minhook/MinHook.h"
+
 #include "hooks/createmove.h"
+#include "hooks/cursor.h"
 #include "hooks/directx.h"
 #include "hooks/paint.h"
 #include "hooks/wndproc.h"
-#include "minhook/MinHook.h"
 
 bool Hooks::Create()
 {
@@ -14,6 +16,7 @@ bool Hooks::Create()
 
 	this->List = std::vector<Hook*>();
 	this->List.push_back(new CreateMove());
+	this->List.push_back(new Cursor());
 	this->List.push_back(new DirectX());
 	this->List.push_back(new Paint());
 	this->List.push_back(new WndProc());

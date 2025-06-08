@@ -4,6 +4,7 @@
 #include "valve/enginetrace.h"
 #include "valve/icliententitylist.h"
 #include "valve/ienginevgui.h"
+#include "valve/isurface.h"
 #include "valve/ivengineclient.h"
 #include "valve/ivmodelinfo.h"
 
@@ -20,6 +21,7 @@ public:
 	IVModelInfo* ModelInfo;
 	CEngineTrace* EngineTrace;
 	IEngineVGuiInternal* EngineVGui;
+	ISurface* Surface;
 
 public:
 	template <typename T>

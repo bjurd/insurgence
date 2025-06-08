@@ -5,6 +5,7 @@
 
 // client.dll
 #define VCLIENTENTITYLIST_INTERFACE_VERSION "VClientEntityList003"
+#define VGUI_SURFACE_INTERFACE_VERSION "VGUI_Surface031"
 
 // engine.dll
 #define VENGINE_CLIENT_INTERFACE_VERSION "VEngineClient014"

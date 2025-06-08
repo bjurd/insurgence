@@ -21,6 +21,9 @@ bool Pointers::Create()
 	if (!this->PrintGrabInterface<IEngineVGuiInternal>("Engine VGui", "engine.dll", VENGINE_VGUI_INTERFACE_VERSION, this->EngineVGui))
 		return false;
 
+	if (!this->PrintGrabInterface<ISurface>("Surface", "vguimatsurface.dll", VGUI_SURFACE_INTERFACE_VERSION, this->Surface))
+		return false;
+
 	//uintptr_t GetClientStateAddr = Memory::FindSignature("engine.dll", Engine_GetClientState);
 
 	//if (GetClientStateAddr)
@@ -35,4 +38,6 @@ void Pointers::Destroy()
 	this->Client = nullptr;
 	this->ModelInfo = nullptr;
 	this->EngineTrace = nullptr;
+	this->EngineVGui = nullptr;
+	this->Surface = nullptr;
 }

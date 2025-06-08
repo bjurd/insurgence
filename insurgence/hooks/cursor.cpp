@@ -1,0 +1,42 @@
+#include "cursor.h"
+
+#include "../features.h"
+#include "../minhook/MinHook.h"
+#include "../pointers.h"
+#include "../valve/isurface.h"
+
+#include "../features/menu.h"
+
+typedef void (*fnUnlockCursor)(ISurface* _this);
+fnUnlockCursor oUnlockCursor;
+
+typedef void (*fnLockCursor)(ISurface* _this);
+fnLockCursor oLockCursor;
+
+void __fastcall hkUnlockCursor(ISurface* _this)
+{
+	oUnlockCursor(_this);
+}
+
+void __fastcall hkLockCursor(ISurface* _this)
+{
+	static Menu* MenuFeature = g_Features->Get<Menu>("Menu");
+
+	if (MenuFeature && MenuFeature->IsOpen)
+	{
+		_this->UnlockCursor();
+		return;
+	}
+
+	oLockCursor(_this);
+}
+
+void Cursor::Create()
+{
+	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<char***>(g_Pointers->Surface), 66), &hkUnlockCursor, reinterpret_cast<LPVOID*>(&oUnlockCursor));
+	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<char***>(g_Pointers->Surface), 67), &hkLockCursor, reinterpret_cast<LPVOID*>(&oLockCursor));
+}
+
+void Cursor::Destroy()
+{
+}
