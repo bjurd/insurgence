@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 
-Bind::Bind(int KeyCode, BindMode Mode, BindCallback Callback)
+Bind::Bind(uint8_t KeyCode, BindMode Mode, BindCallback Callback)
 {
 	this->KeyCode = KeyCode;
 	this->Mode = Mode;
@@ -31,7 +31,7 @@ bool Bind::IsPressed()
 	}
 }
 
-void Binds::Create(int KeyCode, BindMode Mode, BindCallback Callback)
+void Binds::Create(uint8_t KeyCode, BindMode Mode, BindCallback Callback)
 {
 	Binds::List.push_back(new Bind(KeyCode, Mode, Callback));
 }

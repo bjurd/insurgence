@@ -19,12 +19,12 @@ class Bind
 public:
 	bool WasPressed = false;
 
-	int KeyCode;
+	uint8_t KeyCode; // Max VK is 0xFE
 	BindMode Mode;
 	BindCallback Callback;
 
 public:
-	Bind(int KeyCode, BindMode Mode, BindCallback Callback);
+	Bind(uint8_t KeyCode, BindMode Mode, BindCallback Callback);
 
 	bool IsPressed();
 };
@@ -33,7 +33,7 @@ namespace Binds
 {
 	inline std::vector<Bind*> List;
 
-	void Create(int KeyCode, BindMode Mode, BindCallback Callback);
+	void Create(uint8_t KeyCode, BindMode Mode, BindCallback Callback);
 	void Process();
 
 	void Destroy();
