@@ -7,11 +7,24 @@
 
 #include "../features/menu.h"
 
+typedef void (*fnSetCursor)(ISurface* _this, CursorCode Cursor);
+fnSetCursor oSetCursor;
+
 typedef void (*fnUnlockCursor)(ISurface* _this);
 fnUnlockCursor oUnlockCursor;
 
 typedef void (*fnLockCursor)(ISurface* _this);
 fnLockCursor oLockCursor;
+
+void __fastcall hkSetCursor(ISurface* _this, CursorCode Cursor)
+{
+	static Menu* MenuFeature = g_Features->Get<Menu>("Menu");
+
+	if (MenuFeature && MenuFeature->IsOpen)
+		Cursor = CursorCode::dc_blank; // ImGui control
+
+	oSetCursor(_this, Cursor);
+}
 
 void __fastcall hkUnlockCursor(ISurface* _this)
 {
@@ -33,6 +46,7 @@ void __fastcall hkLockCursor(ISurface* _this)
 
 void Cursor::Create()
 {
+	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<char***>(g_Pointers->Surface), 57), &hkSetCursor, reinterpret_cast<LPVOID*>(&oSetCursor));
 	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<char***>(g_Pointers->Surface), 66), &hkUnlockCursor, reinterpret_cast<LPVOID*>(&oUnlockCursor));
 	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<char***>(g_Pointers->Surface), 67), &hkLockCursor, reinterpret_cast<LPVOID*>(&oLockCursor));
 }
