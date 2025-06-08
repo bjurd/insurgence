@@ -11,14 +11,15 @@
 #include "../valve/math.h"
 #include "../valve/render.h"
 #include "../valve/studio.h"
+#include <atomic>
 
-bool CanActivate = false;
+std::atomic<bool> CanActivate = false;
 
 void Aimbot::Create()
 {
 	Binds::Create(VK_XBUTTON2, BindMode::Hold, std::function([](bool IsPressed, bool WasPressed)
 		{
-			CanActivate = IsPressed;
+			CanActivate.store(IsPressed);
 		}));
 }
 
@@ -26,7 +27,7 @@ void Aimbot::Destroy()
 {
 }
 
-Vector GetTargetAimPosition(C_INSPlayer* Target)
+Vector Aimbot::GetTargetAimPosition(C_INSPlayer* Target)
 {
 	Vector AimPos;
 	AimPos.Invalidate();
@@ -99,7 +100,7 @@ Vector GetTargetAimPosition(C_INSPlayer* Target)
 	return AimPos;
 }
 
-Vector GetAimbotTarget()
+Vector Aimbot::GetAimbotTarget()
 {
 	Vector AimPos;
 	AimPos.Invalidate();
@@ -126,7 +127,7 @@ Vector GetAimbotTarget()
 
 		if (CurrentDistance < Distance)
 		{
-			Vector CurrentAimPos = GetTargetAimPosition(Player);
+			Vector CurrentAimPos = this->GetTargetAimPosition(Player);
 
 			if (CurrentAimPos.IsValid())
 			{
@@ -141,9 +142,9 @@ Vector GetAimbotTarget()
 
 void Aimbot::OnCreateMove(CUserCmd* Command)
 {
-	if (CanActivate && Command->CommandNumber > 0 && Command->TickCount > 0)
+	if (CanActivate.load() && Command->CommandNumber > 0 && Command->TickCount > 0)
 	{
-		Vector AimPos = GetAimbotTarget();
+		Vector AimPos = this->GetAimbotTarget();
 
 		if (AimPos.IsValid())
 		{
