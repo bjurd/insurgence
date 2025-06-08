@@ -1,11 +1,12 @@
 #pragma once
 
+#include <cstdint>
 #include <functional>
 #include <vector>
 
 typedef std::function<void(bool, bool)> BindCallback; // IsPressed, WasPressed
 
-enum BindMode : unsigned char
+enum BindMode : uint8_t
 {
 	None, // Disabled, runs once when pressed->unpressed
 	Always, // Runs all the time
