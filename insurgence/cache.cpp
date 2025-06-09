@@ -7,4 +7,6 @@
 void Cache::FrameUpdate()
 {
 	Cache::WorldToScreenMatrix = g_Pointers->EngineClient->WorldToScreenMatrix();
+
+	g_Pointers->EngineClient->GetScreenSize(Cache::ViewSetup.Width, Cache::ViewSetup.Height);
 }

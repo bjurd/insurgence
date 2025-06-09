@@ -19,8 +19,8 @@ void __fastcall hkRenderView(CViewRender* _this, const CViewSetup& View, const C
 
 	CacheViewSetup.X = *ViewSetup.GetX();
 	CacheViewSetup.Y = *ViewSetup.GetY();
-	CacheViewSetup.Width = *ViewSetup.GetWidth();
-	CacheViewSetup.Height = *ViewSetup.GetHeight();
+	//CacheViewSetup.Width = *ViewSetup.GetWidth(); // Bad for some reason, haven't looked into it
+	//CacheViewSetup.Height = *ViewSetup.GetHeight();
 	CacheViewSetup.Origin = *ViewSetup.GetOrigin();
 	CacheViewSetup.Angles = *ViewSetup.GetAngles();
 	CacheViewSetup.FOV = *ViewSetup.GetFOV();

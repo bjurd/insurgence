@@ -38,10 +38,7 @@ float Aimbot::GetFOVRadius()
 	if (this->FOV <= 0.f)
 		return 0.f;
 
-	int ScreenWidth, ScreenHeight;
-	g_Pointers->EngineClient->GetScreenSize(ScreenWidth, ScreenHeight);
-
-	int ScreenCenterX = ScreenWidth / 2;
+	int ScreenCenterX = Cache::ViewSetup.Width / 2;
 
 	float RenderFOV = Cache::ViewSetup.FOV;
 	float VisualFOV = DEG2RAD(this->FOV / 2.f);

@@ -184,16 +184,15 @@ void ESP::DestroyStateBlocks()
 
 void ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
 {
+	int ScreenWidth = Cache::ViewSetup.Width;
+	int ScreenHeight = Cache::ViewSetup.Height;
+
 	D3DVIEWPORT9 ViewPort;
 	ViewPort.X = ViewPort.Y = 0;
-	ViewPort.MinZ = 0.0f;
-	ViewPort.MaxZ = 1.0f;
-
-	int ScreenWidth, ScreenHeight;
-	g_Pointers->EngineClient->GetScreenSize(ScreenWidth, ScreenHeight);
-
 	ViewPort.Width = (DWORD)ScreenWidth;
 	ViewPort.Height = (DWORD)ScreenHeight;
+	ViewPort.MinZ = 0.f;
+	ViewPort.MaxZ = 1.f;
 
 	Device->SetViewport(&ViewPort);
 
@@ -294,8 +293,8 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 		{
 			float AimbotRadius = AimbotFeature->GetFOVRadius();
 
-			int ScreenWidth, ScreenHeight;
-			g_Pointers->EngineClient->GetScreenSize(ScreenWidth, ScreenHeight); // TODO: Move these to cache
+			int ScreenWidth = Cache::ViewSetup.Width;
+			int ScreenHeight = Cache::ViewSetup.Height;
 
 			this->DrawCircle(Device, static_cast<float>(ScreenWidth / 2), static_cast<float>(ScreenHeight / 2), AimbotRadius - 1, COLOR_BLACK);
 			this->DrawCircle(Device, static_cast<float>(ScreenWidth / 2), static_cast<float>(ScreenHeight / 2), AimbotRadius + 1, COLOR_BLACK);
