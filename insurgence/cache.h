@@ -1,12 +1,19 @@
 #pragma once
 
 #include "valve/matrix.h"
-#include "valve/view_shared.h"
+
+struct ViewSetup_t
+{
+	int X, Y;
+	int Width, Height;
+
+	float FOV;
+};
 
 namespace Cache
 {
 	inline VMatrix WorldToScreenMatrix;
-	inline CViewSetup ViewSetup; // Updated in RenderView hook
+	inline ViewSetup_t ViewSetup; // Updated in RenderView hook
 
 	void FrameUpdate();
 }

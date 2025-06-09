@@ -22,9 +22,9 @@ enum StereoEye_t
 	STEREO_EYE_MAX = 3,
 };
 
-class CViewSetup // TODO: This class has a temporary retard setup just to get it to work and needs fixed at some point
+class CViewSetup
 {
-public: // Grab from engine
+public:
 	PROXYVAR(GetX, int, 0x0000);
 	PROXYVAR(GetY, int, 0x0004);
 	PROXYVAR(GetWidth, int, 0x0008);
@@ -36,10 +36,4 @@ public: // Grab from engine
 	PROXYVAR(GetZFar, float, 0x0204);
 
 	PROXYVAR(GetOffCenter, bool, 0x0320);
-
-public: // Use in insurgence
-	int X, Y;
-	int Width, Height;
-
-	float FOV;
 };
