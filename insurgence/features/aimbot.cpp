@@ -57,9 +57,10 @@ std::pair<bool, float> Aimbot::PositionInFOV(const Vector& Position)
 		FOV = 360.f;
 
 	Vector ViewDirection;
-	AngleVectors(GetMainViewAngles(), ViewDirection);
+	AngleVectors(Cache::ViewSetup.Angles, ViewDirection);
 
-	Vector Direction = Position - GetMainViewOrigin();
+	Vector Direction;
+	VectorSubtract(Position, Cache::ViewSetup.Origin, Direction);
 	VectorNormalize(Direction);
 
 	float Dot = DotProduct(ViewDirection, Direction);
@@ -206,7 +207,6 @@ Vector Aimbot::GetIdealAimPosition(C_INSPlayer* Target, const std::unordered_map
 		return AimPos;
 
 	C_INSPlayer* LocalPlayer = Helpers::GetLocalPlayer();
-	Vector ViewOrigin = GetMainViewOrigin();
 
 	Ray_t Ray;
 	CTraceFilterSimple TraceFilter(LocalPlayer, COLLISION_GROUP_NONE);
@@ -219,7 +219,7 @@ Vector Aimbot::GetIdealAimPosition(C_INSPlayer* Target, const std::unordered_map
 		{
 			for (const Vector& Position : Found->second)
 			{
-				Ray.Init(ViewOrigin, Position);
+				Ray.Init(Cache::ViewSetup.Origin, Position);
 
 				CGameTrace Result;
 				g_Pointers->EngineTrace->TraceRay(Ray, MASK_SHOT, &TraceFilter, &Result);
@@ -304,7 +304,7 @@ void Aimbot::OnCreateMove(CUserCmd* Command)
 
 		if (AimPos.IsValid())
 		{
-			Vector AimDir = AimPos - GetMainViewOrigin();
+			Vector AimDir = AimPos - Cache::ViewSetup.Origin;
 
 			Angle AimAng;
 			VectorAngles(AimDir, AimAng);

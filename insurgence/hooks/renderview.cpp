@@ -15,12 +15,15 @@ void __fastcall hkRenderView(CViewRender* _this, const CViewSetup& View, const C
 	oRenderView(_this, View, OtherView, ClearFlags, Draw);
 
 	CViewSetup& ViewSetup = const_cast<CViewSetup&>(View);
+	ViewSetup_t& CacheViewSetup = Cache::ViewSetup;
 
-	Cache::ViewSetup.X = *ViewSetup.GetX();
-	Cache::ViewSetup.Y = *ViewSetup.GetY();
-	Cache::ViewSetup.Width = *ViewSetup.GetWidth();
-	Cache::ViewSetup.Height = *ViewSetup.GetHeight();
-	Cache::ViewSetup.FOV = *ViewSetup.GetFOV();
+	CacheViewSetup.X = *ViewSetup.GetX();
+	CacheViewSetup.Y = *ViewSetup.GetY();
+	CacheViewSetup.Width = *ViewSetup.GetWidth();
+	CacheViewSetup.Height = *ViewSetup.GetHeight();
+	CacheViewSetup.Origin = *ViewSetup.GetOrigin();
+	CacheViewSetup.Angles = *ViewSetup.GetAngles();
+	CacheViewSetup.FOV = *ViewSetup.GetFOV();
 }
 
 void RenderView::Create()

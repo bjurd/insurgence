@@ -32,6 +32,9 @@ public:
 
 	PROXYVAR(GetFOV, float, 0x00A8);
 
+	PROXYVAR(GetOrigin, Vector, 0x00B0);
+	PROXYVAR(GetAngles, Angle, 0x00BC);
+
 	PROXYVAR(GetZNear, float, 0x0200);
 	PROXYVAR(GetZFar, float, 0x0204);
 

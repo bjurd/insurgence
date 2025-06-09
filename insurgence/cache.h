@@ -1,11 +1,15 @@
 #pragma once
 
 #include "valve/matrix.h"
+#include "valve/vector.h"
 
 struct ViewSetup_t
 {
 	int X, Y;
 	int Width, Height;
+
+	Vector Origin;
+	Angle Angles;
 
 	float FOV;
 };
