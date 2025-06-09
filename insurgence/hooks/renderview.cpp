@@ -29,7 +29,7 @@ void __fastcall hkRenderView(CViewRender* _this, const CViewSetup& View, const C
 void RenderView::Create()
 {
 	// TODO: Use sig
-	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<char***>(g_Pointers->ViewRender), 6), &hkRenderView, reinterpret_cast<LPVOID*>(&oRenderView));
+	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<void***>(g_Pointers->ViewRender), 6), &hkRenderView, reinterpret_cast<LPVOID*>(&oRenderView));
 }
 
 void RenderView::Destroy()

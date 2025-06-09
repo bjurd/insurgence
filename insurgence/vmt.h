@@ -7,7 +7,7 @@
 namespace VMT
 {
 	void** GetVTable(void* Object);
-	char* GetMethodPointerAt(char*** Object, uintptr_t Index);
+	void* GetMethodPointerAt(void*** Object, uintptr_t Index);
 
 	template <typename Type>
 	Type* GetVarAt(void* Object, uintptr_t Index)

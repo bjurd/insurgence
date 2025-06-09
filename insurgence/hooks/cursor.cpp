@@ -49,9 +49,9 @@ void __fastcall hkLockCursor(ISurface* _this)
 
 void Cursor::Create()
 {
-	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<char***>(g_Pointers->Surface), 57), &hkSetCursor, reinterpret_cast<LPVOID*>(&oSetCursor));
-	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<char***>(g_Pointers->Surface), 66), &hkUnlockCursor, reinterpret_cast<LPVOID*>(&oUnlockCursor));
-	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<char***>(g_Pointers->Surface), 67), &hkLockCursor, reinterpret_cast<LPVOID*>(&oLockCursor));
+	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<void***>(g_Pointers->Surface), 57), &hkSetCursor, reinterpret_cast<LPVOID*>(&oSetCursor));
+	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<void***>(g_Pointers->Surface), 66), &hkUnlockCursor, reinterpret_cast<LPVOID*>(&oUnlockCursor));
+	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<void***>(g_Pointers->Surface), 67), &hkLockCursor, reinterpret_cast<LPVOID*>(&oLockCursor));
 }
 
 void Cursor::Destroy()

@@ -21,7 +21,7 @@ void __fastcall hkPaint(IEngineVGuiInternal* _this, PaintMode_t Mode)
 
 void Paint::Create()
 {
-	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<char***>(g_Pointers->EngineVGui), 14), &hkPaint, reinterpret_cast<LPVOID*>(&oPaint));
+	MH_CreateHook((LPVOID)VMT::GetMethodPointerAt(reinterpret_cast<void***>(g_Pointers->EngineVGui), 14), &hkPaint, reinterpret_cast<LPVOID*>(&oPaint));
 }
 
 void Paint::Destroy()
