@@ -22,6 +22,11 @@ void ESP::Create()
 
 void ESP::Destroy()
 {
+	if (this->Font)
+	{
+		this->Font->Release();
+		this->Font = nullptr;
+	}
 }
 
 void ESP::SetupFont(LPDIRECT3DDEVICE9 Device)
