@@ -7,6 +7,7 @@
 #include "hooks/cursor.h"
 #include "hooks/directx.h"
 #include "hooks/paint.h"
+#include "hooks/renderview.h"
 #include "hooks/wndproc.h"
 
 bool Hooks::Create()
@@ -19,6 +20,7 @@ bool Hooks::Create()
 	this->List.push_back(new Cursor());
 	this->List.push_back(new DirectX());
 	this->List.push_back(new Paint());
+	this->List.push_back(new RenderView());
 	this->List.push_back(new WndProc());
 
 	for (Hook* Current : this->List)

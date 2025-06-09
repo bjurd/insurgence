@@ -25,6 +25,8 @@ public:
 	void Destroy();
 
 public:
+	float GetFOVRadius();
+
 	std::pair<bool, float> PositionInFOV(const Vector& Position);
 	float DistanceFromCrosshair(const Vector& Position);
 	float DistanceFromCrosshair(C_INSPlayer* Target);

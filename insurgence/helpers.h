@@ -47,7 +47,7 @@ public:
 
 	T end()
 	{
-		return T(g_Pointers->Client->GetMaxClients() + 1);
+		return T(g_Pointers->EngineClient->GetMaxClients() + 1);
 	}
 };
 

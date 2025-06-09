@@ -1,6 +1,7 @@
 #include "aimbot.h"
 
 #include "../binds.h"
+#include "../cache.h"
 #include "../helpers.h"
 #include "../nwi/c_insplayer.h"
 #include "../pointers.h"
@@ -30,6 +31,22 @@ void Aimbot::Create()
 
 void Aimbot::Destroy()
 {
+}
+
+float Aimbot::GetFOVRadius()
+{
+	if (this->FOV <= 0.f)
+		return 0.f;
+
+	int ScreenWidth, ScreenHeight;
+	g_Pointers->EngineClient->GetScreenSize(ScreenWidth, ScreenHeight);
+
+	int ScreenCenterX = ScreenWidth / 2;
+
+	float RenderFOV = Cache::ViewSetup.FOV;
+	float VisualFOV = DEG2RAD(this->FOV / 2.f);
+
+	return ScreenCenterX * tanf(VisualFOV) / tanf(DEG2RAD(RenderFOV) / 2.f);
 }
 
 std::pair<bool, float> Aimbot::PositionInFOV(const Vector& Position)
@@ -235,7 +252,7 @@ std::pair<C_INSPlayer*, Vector> Aimbot::GetTarget()
 	};
 
 	std::vector<TargetEntry> Targets;
-	Targets.reserve(g_Pointers->Client->GetMaxClients() + 1);
+	Targets.reserve(g_Pointers->EngineClient->GetMaxClients() + 1);
 
 	for (C_INSPlayer* Player : Helpers::Iterators::TargetPlayers())
 	{

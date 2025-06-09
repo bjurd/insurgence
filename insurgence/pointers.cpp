@@ -4,12 +4,36 @@
 #include "signatures.h"
 #include "valve/interfaces.h"
 
+void Pointers::PrintAddress(const std::string Name, void* Object)
+{
+	printf(
+		"%s: 0x%016" PRIXPTR "\n",
+		Name.c_str(),
+		reinterpret_cast<uintptr_t>(Object)
+	);
+}
+
 bool Pointers::Create()
 {
 	if (!this->PrintGrabInterface<IClientEntityList>("Entity List", "client.dll", VCLIENTENTITYLIST_INTERFACE_VERSION, this->EntityList))
 		return false;
 
-	if (!this->PrintGrabInterface<IVEngineClient>("Engine Client", "engine.dll", VENGINE_CLIENT_INTERFACE_VERSION, this->Client))
+	if (!this->PrintGrabInterface<IVEngineClient>("Engine Client", "engine.dll", VENGINE_CLIENT_INTERFACE_VERSION, this->EngineClient))
+		return false;
+
+	if (!this->PrintGrabInterface<CHLClient>("HL Client", "client.dll", CLIENT_DLL_INTERFACE_VERSION, this->Client))
+		return false;
+
+	uintptr_t GetPlayerViewAddr = Memory::FindSignature("client.dll", CHLClient_GetPlayerView);
+	uintptr_t ViewPtrAddr = Memory::RelativeToReal(GetPlayerViewAddr + 0x6, 3, 7);
+
+	if (GetPlayerViewAddr && ViewPtrAddr)
+	{
+		this->ViewRender = *reinterpret_cast<CViewRender**>(ViewPtrAddr);
+		this->PrintAddress("View Render", this->ViewRender);
+	}
+
+	if (!this->PrintGrabInterface<CVRenderView>("Render View", "engine.dll", VENGINE_RENDERVIEW_INTERFACE_VERSION, this->RenderView))
 		return false;
 
 	if (!this->PrintGrabInterface<IVModelInfo>("Model Info", "engine.dll", VMODELINFO_CLIENT_INTERFACE_VERSION, this->ModelInfo))
@@ -35,7 +59,7 @@ bool Pointers::Create()
 void Pointers::Destroy()
 {
 	this->EntityList = nullptr;
-	this->Client = nullptr;
+	this->EngineClient = nullptr;
 	this->ModelInfo = nullptr;
 	this->EngineTrace = nullptr;
 	this->EngineVGui = nullptr;

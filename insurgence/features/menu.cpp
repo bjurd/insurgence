@@ -87,6 +87,7 @@ void Menu::Render()
 				ImGui::Checkbox("Enabled", &AimbotFeature->Enabled);
 
 				// TODO: Aim key
+				ImGui::SliderFloat("FOV", &AimbotFeature->FOV, 0.f, 180.f, "%.0f");
 
 				ImGui::Checkbox("Target Head", &AimbotFeature->TargetHead); // TODO: Multi-select dropdown
 				ImGui::Checkbox("Target Body", &AimbotFeature->TargetTorso);

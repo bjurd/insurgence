@@ -14,6 +14,14 @@
 
 #define C_BasePlayer_GetPlayerName "40 53 48 83 EC ? 48 8B 1D ? ? ? ? 48 85 DB 74 ? 48 8B 41 ? 48 8B 9B"
 
+#define CHLClient_Init "40 53 48 83 EC ? 48 8D 0D ? ? ? ? 48 8B DA"
+#define CHLClient_View_Render "48 83 EC ? 83 7A ? ? 74"
+#define CHLClient_RenderView "48 83 EC ? 48 8B 0D ? ? ? ? 44 89 4C 24"
+#define CHLClient_GetPlayerView "40 53 48 83 EC ? 48 8B 0D ? ? ? ? 48 8B DA 83 CA"
+
+#define CViewRender_RenderView "40 55 57 41 55 41 56 41 57"
+#define CViewRender_GetPlayerViewSetup "4C 8B C1 83 FA ? 75 ? 48 8D 41 ? C3 48 63 C2 48 69 C8 ? ? ? ? 49 8D 40 ? 48 03 C1 C3 CC 48 89 5C 24"
+
 #define IClientRenderable_SetupBones "40 55 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 80 3D"
 
 #define Render_GetMainViewOrigin "48 63 C1 48 8D 0C 40 48 8D 05 ? ? ? ? 48 8D 04 88 C3 CC CC CC CC CC CC CC CC CC CC CC CC CC 48 63 C1 48 8D 0C 40 48 8D 05 ? ? ? ? 48 8D 04 88 C3 CC CC CC CC CC CC CC CC CC CC CC CC CC 48 63 C1 48 8D 0C 40 48 8D 05 ? ? ? ? 48 8D 04 88 C3 CC CC CC CC CC CC CC CC CC CC CC CC CC 40 53"

@@ -1,6 +1,7 @@
 #include "esp.h"
 
 #include "../cache.h"
+#include "../features.h"
 #include "../helpers.h"
 #include "../nwi/c_insplayer.h"
 #include "../pointers.h"
@@ -9,6 +10,8 @@
 #include "../valve/math.h"
 #include "../valve/render.h"
 #include "../valve/studio.h"
+
+#include "aimbot.h" // TODO: Split this away from ESP
 
 void ESP::Create()
 {
@@ -50,7 +53,7 @@ void ESP::DrawRect(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const
 		Points[3] = D3DXVECTOR2(X, Y + Height);
 		Points[4] = Points[0];
 
-		Line->SetWidth(1.0f);
+		Line->SetWidth(1.f);
 		Line->SetAntialias(FALSE);
 
 		Line->Begin();
@@ -73,6 +76,40 @@ void ESP::DrawOutlinedRect(LPDIRECT3DDEVICE9 Device, const float X, const float 
 	this->DrawRect(Device, X + 1, Y + 1, Width - 2, Height - 2, COLOR_BLACK);
 }
 
+void ESP::DrawCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Radius, const Color OutlineColor)
+{
+	static int Segments = 32;
+
+	ID3DXLine* Line = nullptr;
+
+	if (SUCCEEDED(D3DXCreateLine(Device, &Line)))
+	{
+		std::vector<D3DXVECTOR2> Points(Segments + 1);
+		float Step = D3DX_PI * 2.f / Segments;
+
+		for (int i = 0; i <= Segments; ++i)
+		{
+			float Angle = i * Step;
+
+			Points[i] = D3DXVECTOR2(
+				X + cosf(Angle) * Radius,
+				Y + sinf(Angle) * Radius
+			);
+		}
+
+		Line->SetWidth(1.f);
+		Line->SetAntialias(FALSE);
+
+		Line->Begin();
+		{
+			Line->Draw(Points.data(), (UINT)Points.size(), D3DCOLOR_ARGB(OutlineColor.a, OutlineColor.r, OutlineColor.g, OutlineColor.b));
+		}
+		Line->End();
+
+		Line->Release();
+	}
+}
+
 bool ESP::GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Right, float& Top, float& Bottom)
 {
 	ICollideable* Collideable = Player->GetCollideable();
@@ -88,8 +125,8 @@ bool ESP::GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Right, float&
 	const Vector Mins = Collideable->OBBMins() + Player->GetAbsOrigin();
 	const Vector Maxs = Collideable->OBBMaxs() + Player->GetAbsOrigin();
 
-	if (!g_Pointers->Client->IsBoxInViewCluster(Mins, Maxs)) return false;
-	if (g_Pointers->Client->CullBox(Mins, Maxs)) return false; // Redundant I think?
+	if (!g_Pointers->EngineClient->IsBoxInViewCluster(Mins, Maxs)) return false;
+	if (g_Pointers->EngineClient->CullBox(Mins, Maxs)) return false; // Redundant I think?
 
 	const Vector Corners[8] = {
 		Mins,
@@ -153,7 +190,7 @@ void ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
 	ViewPort.MaxZ = 1.0f;
 
 	int ScreenWidth, ScreenHeight;
-	g_Pointers->Client->GetScreenSize(ScreenWidth, ScreenHeight);
+	g_Pointers->EngineClient->GetScreenSize(ScreenWidth, ScreenHeight);
 
 	ViewPort.Width = (DWORD)ScreenWidth;
 	ViewPort.Height = (DWORD)ScreenHeight;
@@ -212,7 +249,7 @@ void ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
 
 void ESP::Render(LPDIRECT3DDEVICE9 Device)
 {
-	if (!this->Enabled || !g_Pointers->Client->IsInGame())
+	if (!this->Enabled || !g_Pointers->EngineClient->IsInGame())
 		return;
 
 	if (!this->GameStateBlock)
@@ -244,9 +281,25 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 				float Width = Right - Left;
 				float Height = Bottom - Top;
 
-				if (this->Boxes) this->DrawOutlinedRect(Device, Left, Top, Width, Height, Color(255, 0, 0, 255));
-				if (this->Names) this->DrawTextAt(Device, Player->GetPlayerName(), (int)Left, (int)Top, COLOR_WHITE);
+				static Color Red = Color(255, 0, 0, 255);
+
+				if (this->Boxes) this->DrawOutlinedRect(Device, Left, Top, Width, Height, Red);
+				if (this->Names) this->DrawTextAt(Device, Player->GetPlayerName(), static_cast<int>(Left), static_cast<int>(Top), COLOR_WHITE);
 			}
+		}
+
+		static Aimbot* AimbotFeature = g_Features->Get<Aimbot>("Aimbot");
+
+		if (AimbotFeature && AimbotFeature->Enabled)
+		{
+			float AimbotRadius = AimbotFeature->GetFOVRadius();
+
+			int ScreenWidth, ScreenHeight;
+			g_Pointers->EngineClient->GetScreenSize(ScreenWidth, ScreenHeight); // TODO: Move these to cache
+
+			this->DrawCircle(Device, static_cast<float>(ScreenWidth / 2), static_cast<float>(ScreenHeight / 2), AimbotRadius - 1, COLOR_BLACK);
+			this->DrawCircle(Device, static_cast<float>(ScreenWidth / 2), static_cast<float>(ScreenHeight / 2), AimbotRadius + 1, COLOR_BLACK);
+			this->DrawCircle(Device, static_cast<float>(ScreenWidth / 2), static_cast<float>(ScreenHeight / 2), AimbotRadius, COLOR_WHITE);
 		}
 	}
 	Device->EndScene();

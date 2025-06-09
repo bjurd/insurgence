@@ -27,7 +27,7 @@ void NetVars::StoreRecvTable(RecvTable* Table)
 
 void NetVars::Create()
 {
-	ClientClass* Classes = g_Pointers->Client->GetAllClasses();
+	ClientClass* Classes = g_Pointers->EngineClient->GetAllClasses();
 
 	for (ClientClass* Class = Classes; Class != nullptr; Class = Class->m_pNext)
 		NetVars::StoreRecvTable(Class->m_pRecvTable);

@@ -75,10 +75,10 @@ bool TargetPlayerIterator::IsValid(C_INSPlayer* Player)
 
 C_BaseEntity* Helpers::GetLocalPlayerEntity()
 {
-	return static_cast<C_BaseEntity*>(g_Pointers->EntityList->GetClientEntity(g_Pointers->Client->GetLocalPlayerIndex()));
+	return static_cast<C_BaseEntity*>(g_Pointers->EntityList->GetClientEntity(g_Pointers->EngineClient->GetLocalPlayerIndex()));
 }
 
 C_INSPlayer* Helpers::GetLocalPlayer()
 {
-	return static_cast<C_INSPlayer*>(g_Pointers->EntityList->GetClientEntity(g_Pointers->Client->GetLocalPlayerIndex()));
+	return static_cast<C_INSPlayer*>(g_Pointers->EntityList->GetClientEntity(g_Pointers->EngineClient->GetLocalPlayerIndex()));
 }

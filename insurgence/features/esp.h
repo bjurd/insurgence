@@ -33,6 +33,7 @@ public:
 
 	void DrawRect(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Width, const float Height, const Color InnerColor);
 	void DrawOutlinedRect(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Width, const float Height, const Color InnerColor);
+	void DrawCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Radius, const Color OutlineColor);
 
 	bool GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Top, float& Right, float& Bottom);
 

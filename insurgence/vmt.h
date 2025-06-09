@@ -12,7 +12,7 @@ namespace VMT
 	template <typename Type>
 	Type* GetVarAt(void* Object, uintptr_t Index)
 	{
-		return reinterpret_cast<Type*>(reinterpret_cast<std::uintptr_t>(Object) + Index);
+		return reinterpret_cast<Type*>(reinterpret_cast<uintptr_t>(Object) + Index);
 	}
 
 	template <typename T>
