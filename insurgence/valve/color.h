@@ -23,5 +23,10 @@ public:
 	}
 };
 
-#define COLOR_BLACK (Color(0, 0, 0, 255))
-#define COLOR_WHITE (Color(255, 255, 255, 255))
+namespace Colors
+{
+	inline const Color Black = Color(0, 0, 0, 255);
+	inline const Color White = Color(255, 255, 255, 255);
+
+	inline const Color Red = Color(255, 0, 0, 255);
+}

@@ -72,8 +72,8 @@ void ESP::DrawOutlinedRect(LPDIRECT3DDEVICE9 Device, const float X, const float 
 	// Oh well, this looks nicer :^)
 
 	this->DrawRect(Device, X, Y, Width, Height, InnerColor);
-	this->DrawRect(Device, X - 1, Y - 1, Width + 2, Height + 2, COLOR_BLACK);
-	this->DrawRect(Device, X + 1, Y + 1, Width - 2, Height - 2, COLOR_BLACK);
+	this->DrawRect(Device, X - 1, Y - 1, Width + 2, Height + 2, Colors::Black);
+	this->DrawRect(Device, X + 1, Y + 1, Width - 2, Height - 2, Colors::Black);
 }
 
 void ESP::DrawCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Radius, const Color OutlineColor)
@@ -280,10 +280,8 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 				float Width = Right - Left;
 				float Height = Bottom - Top;
 
-				static Color Red = Color(255, 0, 0, 255);
-
-				if (this->Boxes) this->DrawOutlinedRect(Device, Left, Top, Width, Height, Red);
-				if (this->Names) this->DrawTextAt(Device, Player->GetPlayerName(), static_cast<int>(Left), static_cast<int>(Top), COLOR_WHITE);
+				if (this->Boxes) this->DrawOutlinedRect(Device, Left, Top, Width, Height, Colors::Red);
+				if (this->Names) this->DrawTextAt(Device, Player->GetPlayerName(), static_cast<int>(Left), static_cast<int>(Top), Colors::White);
 			}
 		}
 
@@ -296,9 +294,9 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 			int ScreenWidth = Cache::ViewSetup.Width;
 			int ScreenHeight = Cache::ViewSetup.Height;
 
-			this->DrawCircle(Device, static_cast<float>(ScreenWidth / 2), static_cast<float>(ScreenHeight / 2), AimbotRadius - 1, COLOR_BLACK);
-			this->DrawCircle(Device, static_cast<float>(ScreenWidth / 2), static_cast<float>(ScreenHeight / 2), AimbotRadius + 1, COLOR_BLACK);
-			this->DrawCircle(Device, static_cast<float>(ScreenWidth / 2), static_cast<float>(ScreenHeight / 2), AimbotRadius, COLOR_WHITE);
+			this->DrawCircle(Device, static_cast<float>(ScreenWidth / 2), static_cast<float>(ScreenHeight / 2), AimbotRadius - 1, Colors::Black);
+			this->DrawCircle(Device, static_cast<float>(ScreenWidth / 2), static_cast<float>(ScreenHeight / 2), AimbotRadius + 1, Colors::Black);
+			this->DrawCircle(Device, static_cast<float>(ScreenWidth / 2), static_cast<float>(ScreenHeight / 2), AimbotRadius, Colors::White);
 		}
 	}
 	Device->EndScene();
