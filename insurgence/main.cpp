@@ -2,6 +2,7 @@
 
 #include "binds.h"
 #include "console.h"
+#include "draw.h"
 #include "features.h"
 #include "hooks.h"
 #include "memory.h"
@@ -21,6 +22,7 @@ void UnMain(HINSTANCE Instance)
 	FreeLibPtr(g_Console);
 
 	NetVars::Destroy();
+	Draw::Destroy();
 
 	FreeLibraryAndExitThread(Instance, 0);
 }

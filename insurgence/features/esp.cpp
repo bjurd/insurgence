@@ -1,6 +1,7 @@
 #include "esp.h"
 
 #include "../cache.h"
+#include "../draw.h"
 #include "../features.h"
 #include "../helpers.h"
 #include "../nwi/c_insplayer.h"
@@ -22,102 +23,6 @@ void ESP::Create()
 
 void ESP::Destroy()
 {
-	if (this->Font)
-	{
-		this->Font->Release();
-		this->Font = nullptr;
-	}
-}
-
-void ESP::SetupFont(LPDIRECT3DDEVICE9 Device)
-{
-	// TODO: Detect failure
-	D3DXCreateFont(Device, 24, 0, FW_NORMAL, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Tahoma"), &this->Font);
-}
-
-void ESP::DrawTextAt(LPDIRECT3DDEVICE9 Device, const std::string Text, const int X, const int Y, const Color TextColor)
-{
-	if (!this->Font)
-		this->SetupFont(Device);
-
-	RECT Clip = { X, Y, 0, 0 };
-
-	this->Font->DrawTextA(nullptr, Text.c_str(), -1, &Clip, DT_NOCLIP, D3DCOLOR_ARGB(TextColor.a, TextColor.r, TextColor.g, TextColor.b));
-}
-
-void ESP::DrawRect(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Width, const float Height, const Color InnerColor)
-{
-	ID3DXLine* Line = nullptr;
-
-	if (SUCCEEDED(D3DXCreateLine(Device, &Line)))
-	{
-		D3DXVECTOR2 Points[5];
-		Points[0] = D3DXVECTOR2(X, Y);
-		Points[1] = D3DXVECTOR2(X + Width, Y);
-		Points[2] = D3DXVECTOR2(X + Width, Y + Height);
-		Points[3] = D3DXVECTOR2(X, Y + Height);
-		Points[4] = Points[0];
-
-		Line->SetWidth(1.f);
-		Line->SetAntialias(FALSE);
-
-		Line->Begin();
-		{
-			Line->Draw(Points, 5, D3DCOLOR_ARGB(InnerColor.a, InnerColor.r, InnerColor.g, InnerColor.b));
-		}
-		Line->End();
-
-		Line->Release();
-	}
-}
-
-void ESP::DrawOutlinedRect(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Width, const float Height, const Color InnerColor)
-{
-	// Would probably be faster to copy the code above and edit the points instead of calling this 3 times
-	// Oh well, this looks nicer :^)
-
-	this->DrawRect(Device, X, Y, Width, Height, InnerColor);
-	this->DrawRect(Device, X - 1, Y - 1, Width + 2, Height + 2, Colors::Black);
-	this->DrawRect(Device, X + 1, Y + 1, Width - 2, Height - 2, Colors::Black);
-}
-
-void ESP::DrawCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Radius, const Color InnerColor, const int Segments)
-{
-	ID3DXLine* Line = nullptr;
-
-	if (SUCCEEDED(D3DXCreateLine(Device, &Line)))
-	{
-		std::vector<D3DXVECTOR2> Points(Segments + 1);
-		float Step = D3DX_PI * 2.f / Segments;
-
-		for (int i = 0; i <= Segments; ++i)
-		{
-			float Angle = i * Step;
-
-			Points[i] = D3DXVECTOR2(
-				X + cosf(Angle) * Radius,
-				Y + sinf(Angle) * Radius
-			);
-		}
-
-		Line->SetWidth(1.f);
-		Line->SetAntialias(FALSE);
-
-		Line->Begin();
-		{
-			Line->Draw(Points.data(), (UINT)Points.size(), D3DCOLOR_ARGB(InnerColor.a, InnerColor.r, InnerColor.g, InnerColor.b));
-		}
-		Line->End();
-
-		Line->Release();
-	}
-}
-
-void ESP::DrawOutlinedCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Radius, const Color InnerColor, const int Segments)
-{
-	this->DrawCircle(Device, X, Y, Radius - 1, Colors::Black, Segments);
-	this->DrawCircle(Device, X, Y, Radius + 1, Colors::Black, Segments);
-	this->DrawCircle(Device, X, Y, Radius, InnerColor, Segments);
 }
 
 bool ESP::GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Right, float& Top, float& Bottom)
@@ -290,8 +195,8 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 				float Width = Right - Left;
 				float Height = Bottom - Top;
 
-				if (this->Boxes) this->DrawOutlinedRect(Device, Left, Top, Width, Height, Colors::Red);
-				if (this->Names) this->DrawTextAt(Device, Player->GetPlayerName(), static_cast<int>(Left), static_cast<int>(Top), Colors::White);
+				if (this->Boxes) Draw::DrawOutlinedRect(Device, Left, Top, Width, Height, Colors::Red);
+				if (this->Names) Draw::DrawText(Device, Player->GetPlayerName(), static_cast<int>(Left), static_cast<int>(Top), Colors::White);
 			}
 		}
 
@@ -301,7 +206,7 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 		{
 			float AimbotRadius = AimbotFeature->GetFOVRadius();
 
-			this->DrawOutlinedCircle(Device, static_cast<float>(Cache::ViewSetup.Width / 2), static_cast<float>(Cache::ViewSetup.Height / 2), AimbotRadius, Colors::White, 64);
+			Draw::DrawOutlinedCircle(Device, static_cast<float>(Cache::ViewSetup.Width / 2), static_cast<float>(Cache::ViewSetup.Height / 2), AimbotRadius, Colors::White, 64);
 		}
 	}
 	Device->EndScene();
