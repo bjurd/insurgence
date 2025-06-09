@@ -76,10 +76,8 @@ void ESP::DrawOutlinedRect(LPDIRECT3DDEVICE9 Device, const float X, const float 
 	this->DrawRect(Device, X + 1, Y + 1, Width - 2, Height - 2, Colors::Black);
 }
 
-void ESP::DrawCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Radius, const Color OutlineColor)
+void ESP::DrawCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Radius, const Color InnerColor, const int Segments)
 {
-	static int Segments = 32;
-
 	ID3DXLine* Line = nullptr;
 
 	if (SUCCEEDED(D3DXCreateLine(Device, &Line)))
@@ -102,12 +100,19 @@ void ESP::DrawCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, con
 
 		Line->Begin();
 		{
-			Line->Draw(Points.data(), (UINT)Points.size(), D3DCOLOR_ARGB(OutlineColor.a, OutlineColor.r, OutlineColor.g, OutlineColor.b));
+			Line->Draw(Points.data(), (UINT)Points.size(), D3DCOLOR_ARGB(InnerColor.a, InnerColor.r, InnerColor.g, InnerColor.b));
 		}
 		Line->End();
 
 		Line->Release();
 	}
+}
+
+void ESP::DrawOutlinedCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Radius, const Color InnerColor, const int Segments)
+{
+	this->DrawCircle(Device, X, Y, Radius - 1, Colors::Black, Segments);
+	this->DrawCircle(Device, X, Y, Radius + 1, Colors::Black, Segments);
+	this->DrawCircle(Device, X, Y, Radius, InnerColor, Segments);
 }
 
 bool ESP::GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Right, float& Top, float& Bottom)
@@ -291,12 +296,7 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 		{
 			float AimbotRadius = AimbotFeature->GetFOVRadius();
 
-			int ScreenWidth = Cache::ViewSetup.Width;
-			int ScreenHeight = Cache::ViewSetup.Height;
-
-			this->DrawCircle(Device, static_cast<float>(ScreenWidth / 2), static_cast<float>(ScreenHeight / 2), AimbotRadius - 1, Colors::Black);
-			this->DrawCircle(Device, static_cast<float>(ScreenWidth / 2), static_cast<float>(ScreenHeight / 2), AimbotRadius + 1, Colors::Black);
-			this->DrawCircle(Device, static_cast<float>(ScreenWidth / 2), static_cast<float>(ScreenHeight / 2), AimbotRadius, Colors::White);
+			this->DrawOutlinedCircle(Device, static_cast<float>(Cache::ViewSetup.Width / 2), static_cast<float>(Cache::ViewSetup.Height / 2), AimbotRadius, Colors::White, 64);
 		}
 	}
 	Device->EndScene();
