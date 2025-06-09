@@ -196,7 +196,17 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 				float Height = Bottom - Top;
 
 				if (this->Boxes) Draw::DrawOutlinedRect(Device, Left, Top, Width, Height, Colors::Red);
-				if (this->Names) Draw::DrawText(Device, Player->GetPlayerName(), static_cast<int>(Left), static_cast<int>(Top), Colors::White);
+
+				if (this->Names)
+				{
+					std::pair<int, int> TextSize = Draw::GetTextSize(Device, Player->GetPlayerName());
+
+					float Center = Left + (Width / 2.f);
+					float TextX = Center - (TextSize.first / 2.f);
+					float TextY = Top - TextSize.second;
+
+					Draw::DrawText(Device, Player->GetPlayerName(), static_cast<int>(TextX), static_cast<int>(TextY), Colors::White);
+				}
 			}
 		}
 

@@ -8,6 +8,18 @@ void Draw::SetupFont(LPDIRECT3DDEVICE9 Device)
 	D3DXCreateFont(Device, 24, 0, FW_NORMAL, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Tahoma"), &Draw::Font);
 }
 
+std::pair<int, int> Draw::GetTextSize(LPDIRECT3DDEVICE9 Device, const std::string Text)
+{
+	RECT Rect = { 0, 0, 0, 0 };
+
+	if (!Draw::Font)
+		Draw::SetupFont(Device);
+
+	Draw::Font->DrawTextA(nullptr, Text.c_str(), -1, &Rect, DT_CALCRECT | DT_NOCLIP, D3DCOLOR_ARGB(0, 0, 0, 0));
+
+	return std::make_pair(static_cast<int>(Rect.right - Rect.left), static_cast<int>(Rect.bottom - Rect.top));
+}
+
 void Draw::DrawText(LPDIRECT3DDEVICE9 Device, const std::string Text, const int X, const int Y, const Color TextColor)
 {
 	if (!Draw::Font)
