@@ -4,8 +4,6 @@
 #include "valve/client.h"
 #include <string>
 
-#undef GetClassName
-
 class C_BaseEntity;
 class C_INSPlayer;
 
@@ -42,7 +40,7 @@ class PlayerRange
 public:
 	T begin()
 	{
-		return T(0);
+		return T(1);
 	}
 
 	T end()

@@ -10,9 +10,12 @@
 
 namespace Draw
 {
+	inline ID3DXLine* Line;
 	inline ID3DXFont* Font;
 
+	void SetupLine(LPDIRECT3DDEVICE9 Device);
 	void SetupFont(LPDIRECT3DDEVICE9 Device);
+
 	std::pair<int, int> GetTextSize(LPDIRECT3DDEVICE9 Device, const std::string Text);
 	void DrawText(LPDIRECT3DDEVICE9 Device, const std::string Text, const int X, const int Y, const Color TextColor);
 

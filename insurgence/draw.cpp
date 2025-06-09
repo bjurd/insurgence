@@ -2,6 +2,15 @@
 
 #include <vector>
 
+void Draw::SetupLine(LPDIRECT3DDEVICE9 Device)
+{
+	if (SUCCEEDED(D3DXCreateLine(Device, &Draw::Line)))
+	{
+		Draw::Line->SetWidth(1.f);
+		Draw::Line->SetAntialias(FALSE);
+	}
+}
+
 void Draw::SetupFont(LPDIRECT3DDEVICE9 Device)
 {
 	// TODO: Detect failure
@@ -32,28 +41,21 @@ void Draw::DrawText(LPDIRECT3DDEVICE9 Device, const std::string Text, const int 
 
 void Draw::DrawRect(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Width, const float Height, const Color InnerColor)
 {
-	ID3DXLine* Line = nullptr;
+	if (!Draw::Line)
+		Draw::SetupLine(Device);
 
-	if (SUCCEEDED(D3DXCreateLine(Device, &Line)))
+	D3DXVECTOR2 Points[5];
+	Points[0] = D3DXVECTOR2(X, Y);
+	Points[1] = D3DXVECTOR2(X + Width, Y);
+	Points[2] = D3DXVECTOR2(X + Width, Y + Height);
+	Points[3] = D3DXVECTOR2(X, Y + Height);
+	Points[4] = Points[0];
+
+	Draw::Line->Begin();
 	{
-		D3DXVECTOR2 Points[5];
-		Points[0] = D3DXVECTOR2(X, Y);
-		Points[1] = D3DXVECTOR2(X + Width, Y);
-		Points[2] = D3DXVECTOR2(X + Width, Y + Height);
-		Points[3] = D3DXVECTOR2(X, Y + Height);
-		Points[4] = Points[0];
-
-		Line->SetWidth(1.f);
-		Line->SetAntialias(FALSE);
-
-		Line->Begin();
-		{
-			Line->Draw(Points, 5, D3DCOLOR_ARGB(InnerColor.a, InnerColor.r, InnerColor.g, InnerColor.b));
-		}
-		Line->End();
-
-		Line->Release();
+		Draw::Line->Draw(Points, 5, D3DCOLOR_ARGB(InnerColor.a, InnerColor.r, InnerColor.g, InnerColor.b));
 	}
+	Draw::Line->End();
 }
 
 void Draw::DrawOutlinedRect(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Width, const float Height, const Color InnerColor)
@@ -68,34 +70,27 @@ void Draw::DrawOutlinedRect(LPDIRECT3DDEVICE9 Device, const float X, const float
 
 void Draw::DrawCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Radius, const Color InnerColor, const int Segments)
 {
-	ID3DXLine* Line = nullptr;
+	if (!Draw::Line)
+		Draw::SetupLine(Device);
 
-	if (SUCCEEDED(D3DXCreateLine(Device, &Line)))
+	std::vector<D3DXVECTOR2> Points(Segments + 1);
+	float Step = D3DX_PI * 2.f / Segments;
+
+	for (int i = 0; i <= Segments; ++i)
 	{
-		std::vector<D3DXVECTOR2> Points(Segments + 1);
-		float Step = D3DX_PI * 2.f / Segments;
+		float Angle = i * Step;
 
-		for (int i = 0; i <= Segments; ++i)
-		{
-			float Angle = i * Step;
-
-			Points[i] = D3DXVECTOR2(
-				X + cosf(Angle) * Radius,
-				Y + sinf(Angle) * Radius
-			);
-		}
-
-		Line->SetWidth(1.f);
-		Line->SetAntialias(FALSE);
-
-		Line->Begin();
-		{
-			Line->Draw(Points.data(), (UINT)Points.size(), D3DCOLOR_ARGB(InnerColor.a, InnerColor.r, InnerColor.g, InnerColor.b));
-		}
-		Line->End();
-
-		Line->Release();
+		Points[i] = D3DXVECTOR2(
+			X + cosf(Angle) * Radius,
+			Y + sinf(Angle) * Radius
+		);
 	}
+
+	Draw::Line->Begin();
+	{
+		Draw::Line->Draw(Points.data(), (UINT)Points.size(), D3DCOLOR_ARGB(InnerColor.a, InnerColor.r, InnerColor.g, InnerColor.b));
+	}
+	Draw::Line->End();
 }
 
 void Draw::DrawOutlinedCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Radius, const Color InnerColor, const int Segments)
@@ -107,6 +102,12 @@ void Draw::DrawOutlinedCircle(LPDIRECT3DDEVICE9 Device, const float X, const flo
 
 void Draw::Destroy()
 {
+	if (Draw::Line)
+	{
+		Draw::Line->Release();
+		Draw::Line = nullptr;
+	}
+
 	if (Draw::Font)
 	{
 		Draw::Font->Release();

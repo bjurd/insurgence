@@ -36,13 +36,13 @@ bool BasePlayerIterator::IsValid(C_INSPlayer* Player)
 
 void BasePlayerIterator::Advance()
 {
-	int Entities = g_Pointers->EntityList->GetHighestEntityIndex();
+	const int Entities = g_Pointers->EngineClient->GetMaxClients() + 1;
 
 	while (Index < Entities)
 	{
 		C_BaseEntity* Entity = static_cast<C_BaseEntity*>(g_Pointers->EntityList->GetClientEntity(Index));
 
-		if (!Entity || strcmp(Entity->GetClassName(), "C_INSPlayer") != 0)
+		if (!Entity)
 		{
 			Index++;
 			continue;
@@ -64,8 +64,8 @@ bool TargetPlayerIterator::IsValid(C_INSPlayer* Player)
 
 	// TODO: The LocalPlayer checks don't work for some reason :/
 	// Don't ESP yourself!
-	if (Player == LocalPlayer) return false;
-	if (*Player->EntIndex() == *LocalPlayer->EntIndex()) return false;
+	/*if (Player == LocalPlayer) return false;
+	if (*Player->EntIndex() == *LocalPlayer->EntIndex()) return false;*/
 	if (*Player->GetHealth() <= 0) return false;
 	if (*Player->IsDormant()) return false;
 	if (*Player->GetTeam() == *LocalPlayer->GetTeam()) return false;
