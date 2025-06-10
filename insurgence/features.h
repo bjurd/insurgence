@@ -5,6 +5,8 @@
 #include <typeinfo>
 #include <unordered_map>
 
+#define TYPE_INDEX(Type) std::type_index(typeid(Type))
+
 class Feature
 {
 public:
@@ -27,7 +29,7 @@ public:
 		requires std::is_base_of_v<Feature, T>
 	T* Get()
 	{
-		auto Found = this->List.find(std::type_index(typeid(T)));
+		auto Found = this->List.find(TYPE_INDEX(T));
 
 		if (Found != this->List.end())
 			return static_cast<T*>(Found->second);
