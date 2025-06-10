@@ -93,7 +93,7 @@ void Draw::DrawCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, co
 
 	Draw::Line->Begin();
 	{
-		Draw::Line->Draw(Points.data(), (UINT)Points.size(), D3DCOLOR_ARGB(InnerColor.a, InnerColor.r, InnerColor.g, InnerColor.b));
+		Draw::Line->Draw(Points.data(), static_cast<DWORD>(Points.size()), D3DCOLOR_ARGB(InnerColor.a, InnerColor.r, InnerColor.g, InnerColor.b));
 	}
 	Draw::Line->End();
 }
