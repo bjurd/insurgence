@@ -9,7 +9,7 @@
 typedef void (*fnPaint)(IEngineVGuiInternal* _this, PaintMode_t Mode);
 fnPaint oPaint;
 
-void __fastcall hkPaint(IEngineVGuiInternal* _this, PaintMode_t Mode)
+static void __fastcall hkPaint(IEngineVGuiInternal* _this, PaintMode_t Mode)
 {
 	if (Mode & PAINT_UIPANELS)
 	{

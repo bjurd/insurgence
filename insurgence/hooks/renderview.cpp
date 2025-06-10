@@ -10,7 +10,7 @@
 typedef void (*fnRenderView)(CViewRender* _this, const CViewSetup& View, const CViewSetup& OtherView, int ClearFlags, int Draw);
 fnRenderView oRenderView;
 
-void __fastcall hkRenderView(CViewRender* _this, const CViewSetup& View, const CViewSetup& OtherView, int ClearFlags, int Draw)
+static void __fastcall hkRenderView(CViewRender* _this, const CViewSetup& View, const CViewSetup& OtherView, int ClearFlags, int Draw)
 {
 	oRenderView(_this, View, OtherView, ClearFlags, Draw);
 

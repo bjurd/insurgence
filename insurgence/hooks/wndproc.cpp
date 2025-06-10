@@ -9,7 +9,7 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND Window, UINT Message, WPARAM 
 HWND MainWindow;
 WNDPROC oWndProc;
 
-LRESULT __stdcall hkWndProc(HWND Window, UINT Message, WPARAM Wide, LPARAM Long)
+static LRESULT __stdcall hkWndProc(HWND Window, UINT Message, WPARAM Wide, LPARAM Long)
 {
 	// TODO: The rest (not click thru imgui)
 

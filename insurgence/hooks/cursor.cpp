@@ -16,7 +16,7 @@ fnUnlockCursor oUnlockCursor;
 typedef void (*fnLockCursor)(ISurface* _this);
 fnLockCursor oLockCursor;
 
-void __fastcall hkSetCursor(ISurface* _this, CursorCode Cursor)
+static void __fastcall hkSetCursor(ISurface* _this, CursorCode Cursor)
 {
 	static Menu* MenuFeature = g_Features->Get<Menu>("Menu");
 
@@ -29,12 +29,12 @@ void __fastcall hkSetCursor(ISurface* _this, CursorCode Cursor)
 	oSetCursor(_this, Cursor);
 }
 
-void __fastcall hkUnlockCursor(ISurface* _this)
+static void __fastcall hkUnlockCursor(ISurface* _this)
 {
 	oUnlockCursor(_this);
 }
 
-void __fastcall hkLockCursor(ISurface* _this)
+static void __fastcall hkLockCursor(ISurface* _this)
 {
 	static Menu* MenuFeature = g_Features->Get<Menu>("Menu");
 

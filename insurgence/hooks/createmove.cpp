@@ -11,7 +11,7 @@
 typedef bool (*fnCreateMove)(void* _this, float SampleTime, CUserCmd* Command);
 fnCreateMove oCreateMove;
 
-bool __fastcall hkCreateMove(void* _this, float SampleTime, CUserCmd* Command)
+static bool __fastcall hkCreateMove(void* _this, float SampleTime, CUserCmd* Command)
 {
 	static Aimbot* AimbotFeature = g_Features->Get<Aimbot>("Aimbot");
 

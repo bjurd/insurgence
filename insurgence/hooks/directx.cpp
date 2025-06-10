@@ -17,7 +17,7 @@ fnReset oReset;
 typedef HRESULT(*fnPresent)(LPDIRECT3DDEVICE9, const RECT*, const RECT*, HWND, const RGNDATA*);
 fnPresent oPresent;
 
-HRESULT __stdcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* PresentationParameters)
+static HRESULT __stdcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* PresentationParameters)
 {
 	static ESP* ESPFeature = g_Features->Get<ESP>("ESP");
 
@@ -35,7 +35,7 @@ HRESULT __stdcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* Prese
 	return Result;
 }
 
-HRESULT __stdcall hkPresent(LPDIRECT3DDEVICE9 Device, const RECT* Source, const RECT* Destination, HWND Window, const RGNDATA* Dirty)
+static HRESULT __stdcall hkPresent(LPDIRECT3DDEVICE9 Device, const RECT* Source, const RECT* Destination, HWND Window, const RGNDATA* Dirty)
 {
 	Binds::Process();
 
