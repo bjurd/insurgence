@@ -1,9 +1,11 @@
 #pragma once
 
+#include <cstdint>
+
 class Color
 {
 public:
-	unsigned char r, g, b, a;
+	uint8_t r, g, b, a;
 
 public:
 	Color()
@@ -14,7 +16,7 @@ public:
 		this->a = 0;
 	}
 
-	Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+	Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 	{
 		this->r = r;
 		this->g = g;
@@ -29,4 +31,5 @@ namespace Colors
 	inline const Color White = Color(255, 255, 255, 255);
 
 	inline const Color Red = Color(255, 0, 0, 255);
+	inline const Color Green = Color(0, 255, 0, 255);
 }
