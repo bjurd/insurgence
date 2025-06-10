@@ -5,13 +5,15 @@
 
 struct ViewSetup_t
 {
-	int X, Y;
-	int Width, Height;
+	int X = 0;
+	int Y = 0;
+	int Width = 0;
+	int Height = 0;
 
 	Vector Origin;
 	Angle Angles;
 
-	float FOV;
+	float FOV = 0.f;
 };
 
 namespace Cache

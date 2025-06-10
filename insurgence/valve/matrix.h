@@ -15,6 +15,7 @@ public:
 public:
 	VMatrix()
 	{
+		memset(m, 0, 12);
 	}
 
 	VMatrix(const matrix3x4_t& Matrix)
