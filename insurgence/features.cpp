@@ -6,10 +6,10 @@
 
 bool Features::Create()
 {
-	this->List = std::unordered_map<std::string, Feature*>();
-	this->List["Aimbot"] = new Aimbot();
-	this->List["ESP"] = new ESP();
-	this->List["Menu"] = new Menu();
+	this->List = std::unordered_map<std::type_index, Feature*>();
+	this->List[std::type_index(typeid(Aimbot))] = new Aimbot();
+	this->List[std::type_index(typeid(ESP))] = new ESP();
+	this->List[std::type_index(typeid(Menu))] = new Menu();
 
 	for (auto Current : this->List)
 		Current.second->Create();
@@ -26,14 +26,4 @@ void Features::Destroy()
 		delete Current.second;
 	}
 	this->List.clear();
-}
-
-Feature* Features::Get(std::string Name)
-{
-	auto Found = this->List.find(Name);
-
-	if (Found != this->List.end())
-		return Found->second;
-
-	return nullptr;
 }

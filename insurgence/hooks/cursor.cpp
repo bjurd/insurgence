@@ -18,7 +18,7 @@ fnLockCursor oLockCursor;
 
 static void __fastcall hkSetCursor(ISurface* _this, CursorCode Cursor)
 {
-	static Menu* MenuFeature = g_Features->Get<Menu>("Menu");
+	static Menu* MenuFeature = g_Features->Get<Menu>();
 
 	if (MenuFeature && MenuFeature->IsOpen)
 	{
@@ -36,7 +36,7 @@ static void __fastcall hkUnlockCursor(ISurface* _this)
 
 static void __fastcall hkLockCursor(ISurface* _this)
 {
-	static Menu* MenuFeature = g_Features->Get<Menu>("Menu");
+	static Menu* MenuFeature = g_Features->Get<Menu>();
 
 	if (MenuFeature && MenuFeature->IsOpen)
 	{

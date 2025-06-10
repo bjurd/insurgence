@@ -15,7 +15,7 @@ static LRESULT __stdcall hkWndProc(HWND Window, UINT Message, WPARAM Wide, LPARA
 
 	ImGui_ImplWin32_WndProcHandler(Window, Message, Wide, Long);
 
-	static Menu* MenuFeature = g_Features->Get<Menu>("Menu");
+	static Menu* MenuFeature = g_Features->Get<Menu>();
 
 	if (MenuFeature && MenuFeature->IsOpen)
 	{

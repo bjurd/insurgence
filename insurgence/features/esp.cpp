@@ -232,7 +232,7 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 			}
 		}
 
-		static Aimbot* AimbotFeature = g_Features->Get<Aimbot>("Aimbot");
+		static Aimbot* AimbotFeature = g_Features->Get<Aimbot>();
 
 		if (AimbotFeature && AimbotFeature->Enabled)
 		{

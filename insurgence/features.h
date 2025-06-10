@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <typeindex>
+#include <typeinfo>
 #include <unordered_map>
 
 class Feature
@@ -15,23 +17,22 @@ public:
 class Features
 {
 public:
-	std::unordered_map<std::string, Feature*> List;
+	std::unordered_map<std::type_index, Feature*> List;
 
 public:
 	bool Create();
 	void Destroy();
 
-	Feature* Get(std::string Name);
-
 	template <typename T>
-	T* Get(std::string Name)
+		requires std::is_base_of_v<Feature, T>
+	T* Get()
 	{
-		Feature* Found = this->Get(Name);
+		auto Found = this->List.find(std::type_index(typeid(T)));
 
-		if (!Found)
-			return nullptr;
+		if (Found != this->List.end())
+			return static_cast<T*>(Found->second);
 
-		return dynamic_cast<T*>(Found);
+		return nullptr;
 	}
 };
 
