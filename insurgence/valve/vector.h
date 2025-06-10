@@ -46,7 +46,7 @@ public:
 	Vector	operator/(float fl) const;
 
 public:
-	float DistToSqr(const Vector& Other)
+	float DistToSqr(const Vector& Other) const
 	{
 		Vector Delta;
 
@@ -57,22 +57,22 @@ public:
 		return Delta.LengthSqr();
 	}
 
-	float DistTo(const Vector& Other)
+	float DistTo(const Vector& Other) const
 	{
 		return sqrtf(this->DistToSqr(Other));
 	}
 
-	float LengthSqr()
+	float LengthSqr() const
 	{
 		return (this->x * this->x) + (this->y * this->y) + (this->z * this->z);
 	}
 
-	float Length()
+	float Length() const
 	{
 		return sqrtf(this->LengthSqr());
 	}
 
-	bool IsValid()
+	bool IsValid() const
 	{
 		return isfinite(this->x) && isfinite(this->y) && isfinite(this->z);
 	}

@@ -100,7 +100,7 @@ void ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
 	int ScreenWidth = Cache::ViewSetup.Width;
 	int ScreenHeight = Cache::ViewSetup.Height;
 
-	D3DVIEWPORT9 ViewPort;
+	D3DVIEWPORT9 ViewPort = {};
 	ViewPort.X = ViewPort.Y = 0;
 	ViewPort.Width = (DWORD)ScreenWidth;
 	ViewPort.Height = (DWORD)ScreenHeight;
