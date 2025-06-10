@@ -24,9 +24,9 @@ public:
 public:
 	bool GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Top, float& Right, float& Bottom);
 
-	void SetupRenderStateBlock(LPDIRECT3DDEVICE9 Device);
+	bool SetupRenderStateBlock(LPDIRECT3DDEVICE9 Device);
 	void DestroyStateBlocks();
-	void SetupRenderState(LPDIRECT3DDEVICE9 Device);
+	bool SetupRenderState(LPDIRECT3DDEVICE9 Device);
 
 	void Render(LPDIRECT3DDEVICE9 Device);
 };

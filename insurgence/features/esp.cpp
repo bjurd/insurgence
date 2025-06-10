@@ -68,16 +68,23 @@ bool ESP::GetPlayerBounds(C_INSPlayer* Player, float& Left, float& Right, float&
 	return true;
 }
 
-void ESP::SetupRenderStateBlock(LPDIRECT3DDEVICE9 Device)
+bool ESP::SetupRenderStateBlock(LPDIRECT3DDEVICE9 Device)
 {
+	bool Result = true;
+
 	if (this->RenderStateBlock)
 		this->DestroyStateBlocks();
 
 	Device->BeginStateBlock();
 	{
-		this->SetupRenderState(Device);
+		Result = this->SetupRenderState(Device);
 	}
 	Device->EndStateBlock(&this->RenderStateBlock);
+
+	if (!Result)
+		this->DestroyStateBlocks();
+
+	return Result;
 }
 
 void ESP::DestroyStateBlocks()
@@ -95,10 +102,13 @@ void ESP::DestroyStateBlocks()
 	}
 }
 
-void ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
+bool ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
 {
 	int ScreenWidth = Cache::ViewSetup.Width;
 	int ScreenHeight = Cache::ViewSetup.Height;
+
+	if (ScreenWidth <= 0 || ScreenHeight <= 0)
+		return false;
 
 	D3DVIEWPORT9 ViewPort = {};
 	ViewPort.X = ViewPort.Y = 0;
@@ -157,6 +167,8 @@ void ESP::SetupRenderState(LPDIRECT3DDEVICE9 Device)
 	D3DXMatrixOrthoOffCenterLH(&Ortho, 0.f, (float)ScreenWidth, (float)ScreenHeight, 0.f, 0.f, 1.f);
 
 	Device->SetTransform(D3DTS_PROJECTION, &Ortho);
+
+	return true;
 }
 
 void ESP::Render(LPDIRECT3DDEVICE9 Device)
@@ -170,8 +182,8 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 			return;
 	}
 
-	if (!this->RenderStateBlock)
-		this->SetupRenderStateBlock(Device);
+	if (!this->RenderStateBlock && !this->SetupRenderStateBlock(Device))
+		return;
 
 	if (FAILED(this->GameStateBlock->Capture()))
 		return;
