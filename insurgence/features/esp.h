@@ -9,9 +9,10 @@ public:
 	bool InScene; // TODO: A better way of communicating with the DirectX hook
 
 public: // TODO: A config system with JSON or YAML or something
-	bool Enabled;
-	bool Boxes;
-	bool Names;
+	bool Enabled = true;
+	bool Boxes = true;
+	bool Names = true;
+	bool Health = true;
 
 private:
 	IDirect3DStateBlock9* GameStateBlock, * RenderStateBlock;

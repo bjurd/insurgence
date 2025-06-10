@@ -112,6 +112,7 @@ void Menu::Render()
 					ImGui::Checkbox("ESP", &ESPFeature->Enabled);
 					ImGui::Checkbox("Boxes", &ESPFeature->Boxes);
 					ImGui::Checkbox("Names", &ESPFeature->Names);
+					ImGui::Checkbox("Health Bars", &ESPFeature->Health);
 				}
 				ImGui::EndChild();
 				ImGui::Unindent(10.f);

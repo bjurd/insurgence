@@ -11,14 +11,12 @@
 #include "../valve/math.h"
 #include "../valve/render.h"
 #include "../valve/studio.h"
+#include <algorithm>
 
 #include "aimbot.h" // TODO: Split this away from ESP
 
 void ESP::Create()
 {
-	this->Enabled = true;
-	this->Boxes = true;
-	this->Names = true;
 }
 
 void ESP::Destroy()
@@ -192,10 +190,22 @@ void ESP::Render(LPDIRECT3DDEVICE9 Device)
 
 			if (this->GetPlayerBounds(Player, Left, Right, Top, Bottom))
 			{
-				float Width = Right - Left;
-				float Height = Bottom - Top;
+				const float Width = Right - Left;
+				const float Height = Bottom - Top;
 
-				if (this->Boxes) Draw::DrawOutlinedRect(Device, Left, Top, Width, Height, Colors::Red);
+				if (this->Boxes)
+					Draw::DrawOutlinedRect(Device, Left, Top, Width, Height, Colors::Red);
+
+				if (this->Health)
+				{
+					float HealthPercentage = static_cast<float>(*Player->GetHealth()) / static_cast<float>(*Player->GetMaxHealth());
+					HealthPercentage = std::clamp<float>(HealthPercentage, 0.f, 1.f);
+
+					const float HealthHeight = (Height - 2.f) * HealthPercentage;
+
+					Draw::DrawFilledRect(Device, Left - 5.f, Top, 4.f, Height, Colors::Black);
+					Draw::DrawFilledRect(Device, Left - 4.f, (Bottom - HealthHeight) - 1.f, 2.f, HealthHeight, Colors::Green);
+				}
 
 				if (this->Names)
 				{

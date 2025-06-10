@@ -69,9 +69,32 @@ void Draw::DrawOutlinedRect(LPDIRECT3DDEVICE9 Device, const float X, const float
 	// Would probably be faster to copy the code above and edit the points instead of calling this 3 times
 	// Oh well, this looks nicer :^)
 
-	Draw::DrawRect(Device, X, Y, Width, Height, InnerColor);
-	Draw::DrawRect(Device, X - 1, Y - 1, Width + 2, Height + 2, Colors::Black);
-	Draw::DrawRect(Device, X + 1, Y + 1, Width - 2, Height - 2, Colors::Black);
+	Draw::DrawRect(Device, X, Y, Width, Height, Colors::Black);
+	Draw::DrawRect(Device, X + 1, Y + 1, Width - 2, Height - 2, InnerColor);
+	Draw::DrawRect(Device, X + 2, Y + 2, Width - 4, Height - 4, Colors::Black);
+}
+
+void Draw::DrawFilledRect(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Width, const float Height, const Color InnerColor)
+{
+	ENSURE_LINE();
+
+	const float MidY = Y + (Height / 2.f);
+
+	D3DXVECTOR2 Points[2];
+	Points[0] = D3DXVECTOR2(X, MidY);
+	Points[1] = D3DXVECTOR2(X + Width, MidY);
+
+	const float OldWidth = Draw::Line->GetWidth();
+	Draw::Line->SetWidth(Height);
+	{
+		Draw::Line->Begin();
+		{
+			// Definitely a rectangle! DrawPrimitiveUP doesn't work for some reason /shrug
+			Draw::Line->Draw(Points, 2, D3DCOLOR_ARGB(InnerColor.a, InnerColor.r, InnerColor.g, InnerColor.b));
+		}
+		Draw::Line->End();
+	}
+	Draw::Line->SetWidth(OldWidth);
 }
 
 void Draw::DrawCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Radius, const Color InnerColor, const int Segments)
