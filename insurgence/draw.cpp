@@ -2,27 +2,35 @@
 
 #include <vector>
 
-void Draw::SetupLine(LPDIRECT3DDEVICE9 Device)
+#pragma warning(push)
+#pragma warning(disable: 4003) // not enough arguments for function-like macro invocation; I'm not making another macro just to shut this up
+
+#define ENSURE_LINE(Result) if (!Draw::Line && !Draw::SetupLine(Device)) return Result;
+#define ENSURE_FONT(Result) if (!Draw::Font && !Draw::SetupFont(Device)) return Result;
+
+bool Draw::SetupLine(LPDIRECT3DDEVICE9 Device)
 {
-	if (SUCCEEDED(D3DXCreateLine(Device, &Draw::Line)))
+	bool Result = SUCCEEDED(D3DXCreateLine(Device, &Draw::Line));
+
+	if (Result)
 	{
 		Draw::Line->SetWidth(1.f);
 		Draw::Line->SetAntialias(FALSE);
 	}
+
+	return Result;
 }
 
-void Draw::SetupFont(LPDIRECT3DDEVICE9 Device)
+bool Draw::SetupFont(LPDIRECT3DDEVICE9 Device)
 {
-	// TODO: Detect failure
-	D3DXCreateFont(Device, 24, 0, FW_NORMAL, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Tahoma"), &Draw::Font);
+	return SUCCEEDED(D3DXCreateFontW(Device, 24, 0, FW_NORMAL, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, TEXT("Tahoma"), &Draw::Font));
 }
 
 std::pair<int, int> Draw::GetTextSize(LPDIRECT3DDEVICE9 Device, const std::string Text)
 {
-	RECT Rect = { 0, 0, 0, 0 };
+	ENSURE_FONT(std::make_pair(0, 0));
 
-	if (!Draw::Font)
-		Draw::SetupFont(Device);
+	RECT Rect = { 0, 0, 0, 0 };
 
 	Draw::Font->DrawTextA(nullptr, Text.c_str(), -1, &Rect, DT_CALCRECT | DT_NOCLIP, D3DCOLOR_ARGB(0, 0, 0, 0));
 
@@ -31,8 +39,7 @@ std::pair<int, int> Draw::GetTextSize(LPDIRECT3DDEVICE9 Device, const std::strin
 
 void Draw::DrawText(LPDIRECT3DDEVICE9 Device, const std::string Text, const int X, const int Y, const Color TextColor)
 {
-	if (!Draw::Font)
-		Draw::SetupFont(Device);
+	ENSURE_FONT();
 
 	RECT Clip = { X, Y, 0, 0 };
 
@@ -41,8 +48,7 @@ void Draw::DrawText(LPDIRECT3DDEVICE9 Device, const std::string Text, const int 
 
 void Draw::DrawRect(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Width, const float Height, const Color InnerColor)
 {
-	if (!Draw::Line)
-		Draw::SetupLine(Device);
+	ENSURE_LINE();
 
 	D3DXVECTOR2 Points[5];
 	Points[0] = D3DXVECTOR2(X, Y);
@@ -70,8 +76,7 @@ void Draw::DrawOutlinedRect(LPDIRECT3DDEVICE9 Device, const float X, const float
 
 void Draw::DrawCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, const float Radius, const Color InnerColor, const int Segments)
 {
-	if (!Draw::Line)
-		Draw::SetupLine(Device);
+	ENSURE_LINE();
 
 	std::vector<D3DXVECTOR2> Points(Segments + 1);
 	float Step = D3DX_PI * 2.f / Segments;
@@ -114,3 +119,5 @@ void Draw::Destroy()
 		Draw::Font = nullptr;
 	}
 }
+
+#pragma warning(pop)
