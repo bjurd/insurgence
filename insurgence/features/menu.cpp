@@ -47,7 +47,7 @@ void Menu::Setup(LPDIRECT3DDEVICE9 Device)
 	if (this->IsSetup)
 		return;
 
-	ImGui::CreateContext();
+	ImGui::CreateContext(); // TODO: DestroyContext
 
 	ImGuiIO& IO = ImGui::GetIO();
 	IO.MouseDrawCursor = false;

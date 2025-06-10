@@ -1,6 +1,7 @@
 #include "directx.h"
 
 #include "../binds.h"
+#include "../draw.h"
 #include "../features.h"
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
@@ -25,13 +26,9 @@ HRESULT __stdcall hkReset(LPDIRECT3DDEVICE9 Device, D3DPRESENT_PARAMETERS* Prese
 
 	ImGui_ImplDX9_InvalidateDeviceObjects();
 
-	HRESULT Result = oReset(Device, PresentationParameters);
+	Draw::Destroy();
 
-	if (SUCCEEDED(Result))
-	{
-		if (ESPFeature)
-			ESPFeature->SetupRenderStateBlock(Device);
-	}
+	HRESULT Result = oReset(Device, PresentationParameters);
 
 	ImGui_ImplDX9_CreateDeviceObjects();
 
