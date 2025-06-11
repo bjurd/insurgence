@@ -1,5 +1,6 @@
 #include "draw.h"
 
+#include "valve/mathfunc.h"
 #include <vector>
 
 #pragma warning(push)
@@ -102,7 +103,7 @@ void Draw::DrawCircle(LPDIRECT3DDEVICE9 Device, const float X, const float Y, co
 	ENSURE_LINE();
 
 	std::vector<D3DXVECTOR2> Points(Segments + 1);
-	float Step = D3DX_PI * 2.f / Segments;
+	float Step = M_PI_F * 2.f / Segments;
 
 	for (int i = 0; i <= Segments; ++i)
 	{

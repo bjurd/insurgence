@@ -1,8 +1,8 @@
 #pragma once
 
-#include "vector.h"
-#include "matrix.h"
 #include "mathfunc.h"
+#include "matrix.h"
+#include "vector.h"
 
 struct cplane_t
 {
