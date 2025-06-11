@@ -12,7 +12,7 @@ project "Insurgence"
 	systemversion "latest"
 	defines { "WIN32_LEAN_AND_MEAN" }
 
-	files { "insurgence/**.h", "insurgence/**.hpp", "insurgence/**.cpp", "insurgence/**.c" }
+	files { "src/**.h", "src/**.hpp", "src/**.cpp", "src/**.c" }
 	includedirs { "$(DXSDK_DIR)Include" }
 	libdirs { "$(DXSDK_DIR)Lib\\x64" }
 	links { "d3d9.lib", "d3dx9.lib", "dxerr.lib", "dxguid.lib" }
@@ -26,6 +26,6 @@ project "Insurgence"
 	filter {}
 
 	vpaths {
-		["Source Files/*"] = { "insurgence/**.cpp", "insurgence/**.c" },
-		["Header Files/*"] = { "insurgence/**.h", "insurgence/**.hpp" }
+		["Source Files/*"] = { "src/**.cpp", "src/**.c" },
+		["Header Files/*"] = { "src/**.h", "src/**.hpp" }
 	}
