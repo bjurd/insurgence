@@ -22,8 +22,11 @@ project "Insurgence"
 		symbols "On"
 	filter "configurations:Release"
 		defines { "NDEBUG" }
-		optimize "On"
+		optimize "Full"
 		symbols "Off"
+		linktimeoptimization "On"
+		buildoptions { "/Gw", "/Gy" }
+		linkoptions { "/OPT:REF", "/OPT:ICF" }
 	filter {}
 
 	vpaths {
