@@ -10,7 +10,7 @@ project "Insurgence"
 	cppdialect "C++20"
 	system "Windows"
 	systemversion "latest"
-	defines { "WIN32_LEAN_AND_MEAN" }
+	defines { "WIN32_LEAN_AND_MEAN", "VC_EXTRALEAN" }
 
 	files { "src/**.h", "src/**.hpp", "src/**.cpp", "src/**.c" }
 	includedirs { "$(DXSDK_DIR)Include" }
