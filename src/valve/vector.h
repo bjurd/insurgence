@@ -111,6 +111,19 @@ public:
 		this->y = Other.y;
 		this->r = Other.r;
 	}
+
+public:
+	bool IsValid() const
+	{
+		return isfinite(this->p) && isfinite(this->y) && isfinite(this->r);
+	}
+
+	void Invalidate()
+	{
+		this->p = INFINITY;
+		this->y = INFINITY;
+		this->r = INFINITY;
+	}
 };
 
 class __declspec(align(16)) VectorAligned : public Vector
