@@ -2,6 +2,12 @@
 
 #include "mathfunc.h"
 
+#define INVALID_VECTOR Vector(INFINITY, INFINITY, INFINITY)
+#define INVALID_ANGLE Angle(INFINITY, INFINITY, INFINITY)
+
+#define MAKE_INVALID_VECTOR(Name) Vector Name(INFINITY, INFINITY, INFINITY)
+#define MAKE_INVALID_ANGLE(Name) Angle Name(INFINITY, INFINITY, INFINITY)
+
 class Vector
 {
 public:

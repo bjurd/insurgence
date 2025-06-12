@@ -162,14 +162,21 @@ std::unordered_map<int, std::vector<Vector>> Aimbot::GetHitgroupPositions(C_INSP
 			// Move position to center of hitbox
 			VMatrix BoneMatrix = BoneMatrices[Hitbox->bone];
 
-			Vector Origin;
-			Angle Angles;
+			MAKE_INVALID_VECTOR(Origin);
+			MAKE_INVALID_ANGLE(Angles);
 
 			BoneMatrix.GetTranslation(Origin);
 			BoneMatrix.GetAngles(Angles);
 
+			if (!Origin.IsValid() || !Angles.IsValid())
+				continue;
+
 			Vector Mins = Hitbox->bbmin;
 			Vector Maxs = Hitbox->bbmax;
+
+			if (!Mins.IsValid() || !Maxs.IsValid())
+				continue;
+
 			VectorRotate(Mins, Angles, Mins);
 			VectorRotate(Maxs, Angles, Maxs);
 
@@ -197,8 +204,7 @@ std::unordered_map<int, std::vector<Vector>> Aimbot::GetHitgroupPositions(C_INSP
 
 Vector Aimbot::GetIdealAimPosition(C_INSPlayer* Target, const std::unordered_map<int, std::vector<Vector>>& HitgroupPositions)
 {
-	Vector AimPos;
-	AimPos.Invalidate();
+	MAKE_INVALID_VECTOR(AimPos);
 
 	if (HitgroupPositions.empty())
 		return AimPos;
@@ -277,10 +283,7 @@ std::pair<C_INSPlayer*, Vector> Aimbot::GetTarget()
 			return { Entry.Player, AimPos }; // make_pair shits bricks when used here
 	}
 
-	Vector AimPos;
-	AimPos.Invalidate();
-
-	return { nullptr, AimPos }; // Here too
+	return { nullptr, INVALID_VECTOR }; // Here too
 }
 
 Vector Aimbot::GetAimPosition()
